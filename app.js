@@ -4,6 +4,7 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const indexRouter = require('./routes/index');
 require('./src/helper/connections_mongdb');
+const router = require('./routes/routes')
 
 const app = express();
 
@@ -21,6 +22,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Define routes
 app.use('/', indexRouter);
+app.use('/', router);
 // Handle 404 errors
 app.use((req, res, next) => {
   next(createError(404));
