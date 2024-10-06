@@ -21,7 +21,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Định nghĩa route
 
 app.use('/', apiRouter); // Chuyển hướng đến router API
-app.use('/autj/', auth);
+app.use('/auth/', auth);
 
 // Xử lý lỗi 404
 app.use((req, res, next) => {
