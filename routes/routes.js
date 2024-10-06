@@ -12,8 +12,9 @@ const reviewRouter = require('./review');
 const bookingRouter = require('./booking');
 const voucherRouter = require('./voucher');
 const voucherTypeRouter = require('./voucherType');
+
 // Định tuyến tất cả các router
-router.use('/', indexRouter);
+router.use('/index', indexRouter);
 router.use('/category', categoryRouter);
 router.use('/tour', tourRouter);
 router.use('/image', imageRouter);
