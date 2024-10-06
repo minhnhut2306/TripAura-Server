@@ -2,33 +2,32 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
-const indexRouter = require('./routes/index');
-require('./src/helper/connections_mongdb');
-const router = require('./routes/routes')
+const indexRouter = require('./routes/index'); // Kết nối với router chính
+const apiRouter = require('./routes/routes'); // Nếu bạn có router riêng cho API
 
 const app = express();
 
-// Set up the view engine
+// Cấu hình view engine
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
 
-// Middleware setup
+// Middleware
 app.use(logger('dev'));
-app.use(express.json()); // Phân tích dữ liệu JSON
-app.use(express.urlencoded({ extended: true })); // Phân tích dữ liệu URL-encoded
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-
-// Define routes
+// Định nghĩa route
 app.use('/', indexRouter);
-app.use('/', router);
-// Handle 404 errors
+app.use('/', apiRouter); // Chuyển hướng đến router API
+
+// Xử lý lỗi 404
 app.use((req, res, next) => {
-  next(createError(404));
+  res.status(404).send('404: Not Found'); // Hoặc bạn có thể render một trang lỗi tùy chỉnh
 });
 
-// General error handler
+// Xử lý lỗi chung
 app.use((err, req, res, next) => {
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
