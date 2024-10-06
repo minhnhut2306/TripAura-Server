@@ -12,7 +12,6 @@ const reviewRouter = require('./review');
 const bookingRouter = require('./booking');
 const voucherRouter = require('./voucher');
 const voucherTypeRouter = require('./voucherType');
-const authRouter = require('./auth');
 
 // Định tuyến tất cả các router
 router.use('/', indexRouter);
@@ -26,6 +25,5 @@ router.use('/review', reviewRouter);
 router.use('/booking', bookingRouter);
 router.use('/voucher', voucherRouter);
 router.use('/voucherType', voucherTypeRouter);
-router.use('/auth', authRouter);
 
 module.exports = router;

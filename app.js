@@ -2,7 +2,8 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
-const apiRouter = require('./routes/routes'); // Nếu bạn có router riêng cho API
+const apiRouter = require('./routes/routes'); 
+const auth = require('./routes/auth')// Nếu bạn có router riêng cho API
 
 const app = express();
 
@@ -20,6 +21,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Định nghĩa route
 
 app.use('/', apiRouter); // Chuyển hướng đến router API
+app.use('/autj/', auth);
 
 // Xử lý lỗi 404
 app.use((req, res, next) => {
