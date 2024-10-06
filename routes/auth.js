@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const moment = require('moment');
-const authController = require('../src/controler/usercontroler');
+const authController = require('../src/controller/usercontroler');
 
 // Đăng ký
 router.post('/register', async (req, res) => {
