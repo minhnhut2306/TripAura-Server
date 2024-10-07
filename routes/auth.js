@@ -137,22 +137,22 @@ router.post('/reset-password', async (req, res) => {
 
 
 
-router.get('/google', passport.authenticate('google', { scope: ['profile'], session: false }));
-router.get('/google/callback', (req, res, next) => {
-    console.log('callback')
-    passport.authenticate('google', (err, profile) => {
-        if (err) {
-            console.log(err)
-        }
-        req.user = profile
-        next()
-    })(req, res, next)
-},
-    (req, res) => {
-        console.log('123')
-        res.json({ 'message': 'data' })
-    }
-);
+// router.get('/google', passport.authenticate('google', { scope: ['profile'], session: false }));
+// router.get('/google/callback', (req, res, next) => {
+//     console.log('callback')
+//     passport.authenticate('google', (err, profile) => {
+//         if (err) {
+//             console.log(err)
+//         }
+//         req.user = profile
+//         next()
+//     })(req, res, next)
+// },
+//     (req, res) => {
+//         console.log('123')
+//         res.json({ 'message': 'data' })
+//     }
+// );
 
 
 module.exports = router;
