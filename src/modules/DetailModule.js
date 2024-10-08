@@ -3,13 +3,14 @@ const Schema = mongoose.Schema;
 const ObjectId = Schema.ObjectId;
 
 const DetailSchema = new Schema({
-    startDay: { type: String, required: true },
-    endDay: { type: String, required: true },
-    maxTicket: { type: String, required: true },
-    minTicket: { type: String, required: true },
-    priceAdult: { type: String, required: true },
-    priceChildren: { type: String, required: true },
-    PromotionalPrice: { type: String, required: true },
+    startDay: { type: Date, required: true },
+    endDay: { type: Date, required: true },
+    maxTicket: { type: Number, required: true },
+    minTicket: { type: Number, required: true },
+    priceAdult: { type: Number, required: true },
+    priceChildren: { type: Number, required: true },
+    PromotionalPrice: { type: Number, required: true },
+    status: { type: String, required: true },
     tourId: { type: ObjectId, ref: 'Tour' }
 
 

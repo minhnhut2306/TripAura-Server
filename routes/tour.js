@@ -21,33 +21,15 @@ router.post('/api/searchTour', async function (req, res) {
     }
 })
 
-router.post('/api/getTourById', async function (req, res) {
-    try {
-        const { tourId } = req.body;
-
-        if (!tourId) {
-            return res.json(createResponse(400, "tourId không được để trống", "error")); 
-        }
-        const tour = await tourController.getTourById(tourId);
-        if (tour) {
-            return res.json(createResponse(200, "Lấy tour thành công", "success", tour)); 
-        } else {
-            return res.json(createResponse(404, "Không tìm thấy tour", "error"));
-        }
-    } catch (error) {
-        console.log(error);
-        return res.json(createResponse(500, "Lỗi máy chủ", "error"));
-    }
-})
 
 router.post('/api/add', async function (req, res) {
     try {
-        const { tourName, description, status, createAt, category } = req.body;
+        const { tourName, description, category } = req.body;
 
-        if (!tourName || !description || !status || !createAt || !category) {
+        if (!tourName || !description || !category) {
             return res.json(createResponse(400, "Không được để trống", "error"));
         }
-        const tour = await tourController.insert(tourName, description, status, createAt, category);
+        const tour = await tourController.insert(tourName, description, category);
         if (tour) {
             return res.json(createResponse(200, "Thêm tour thành công", "success", tour));
         } else {

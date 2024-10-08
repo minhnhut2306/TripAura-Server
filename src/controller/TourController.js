@@ -90,87 +90,17 @@ const filter = async (destination, minPrice, maxPrice, startDate) => {
     }
 }
 
-const getTourById = async (tourId) => {
-    try {
-        const tour = await TourModule.aggregate([
-            {
-                $match: { _id: new mongoose.Types.ObjectId(tourId) }
-            },
-            {
-                $lookup: {
-                    from: 'images', // Collection Image
-                    localField: '_id',
-                    foreignField: 'tourId',
-                    as: 'images'
-                }
-            },
-            {
-                $lookup: {
-                    from: 'locations',
-                    localField: '_id',
-                    foreignField: 'tourId',
-                    as: 'locations'
-                }
-            },
-            {
-                $lookup: {
-                    from: 'details', // Collection Image
-                    localField: '_id',
-                    foreignField: 'tourId',
-                    as: 'details'
-                }
-            },
-            {
-                $addFields: {
-                    details: {
-                        $sortArray: {
-                            input: "$details",
-                            sortBy: { startDay: 1 } // Sắp xếp theo ngày giảm dần (gần nhất)
-                        }
-                    }
-                }
-            },
-            {
-                $project: {
-                    _id: 1,
-                    tourName: 1,
-                    description: 1,
-                    status: 1,
-                    createAt: 1,
-                    locations: {
-                        departure: 1,
-                        destination: 1
-                    },
-                    details: {
-                        priceAdult: 1,
-                        startDay: 1,
-                        maxTicket: 1,
-                        minTicket: 1,
-                        priceAdult: 1,
-                        priceChildren: 1,
-                        PromotionalPrice: 1
-                    },
-                    images: { _id: 1, linkImage: 1 }
-                }
-            }
-        ]);
 
-        if (!tour.length) {
-            return false;
-        }
-        return tour; // Trả về tour đầu tiên
-    } catch (error) {
-        console.error(error);
-        return false;
-    }
-}
 
 // Hàm lấy danh sách tour theo categoryId và liên kết hình ảnh
 const getToursByCategory = async (categoryId) => {
     try {
         const tours = await TourModule.aggregate([
             {
-                $match: { category: new mongoose.Types.ObjectId(categoryId) }
+                $match: {
+                    category: new mongoose.Types.ObjectId(categoryId),
+                    status: "1"
+                }
             },
             {
                 $lookup: {
@@ -245,9 +175,10 @@ const getToursByCategory = async (categoryId) => {
 }
 
 
-const insert = async (tourName, description, status, createAt, category) => {
+const insert = async (tourName, description, category) => {
     try {
-        const tour = new TourModule({ tourName, description, status, createAt, category });
+        const createAt = new Date();
+        const tour = new TourModule({ tourName, description, status: 1, createAt, category });
         await tour.save();
         return tour;
     }
@@ -256,4 +187,4 @@ const insert = async (tourName, description, status, createAt, category) => {
     }
 }
 
-module.exports = { insert, getToursByCategory, getTourById, filter }
+module.exports = { insert, getToursByCategory, filter }

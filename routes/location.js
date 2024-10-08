@@ -3,7 +3,7 @@ var router = express.Router();
 const locationController = require('../src/controller/LocationController');
 const { createResponse } = require('../src/helper/createResponse.helper');
 
-router.post('/api/insertLocation', async function (req, res) {
+router.post('/api/add', async function (req, res) {
     try {
         const { departure, destination, tourId } = req.body;
         if (departure == "" || destination == "" || tourId == "") {

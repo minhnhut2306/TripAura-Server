@@ -8,7 +8,7 @@ router.post('/api/add', async function (req, res) {
     try {
         const { linkImage, tourId } = req.body;
 
-        if (linkImage == "" || tourId == "") {
+        if (!linkImage || !tourId) {
             return res.json(createResponse(400, "Link ảnh và tourId không được để trống.", "error"));
         } else {
             const tour = await imageController.insert(linkImage, tourId);
@@ -35,9 +35,9 @@ router.post('/api/getByTourId', async function (req, res) {
         } else {
             const tour = await imageController.getById(tourId)
             if (tour) {
-                return res.json(createResponse(200, "Lấy danh sách ảnh thành công.", "success", tour)); 
+                return res.json(createResponse(200, "Lấy danh sách ảnh thành công.", "success", tour));
             } else {
-                return res.json(createResponse(404, "Không có dữ liệu ảnh cho tourId này.", "error")); 
+                return res.json(createResponse(404, "Không có dữ liệu ảnh cho tourId này.", "error"));
             }
         }
     } catch (error) {

@@ -4,7 +4,7 @@ const ObjectId = Schema.ObjectId;
 
 const LocationSchema = new Schema({
     departure: { type: String, required: true },
-    destination: {type :String, required: true},
+    destination: { type: String, required: true },
     tourId: { type: ObjectId, ref: 'Tour' }
 });
 

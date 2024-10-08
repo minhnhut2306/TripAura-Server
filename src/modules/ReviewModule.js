@@ -5,7 +5,7 @@ const ObjectId = Schema.ObjectId;
 const ReviewSchema = new Schema({
     tourId: { type: ObjectId, ref: 'Tour' },
     userId: { type: ObjectId, ref: 'User' },
-    rating: { type: String, required: true },
+    rating: { type: Number, required: true },
     comment: { type: String, required: true },
     dayReview: { type: String, required: true },
 });
