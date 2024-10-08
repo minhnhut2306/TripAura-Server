@@ -1,7 +1,8 @@
 const passport = require('passport');
 const { register, login, forgotpasswordService, verifyOtpService, resetpasswordService } = require('../service/userservice');
 const { createResponse } = require('../helper/createResponse.helper');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
+
 const saltRounds = 10; 
 
 // Controller đăng ký

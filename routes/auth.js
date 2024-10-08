@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const moment = require('moment');
-const authController = require('../src/controler/usercontroler');
+const passport = require('passport');
+const authController = require('../src/controller/usercontroler');
 
 // Đăng ký
 router.post('/register', async (req, res) => {
@@ -11,7 +12,7 @@ router.post('/register', async (req, res) => {
             fullname, email, phone, password
         } = req.body;
 
-        const response = await authController.registerController( email, phone, password);
+        const response = await authController.registerController(email, phone, password);
         res.status(response.code || 500).json({
             message: response.msg,
             status: response.status,
@@ -132,6 +133,26 @@ router.post('/reset-password', async (req, res) => {
         });
     }
 });
+
+
+
+
+// router.get('/google', passport.authenticate('google', { scope: ['profile'], session: false }));
+// router.get('/google/callback', (req, res, next) => {
+//     console.log('callback')
+//     passport.authenticate('google', (err, profile) => {
+//         if (err) {
+//             console.log(err)
+//         }
+//         req.user = profile
+//         next()
+//     })(req, res, next)
+// },
+//     (req, res) => {
+//         console.log('123')
+//         res.json({ 'message': 'data' })
+//     }
+// );
 
 
 module.exports = router;
