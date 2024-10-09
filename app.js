@@ -6,13 +6,13 @@ const passport = require('passport');
 require('./src/helper/connections_mongdb');
 const cors = require('cors');
 const swaggerSetup = require('./routes/swagger');
-
+const swaggerUi = require('swagger-ui-express');
 const router = require('./routes/routes');
 
 const app = express();
 
 // Thiết lập Swagger
-swaggerSetup(app);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSetup));
 
 // Cấu hình view engine và các middleware khác
 app.set('views', path.join(__dirname, 'views'));
