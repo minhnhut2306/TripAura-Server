@@ -3,6 +3,7 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const passport = require('passport');
+const createError = require('http-errors'); // Import createError
 require('./src/helper/connections_mongdb');
 const cors = require('cors');
 const swaggerSetup = require('./routes/swagger');
@@ -28,7 +29,7 @@ app.use('/', router);
 
 // Handle 404 errors
 app.use((req, res, next) => {
-  next(createError(404));
+  next(createError(404)); // Gọi lỗi 404 cho các route không tìm thấy
 });
 
 // General error handler
