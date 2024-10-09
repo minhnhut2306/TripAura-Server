@@ -4,13 +4,155 @@ const moment = require('moment');
 const passport = require('passport');
 const authController = require('../src/controller/usercontroler');
 
-// Đăng ký
+
+/**
+ * @swagger
+ * /auth/register:
+ *   post:
+ *     summary: Đăng ký tài khoản
+ *     description: Đăng ký tài khoản người dùng mới
+ *     tags: [User]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 example: user@example.com
+ *               phone:
+ *                 type: string
+ *                 example: "0123456789"
+ *               password:
+ *                 type: string
+ *                 example: "your_password"
+ *     responses:
+ *       200:
+ *         description: Đăng ký thành công
+ *       500:
+ *         description: Lỗi máy chủ
+ */
+
+/**
+ * @swagger
+ * /auth/login:
+ *   post:
+ *     summary: Đăng nhập
+ *     description: Đăng nhập tài khoản người dùng
+ *     tags: [User]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 example: user@example.com
+ *               phone:
+ *                 type: string
+ *                 example: "0123456789"
+ *               password:
+ *                 type: string
+ *                 example: "your_password"
+ *     responses:
+ *       200:
+ *         description: Đăng nhập thành công
+ *       500:
+ *         description: Lỗi máy chủ
+ */
+
+/**
+ * @swagger
+ * /auth/forgot-password:
+ *   post:
+ *     summary: Quên mật khẩu
+ *     description: Quên mật khẩu người dùng
+ *     tags: [User]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 example: user@example.com
+ *     responses:
+ *       200:
+ *         description: Gửi email khôi phục thành công
+ *       400:
+ *         description: Email không được để trống
+ *       500:
+ *         description: Lỗi máy chủ
+ */
+
+/**
+ * @swagger
+ * /auth/verifyOtp:
+ *   get:
+ *     summary: Xác minh OTP
+ *     description: Xác minh mã OTP gửi đến email
+ *     tags: [User]
+ *     parameters:
+ *       - in: query
+ *         name: email
+ *         required: true
+ *         schema:
+ *           type: string
+ *           example: user@example.com
+ *       - in: query
+ *         name: otp
+ *         required: true
+ *         schema:
+ *           type: string
+ *           example: "123456"
+ *     responses:
+ *       200:
+ *         description: Xác minh thành công
+ *       400:
+ *         description: Cả email và OTP đều không được để trống
+ *       500:
+ *         description: Lỗi máy chủ
+ */
+
+/**
+ * @swagger
+ * /auth/reset-password:
+ *   post:
+ *     summary: Đặt lại mật khẩu
+ *     description: Đặt lại mật khẩu người dùng
+ *     tags: [User]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 example: user@example.com
+ *               password:
+ *                 type: string
+ *                 example: "new_password"
+ *     responses:
+ *       200:
+ *         description: Đặt lại mật khẩu thành công
+ *       400:
+ *         description: Email và mật khẩu đều không được để trống
+ *       500:
+ *         description: Lỗi máy chủ
+ */
+
 router.post('/register', async (req, res) => {
     try {
         console.log('Request Body:', req.body);
-        const {
-            fullname, email, phone, password
-        } = req.body;
+        const { email, phone, password } = req.body;
 
         const response = await authController.registerController(email, phone, password);
         res.status(response.code || 500).json({

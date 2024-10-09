@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 
-const indexRouter = require('./index');
 const categoryRouter = require('./category');
 const tourRouter = require('./tour');
 const imageRouter = require('./image');
@@ -15,7 +14,6 @@ const voucherTypeRouter = require('./voucherType');
 const auth = require('./auth');
 
 // Định tuyến tất cả các router
-router.use('/', indexRouter);
 router.use('/category', categoryRouter);
 router.use('/tour', tourRouter);
 router.use('/image', imageRouter);
