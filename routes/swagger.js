@@ -24,6 +24,15 @@ const options = {
                 url: 'http://localhost:3000',
                 description: 'Local server',
             },
+            {
+                url: 'https://trip-aura-server.vercel.app/',
+                description: 'Production server',
+            },
+            {
+                url: 'https://trip-aura-server-git-main-minhnhut2306s-projects.vercel.app/',
+                description: 'Production server',
+            },
+            
         ],
     },
     apis: ['./routes/*.js'],  // Ensure the correct path to your route files
