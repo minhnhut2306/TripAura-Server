@@ -1,4 +1,3 @@
-// swagger.js
 const swaggerJsdoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
 
@@ -12,13 +11,13 @@ const options = {
         },
         tags: [
             {
-                name: "User", 
-                description: ""
+                name: "User",
+                description: "User-related operations"
             },
             {
-                name: "Booking", 
-                description: ""
-            },
+                name: "Booking",
+                description: "Booking-related operations"
+            }
         ],
         servers: [
             {
@@ -31,9 +30,11 @@ const options = {
             },
         ],
     },
-    apis: ['./routes/*.js'],
+    apis: ['./routes/*.js'],  // Ensure the correct path to your route files
 };
 
 const swaggerSpec = swaggerJsdoc(options);
 
-module.exports = swaggerSpec;
+module.exports = (app) => {
+    app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+};
