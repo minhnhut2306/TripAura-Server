@@ -1,4 +1,3 @@
-// swagger.js
 const swaggerJsdoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
 
@@ -12,13 +11,16 @@ const options = {
         },
         tags: [
             {
-                name: "User", 
-                description: ""
+              name: "User", 
+              description: ""
             },
+          ],
+        tags: [
             {
-                name: "Booking", 
-                description: ""
+              name: "Booking", 
+              description: ""
             },
+  
         ],
         servers: [
             {
@@ -36,4 +38,6 @@ const options = {
 
 const swaggerSpec = swaggerJsdoc(options);
 
-module.exports = swaggerSpec;
+module.exports = (app) => {
+    app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+};
