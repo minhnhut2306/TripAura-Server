@@ -6,11 +6,13 @@ const { createResponse } = require('../src/helper/createResponse.helper');
 
 /**
  * @swagger
- * /voucherType/api/addVoucherType:
+ * /voucher/api/addVoucherType:
  *   post:
  *     summary: Thêm loại voucher mới
+ *     description: Thêm một loại voucher mới với tên loại voucher.
  *     tags: [VoucherType]
  *     requestBody:
+ *       required: true
  *       content:
  *         application/json:
  *           schema:
@@ -21,9 +23,46 @@ const { createResponse } = require('../src/helper/createResponse.helper');
  *                 example: "Giảm giá cho tour"
  *     responses:
  *       200:
- *         description: Thành công
+ *         description: Thêm loại voucher thành công
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 code:
+ *                   type: number
+ *                   example: 200
+ *                 msg:
+ *                   type: string
+ *                   example: "Thêm loại voucher thành công"
+ *                 status:
+ *                   type: string
+ *                   example: "success"
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     _id:
+ *                       type: string
+ *                       example: "60c72b2f9b1d4e7f5c9f6f8f"
+ *                     name:
+ *                       type: string
+ *                       example: "Giảm giá cho tour"
  *       500:
- *         description: Lỗi máy chủ
+ *         description: Lỗi khi thêm loại voucher hoặc lỗi máy chủ
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 code:
+ *                   type: number
+ *                   example: 500
+ *                 msg:
+ *                   type: string
+ *                   example: "Lỗi máy chủ"
+ *                 status:
+ *                   type: string
+ *                   example: "error"
  */
 
 
