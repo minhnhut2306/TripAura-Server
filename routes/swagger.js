@@ -24,7 +24,8 @@ const options = {
         ],
         servers: [
             { url: 'https://trip-aura-server.vercel.app/', description: 'Production server' },
-            { url: 'https://trip-aura-server-git-main-minhnhut2306s-projects.vercel.app/', description: 'Production server' }
+            { url: 'https://trip-aura-server-git-main-minhnhut2306s-projects.vercel.app/', description: 'Production server' },
+            { url: 'https://tripaura-server.onrender.com/', description: 'Production server' }
         ],
     },
     apis: ['./routes/*.js'],
