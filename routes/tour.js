@@ -101,9 +101,9 @@ router.post('/api/searchTour', async function (req, res) {
 
         const tour = await tourController.filter(destination, minPrice, maxPrice, startDate)
         if (tour && tour.length > 0) {
-            return res.json(createResponse(200, "Lấy tour thành công", "success", tour)); 
+            return res.json(createResponse(200, "Lấy tour thành công", "success", tour));
         } else {
-            return res.json(createResponse(404, "Không tìm thấy tour", "error")); 
+            return res.json(createResponse(404, "Không tìm thấy tour", "error"));
         }
 
     } catch (error) {
@@ -124,7 +124,7 @@ router.post('/api/add', async function (req, res) {
         if (tour) {
             return res.json(createResponse(200, "Thêm tour thành công", "success", tour));
         } else {
-            return res.json(createResponse(500, "Lỗi khi thêm tour", "error")); 
+            return res.json(createResponse(500, "Lỗi khi thêm tour", "error"));
         }
     } catch (error) {
         console.log(error);
@@ -138,9 +138,24 @@ router.post('/api/getByCategory', async function (req, res) {
 
         const tour = await tourController.getToursByCategory(categoryId)
         if (tour && tour.length > 0) {
-            return res.json(createResponse(200, "Lấy tour theo danh mục thành công", "success", tour)); 
+            return res.json(createResponse(200, "Lấy tour theo danh mục thành công", "success", tour));
         } else {
-            return res.json(createResponse(404, "Không có dữ liệu", "error")); 
+            return res.json(createResponse(404, "Không có dữ liệu", "error"));
+        }
+
+    } catch (error) {
+        console.log(error);
+        return res.json(createResponse(500, "Lỗi máy chủ.", "error"));
+    }
+})
+
+router.get('/api/getAll', async function (req, res) {
+    try {
+        const tours = await tourController.getToursAll()
+        if (tours && tours.length > 0) {
+            return res.json(createResponse(200, "Lấy tour theo danh mục thành công", "success", tours));
+        } else {
+            return res.json(createResponse(404, "Không có dữ liệu", "error"));
         }
 
     } catch (error) {
