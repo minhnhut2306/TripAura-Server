@@ -3,6 +3,91 @@ var router = express.Router();
 
 const reviewController = require('../src/controller/ReviewController');
 const { createResponse } = require('../src/helper/createResponse.helper');
+/**
+ * @swagger
+ * /review/api/addReview:
+ *   post:
+ *     summary: Thêm đánh giá cho tour
+ *     description: Thêm một đánh giá mới cho tour với thông tin người dùng, điểm đánh giá, bình luận và ngày đánh giá
+ *     tags: [Review]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               userId:
+ *                 type: string
+ *                 example: "60c72b2f9b1d4e7f5c9f6f8b"
+ *               tourId:
+ *                 type: string
+ *                 example: "60c72b2f9b1d4e7f5c9f6f8c"
+ *               rating:
+ *                 type: number
+ *                 example: 4
+ *               comment:
+ *                 type: string
+ *                 example: "Tour rất tuyệt vời!"
+ *               dayReview:
+ *                 type: string
+ *                 example: "2024-10-10"
+ *     responses:
+ *       200:
+ *         description: Thêm review thành công
+ *       500:
+ *         description: Lỗi máy chủ khi thêm review
+ */
+/**
+ * @swagger
+ * /review/api/getByUserId:
+ *   post:
+ *     summary: Lấy danh sách đánh giá của người dùng
+ *     description: Lấy danh sách đánh giá theo User ID
+ *     tags: [Review]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               userId:
+ *                 type: string
+ *                 example: "60c72b2f9b1d4e7f5c9f6f8b"
+ *     responses:
+ *       200:
+ *         description: Lấy review thành công
+ *       404:
+ *         description: Không có review nào
+ *       500:
+ *         description: Lỗi máy chủ khi lấy review
+ */
+/**
+ * @swagger
+ * /review/api/getByTourId:
+ *   post:
+ *     summary: Lấy danh sách đánh giá cho tour
+ *     description: Lấy danh sách đánh giá theo Tour ID
+ *     tags: [Review]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               tourId:
+ *                 type: string
+ *                 example: "60c72b2f9b1d4e7f5c9f6f8c"
+ *     responses:
+ *       200:
+ *         description: Lấy review thành công
+ *       404:
+ *         description: Không có review nào
+ *       500:
+ *         description: Lỗi máy chủ khi lấy review
+ */
 
 router.post('/api/addReview', async function (req, res) {
     try {

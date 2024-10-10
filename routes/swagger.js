@@ -17,13 +17,45 @@ const options = {
             {
                 name: "Booking",
                 description: "Booking-related operations"
+            },
+            {
+                name: "Category",
+                description: "Category-related operations"
+            },
+            {
+                name: "Detail",
+                description: "Detail-related operations"
+            },
+            {
+                name: "Favourite",
+                description: "Favourite-related operations"
+            },
+            {
+                name: "Image",
+                description: "Image-related operations"
+            },
+            {
+                name: "Location",
+                description: "Location-related operations"
+            },
+            {
+                name: "Review",
+                description: "Review-related operations"
+            },
+            {
+                name: "Tour",
+                description: "Tour-related operations"
+            },
+            {
+                name: "Voucher",
+                description: "Voucher-related operations"
+            }, 
+            {
+                name: "VoucherType",
+                description: "VoucherType-related operations"
             }
         ],
         servers: [
-            {
-                url: 'http://localhost:3000',
-                description: 'Local server',
-            },
             {
                 url: 'https://trip-aura-server.vercel.app/',
                 description: 'Production server',
@@ -32,10 +64,9 @@ const options = {
                 url: 'https://trip-aura-server-git-main-minhnhut2306s-projects.vercel.app/',
                 description: 'Production server',
             },
-            
         ],
     },
-    apis: ['./routes/*.js'],  // Ensure the correct path to your route files
+    apis: ['./routes/*.js'],
 };
 
 const swaggerSpec = swaggerJsdoc(options);

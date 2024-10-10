@@ -3,6 +3,97 @@ var router = express.Router();
 
 var tourController = require('../src/controller/TourController');
 const { createResponse } = require('../src/helper/createResponse.helper');
+/**
+ * @swagger
+ * /tour/api/searchTour:
+ *   post:
+ *     summary: Tìm kiếm tour theo tiêu chí
+ *     description: Tìm kiếm danh sách tour dựa trên điểm đến, giá tối thiểu, giá tối đa và ngày bắt đầu
+ *     tags: [Tour]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               destination:
+ *                 type: string
+ *                 example: "Hà Nội"
+ *               minPrice:
+ *                 type: number
+ *                 example: 1000000
+ *               maxPrice:
+ *                 type: number
+ *                 example: 5000000
+ *               startDate:
+ *                 type: string
+ *                 format: date
+ *                 example: "2024-10-15"
+ *     responses:
+ *       200:
+ *         description: Lấy tour thành công
+ *       404:
+ *         description: Không tìm thấy tour
+ *       500:
+ *         description: Lỗi máy chủ
+ */
+/**
+ * @swagger
+ * /tour/api/add:
+ *   post:
+ *     summary: Thêm tour mới
+ *     description: Thêm một tour mới với tên, mô tả và danh mục
+ *     tags: [Tour]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               tourName:
+ *                 type: string
+ *                 example: "Tour du lịch Hà Nội"
+ *               description:
+ *                 type: string
+ *                 example: "Khám phá vẻ đẹp của Hà Nội với nhiều điểm đến hấp dẫn."
+ *               category:
+ *                 type: string
+ *                 example: "60c72b2f9b1d4e7f5c9f6f8d"
+ *     responses:
+ *       200:
+ *         description: Thêm tour thành công
+ *       400:
+ *         description: Không được để trống
+ *       500:
+ *         description: Lỗi khi thêm tour
+ */
+/**
+ * @swagger
+ * /tour/api/getByCategory:
+ *   post:
+ *     summary: Lấy danh sách tour theo danh mục
+ *     description: Lấy danh sách tour dựa trên ID danh mục
+ *     tags: [Tour]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               categoryId:
+ *                 type: string
+ *                 example: "60c72b2f9b1d4e7f5c9f6f8d"
+ *     responses:
+ *       200:
+ *         description: Lấy tour theo danh mục thành công
+ *       404:
+ *         description: Không có dữ liệu
+ *       500:
+ *         description: Lỗi máy chủ
+ */
 
 router.post('/api/searchTour', async function (req, res) {
     try {

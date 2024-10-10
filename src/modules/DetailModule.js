@@ -11,7 +11,7 @@ const DetailSchema = new Schema({
     priceChildren: { type: Number, required: true },
     PromotionalPrice: { type: Number, required: true },
     status: { type: String, required: true },
-    tourId: { type: ObjectId, ref: 'Tour' }
+    tourId: { type: ObjectId, ref: 'Tour', required: true}
 
 
 })

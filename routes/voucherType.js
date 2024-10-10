@@ -4,6 +4,29 @@ var router = express.Router();
 const vouchetController = require('../src/controller/VoucherTypeController');
 const { createResponse } = require('../src/helper/createResponse.helper');
 
+/**
+ * @swagger
+ * /voucherType/api/addVoucherType:
+ *   post:
+ *     summary: Thêm loại voucher mới
+ *     tags: [VoucherType]
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 example: "Giảm giá cho tour"
+ *     responses:
+ *       200:
+ *         description: Thành công
+ *       500:
+ *         description: Lỗi máy chủ
+ */
+
+
 
 router.post('/api/addVoucherType', async function (req, res) {
     try {

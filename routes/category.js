@@ -4,6 +4,50 @@ var { createResponse } = require('../src/helper/createResponse.helper');
 var categoryController = require('../src/controller/CategoryController');
 
 // API thêm danh mục
+
+/**
+ * @swagger
+ * /category/api/add:
+ *   post:
+ *     summary: Thêm danh mục
+ *     description: Thêm danh mục mới vào hệ thống
+ *     tags: [Category]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 example: "Thể thao"
+ *               icon:
+ *                 type: string
+ *                 example: "https://example.com/icon.png"
+ *     responses:
+ *       200:
+ *         description: Thêm danh mục thành công
+ *       400:
+ *         description: Dữ liệu không hợp lệ
+ *       409:
+ *         description: Danh mục đã tồn tại
+ *       500:
+ *         description: Lỗi máy chủ
+ */
+/**
+ * @swagger
+ * /category/api/getCategory:
+ *   get:
+ *     summary: Lấy danh sách danh mục
+ *     description: Lấy tất cả các danh mục từ hệ thống
+ *     tags: [Category]
+ *     responses:
+ *       200:
+ *         description: Lấy danh sách danh mục thành công
+ *       500:
+ *         description: Lỗi máy chủ
+ */
 router.post('/api/add', async function (req, res) {
     try {
         const { name, icon } = req.body;

@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const ObjectId = Schema.ObjectId;
+const moment = require('moment');
 
 const BookingSchema = new Schema({
     detailId: { type: ObjectId, ref: 'Detail' },
@@ -10,7 +11,7 @@ const BookingSchema = new Schema({
     numchildren: { type: Number, required: true },
     priceAdult: { type: Number, required: true },
     priceChildren: { type: Number, required: true },
-    createAt: { type: String, required: true },
+    createAt: { type: String, default: () => moment().format('YYYY-MM-DD') },
     status: { type: String, required: true },
 });
 

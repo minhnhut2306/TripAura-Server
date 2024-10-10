@@ -3,6 +3,38 @@ var router = express.Router();
 const locationController = require('../src/controller/LocationController');
 const { createResponse } = require('../src/helper/createResponse.helper');
 
+/**
+ * @swagger
+ * /location/api/add:
+ *   post:
+ *     summary: Thêm địa điểm mới cho tour
+ *     description: Thêm một địa điểm mới với thông tin về điểm khởi hành, điểm đến và tour ID
+ *     tags: [Location]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               departure:
+ *                 type: string
+ *                 example: "Hà Nội"
+ *               destination:
+ *                 type: string
+ *                 example: "Đà Nẵng"
+ *               tourId:
+ *                 type: string
+ *                 example: "60c72b2f9b1d4e7f5c9f6f8b"
+ *     responses:
+ *       200:
+ *         description: Thêm địa điểm thành công
+ *       400:
+ *         description: Không được để trống thông tin
+ *       500:
+ *         description: Lỗi máy chủ khi thêm địa điểm
+ */
+
 router.post('/api/add', async function (req, res) {
     try {
         const { departure, destination, tourId } = req.body;

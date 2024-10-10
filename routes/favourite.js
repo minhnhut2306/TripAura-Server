@@ -4,6 +4,107 @@ var router = express.Router();
 const favouriteController = require('../src/controller/FavouriteController');
 const { createResponse } = require('../src/helper/createResponse.helper');
 
+/**
+ * @swagger
+ * /favourite/api/add:
+ *   post:
+ *     summary: Thêm tour vào danh sách yêu thích
+ *     description: Thêm tour vào danh sách yêu thích của người dùng
+ *     tags: [Favourite]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               userId:
+ *                 type: string
+ *                 example: "60c72b2f9b1d4e7f5c9f6f8b"
+ *               tourId:
+ *                 type: string
+ *                 example: "60c72b2f9b1d4e7f5c9f6f8c"
+ *     responses:
+ *       200:
+ *         description: Thêm vào mục yêu thích thành công
+ *       500:
+ *         description: Lỗi máy chủ
+ */
+
+/**
+ * @swagger
+ * /favourite/api/favourite:
+ *   post:
+ *     summary: Thêm hoặc xóa tour khỏi danh sách yêu thích
+ *     description: Thêm tour vào danh sách yêu thích nếu chưa có, ngược lại xóa khỏi danh sách
+ *     tags: [Favourite]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               userId:
+ *                 type: string
+ *                 example: "60c72b2f9b1d4e7f5c9f6f8b"
+ *               tourId:
+ *                 type: string
+ *                 example: "60c72b2f9b1d4e7f5c9f6f8c"
+ *     responses:
+ *       200:
+ *         description: Thêm hoặc xóa thành công
+ *       400:
+ *         description: Lỗi yêu thích
+ */
+/**
+ * @swagger
+ * /favourite/api/deleteFavourite:
+ *   post:
+ *     summary: Xóa tour khỏi danh sách yêu thích
+ *     description: Xóa tour khỏi danh sách yêu thích của người dùng
+ *     tags: [Favourite]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               tourId:
+ *                 type: string
+ *                 example: "60c72b2f9b1d4e7f5c9f6f8c"
+ *     responses:
+ *       200:
+ *         description: Xóa thành công
+ *       404:
+ *         description: Không tìm thấy yêu thích để xóa
+ */
+/**
+ * @swagger
+ * /favourite/api/getFavouriteByUser:
+ *   post:
+ *     summary: Lấy danh sách yêu thích của người dùng
+ *     description: Lấy danh sách tour yêu thích theo User ID
+ *     tags: [Favourite]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               userId:
+ *                 type: string
+ *                 example: "60c72b2f9b1d4e7f5c9f6f8b"
+ *     responses:
+ *       200:
+ *         description: Lấy danh sách yêu thích thành công
+ *       400:
+ *         description: Không đủ dữ liệu
+ *       500:
+ *         description: Lỗi máy chủ
+ */
 router.post('/api/add', async function (req, res, next) {
     const { userId, tourId } = req.body
     try {
