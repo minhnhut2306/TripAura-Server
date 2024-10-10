@@ -94,7 +94,26 @@ const { createResponse } = require('../src/helper/createResponse.helper');
  *       500:
  *         description: Lỗi máy chủ
  */
-
+/**
+ * @swagger
+ * /tour/api/getAll:
+ *   post:
+ *     summary: Lấy danh sách 
+ *     description: Lấy danh sách 
+ *     tags: [Tour]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *     responses:
+ *       200:
+ *         description: Lấy tour theo danh mục thành công
+ *       404:
+ *         description: Không có dữ liệu
+ *       500:
+ *         description: Lỗi máy chủ
+ */
 router.post('/api/searchTour', async function (req, res) {
     try {
         const { destination, minPrice, maxPrice, startDate } = req.body;
