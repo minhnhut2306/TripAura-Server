@@ -73,7 +73,7 @@ const update = async (fullname, email, phone, gender, nationality, dateofbirth, 
 }
 const getUserById = async (userId) => {
     try {
-        const user = await User.findById(userId)
+        const user = await UserModel.findById(userId)
         if (!user) {
             throw new Error('User not found');
         }
