@@ -165,8 +165,9 @@ const getToursByCategory = async (categoryId) => {
 
         if (!tours.length) {
             return false;
-        }
 
+        }
+        
         return tours;
     } catch (error) {
         console.error(error);
@@ -244,7 +245,7 @@ const getToursAll = async () => {
         ]);
 
         if (!tours.length) {
-            
+
             return false;
         }
         return tours;
