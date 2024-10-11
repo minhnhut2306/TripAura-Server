@@ -44,9 +44,6 @@ const register = async (email, phone, password) => {
 
 const update = async (fullname, email, phone, gender, nationality, dateofbirth, userId) => {
     try {
-        if (!fullname || !email || !phone || !gender || !nationality || !dateofbirth) {
-            return createResponse(401, "Vui lòng điền đầy đủ thông tin.", false);
-        }
         if (email && !validator.isEmail(email)) return createResponse(401, "Email không hợp lệ.", false);
         if (phone && !validator.isPhone(phone)) return createResponse(401, "Số điện thoại không hợp lệ.", false);
         const user = await UserModel.findByIdAndUpdate(
@@ -71,6 +68,7 @@ const update = async (fullname, email, phone, gender, nationality, dateofbirth, 
         return createResponse(500, "Đã xảy ra lỗi trong quá trình đăng ký. Vui lòng thử lại sau.", false);
     }
 }
+
 const getUserById = async (userId) => {
     try {
         const user = await UserModel.findById(userId)
@@ -207,4 +205,4 @@ const resetpasswordService = async (email, hashedPassword) => {
     }
 };
 
-module.exports = { register, login, forgotpasswordService, verifyOtpService, resetpasswordService, update,getUserById };
+module.exports = { register, login, forgotpasswordService, verifyOtpService, resetpasswordService, update, getUserById };
