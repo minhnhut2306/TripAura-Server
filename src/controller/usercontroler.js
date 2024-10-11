@@ -24,7 +24,7 @@ exports.updateUserController = async (fullname, email, phone, gender, nationalit
         return createResponse(500, 'Lỗi trong quá trình xử lý đăng ký.', false);
     }
 };
-export const getUserController = async (userId) => {
+exports.getUserController = async (userId) => {
     try {
         const user = await getUserById(userId);
         return {
@@ -32,9 +32,10 @@ export const getUserController = async (userId) => {
             data: user,
         };
     } catch (error) {
+        console.error('Lỗi khi lấy người dùng:', error);
         return {
             success: false,
-            message: error.message,
+            message: error.message || 'Đã xảy ra lỗi không mong muốn',
         };
     }
 };
