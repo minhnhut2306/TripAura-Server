@@ -60,7 +60,7 @@ const update = async (fullname, email, phone, gender, nationality, dateofbirth, 
                 nationality: nationality,
                 dateofbirth: dateofbirth
             })
-            return createResponse(200, "Cập  nhật thành công", true);
+            return createResponse(200, "Cập  nhật thành công", true, user);
         } else {
             return createResponse(500, "Lỗi update user", false);
         }
