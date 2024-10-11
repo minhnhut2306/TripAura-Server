@@ -34,11 +34,11 @@ const register = async (email, phone, password) => {
 
         const existing = await UserModel.findOne({ $or: [{ email }, { phone }] });
         if (existing) return createResponse(401, "Email hoặc số điện thoại đã tồn tại.", false);
-        await createAccount( email, phone, password);
+        await createAccount(email, phone, password);
         return createResponse(200, "Đăng ký thành công.", "success", true);
     } catch (error) {
         console.error('Lỗi đăng ký:', error.message);
-        return createResponse(500, "Đã xảy ra lỗi trong quá trình đăng ký. Vui lòng thử lại sau.",'error', false);
+        return createResponse(500, "Đã xảy ra lỗi trong quá trình đăng ký. Vui lòng thử lại sau.", 'error', false);
     }
 }
 
@@ -59,7 +59,7 @@ const update = async (fullname, email, phone, gender, nationality, dateofbirth, 
                 nationality: nationality,
                 dateofbirth: dateofbirth
             },
-            { new: true }  
+            { new: true }
         )
         if (user) {
             return createResponse(200, "Cập  nhật thành công", true, user);
@@ -71,7 +71,18 @@ const update = async (fullname, email, phone, gender, nationality, dateofbirth, 
         return createResponse(500, "Đã xảy ra lỗi trong quá trình đăng ký. Vui lòng thử lại sau.", false);
     }
 }
-
+const getUserById = async (userId) => {
+    try {
+        const user = await User.findById(userId)
+        if (!user) {
+            throw new Error('User not found');
+        }
+        console.log(`User retrieved successfully: ${userId}`);
+        return user;
+    } catch (error) {
+        throw new Error(`Error retrieving user: ${error.message}`);
+    }
+};
 
 const login = async (email, phone, password) => {
     try {
@@ -196,4 +207,4 @@ const resetpasswordService = async (email, hashedPassword) => {
     }
 };
 
-module.exports = { register, login, forgotpasswordService, verifyOtpService, resetpasswordService, update };
+module.exports = { register, login, forgotpasswordService, verifyOtpService, resetpasswordService, update,getUserById };

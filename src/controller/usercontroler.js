@@ -1,5 +1,5 @@
 const passport = require('passport');
-const { register, login, forgotpasswordService, verifyOtpService, resetpasswordService, update } = require('../service/userservice');
+const { register, login, forgotpasswordService, verifyOtpService, resetpasswordService, update,getUserById } = require('../service/userservice');
 const { createResponse } = require('../helper/createResponse.helper');
 const bcrypt = require('bcryptjs');
 
@@ -24,7 +24,20 @@ exports.updateUserController = async (fullname, email, phone, gender, nationalit
         return createResponse(500, 'Lỗi trong quá trình xử lý đăng ký.', false);
     }
 };
-
+export const getUserController = async (userId) => {
+    try {
+        const user = await getUserById(userId);
+        return {
+            success: true,
+            data: user,
+        };
+    } catch (error) {
+        return {
+            success: false,
+            message: error.message,
+        };
+    }
+};
 // Controller đăng nhập
 exports.loginController = async (email, phone, password) => {
     try {

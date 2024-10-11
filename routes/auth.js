@@ -189,7 +189,16 @@ router.post('/api/updateUser', async (req, res) => {
         });
     }
 });
+router.get('/user/:id', async (req, res) => {
+    const { id } = req.params;
 
+    const response = await getUserController(id); 
+    if (response.success) {
+        return res.status(200).json(response); 
+    } else {
+        return res.status(404).json(response);
+    }
+});
 // Đăng nhập
 router.post('/login', async (req, res) => {
     try {
@@ -212,7 +221,6 @@ router.post('/login', async (req, res) => {
 
 });
 // quên mật khẩu
-
 router.post('/forgot-password', async (req, res) => {
     try {
         const { email } = req.body;
@@ -249,9 +257,7 @@ router.get('/verifyOtp', async (req, res) => {
                 data: null
             });
         }
-
         const response = await authController.verifyOtp(email, otp);
-
         res.status(response.code || 500).json({
             message: response.msg,
             status: response.status,
@@ -278,7 +284,6 @@ router.post('/reset-password', async (req, res) => {
                 data: null
             });
         }
-
         const response = await authController.resetPassword(email, password);
         res.status(response.code || 500).json({
             message: response.msg,
