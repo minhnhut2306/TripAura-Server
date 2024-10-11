@@ -59,7 +59,7 @@ const update = async (fullname, email, phone, gender, nationality, dateofbirth, 
                 nationality: nationality,
                 dateofbirth: dateofbirth
             },
-            { new: true }  // Trả về user sau khi đã update
+            { new: true }  
         )
         if (user) {
             return createResponse(200, "Cập  nhật thành công", true, user);
