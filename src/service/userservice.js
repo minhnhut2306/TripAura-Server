@@ -71,18 +71,22 @@ const update = async (fullname, email, phone, gender, nationality, dateofbirth, 
         return createResponse(500, "Đã xảy ra lỗi trong quá trình đăng ký. Vui lòng thử lại sau.", false);
     }
 }
-const getUserById = async (userId) => {
+export const getUserController = async (userId) => {
     try {
-        const user = await User.findById(userId)
-        if (!user) {
-            throw new Error('User not found');
-        }
-        console.log(`User retrieved successfully: ${userId}`);
-        return user;
+        const user = await getUserById(userId);
+        return {
+            success: true,
+            data: user,
+        };
     } catch (error) {
-        throw new Error(`Error retrieving user: ${error.message}`);
+        console.error('Lỗi khi lấy người dùng:', error);
+        return {
+            success: false,
+            message: error.message || 'Đã xảy ra lỗi không mong muốn',
+        };
     }
 };
+
 
 const login = async (email, phone, password) => {
     try {
