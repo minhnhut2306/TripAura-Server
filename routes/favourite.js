@@ -141,11 +141,11 @@ router.post('/api/favourite', async function (req, res) {
 })
 
 router.post('/api/deleteFavourite', async function (req, res) {
-    const { tourId } = req.body
+    const { tourId, userId } = req.body
     try {
-        const data = await favouriteController.remove(tourId)
-        if (data) {
-            return res.json(createResponse(200, "Xóa yêu thích thành công", "success", data));
+        const data = await favouriteController.remove({ tourId: tourId, userId: userId })
+        if (data == 0) {
+            return res.json(createResponse(200, "Xóa yêu thích thành công", "success"));
         } else {
             return res.json(createResponse(404, "Lỗi xóa.", "error"));
         }
