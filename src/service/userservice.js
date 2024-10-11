@@ -50,16 +50,19 @@ const update = async (fullname, email, phone, gender, nationality, dateofbirth, 
         }
         if (email && !validator.isEmail(email)) return createResponse(401, "Email không hợp lệ.", false);
         if (phone && !validator.isPhone(phone)) return createResponse(401, "Số điện thoại không hợp lệ.", false);
-        const user = await UserModel.findOne({ _id: userId })
-        if (user) {
-            await user.updateOne({
+        const user = await UserModel.findByIdAndUpdate(
+            { _id: userId },
+            {
                 fullname: fullname,
                 email: email,
                 phone: phone,
                 gender: gender,
                 nationality: nationality,
                 dateofbirth: dateofbirth
-            })
+            },
+            { new: true }  // Trả về user sau khi đã update
+        )
+        if (user) {
             return createResponse(200, "Cập  nhật thành công", true, user);
         } else {
             return createResponse(500, "Lỗi update user", false);
