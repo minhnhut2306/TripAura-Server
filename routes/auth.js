@@ -192,7 +192,7 @@ router.post('/api/updateUser', async (req, res) => {
 router.get('/user/:id', async (req, res) => {
     const { id } = req.params;
 
-    const response = await getUserController(id); 
+    const response = await authController.getUserController(id); 
     if (response.success) {
         return res.status(200).json(response); 
     } else {
