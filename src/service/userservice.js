@@ -36,10 +36,10 @@ const register = async ( email, phone, password) => {
         if (existing) return createResponse(401, "Email hoặc số điện thoại đã tồn tại.", false);
 
         await createAccount( email, phone, password);
-        return createResponse(200, "Đăng ký thành công.", true);
+        return createResponse(200, "Đăng ký thành công.", "success", true);
     } catch (error) {
         console.error('Lỗi đăng ký:', error.message);
-        return createResponse(500, "Đã xảy ra lỗi trong quá trình đăng ký. Vui lòng thử lại sau.", false);
+        return createResponse(500, "Đã xảy ra lỗi trong quá trình đăng ký. Vui lòng thử lại sau.",'error', false);
     }
 }
 
