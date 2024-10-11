@@ -67,7 +67,7 @@ const getAll = async (userId) => {
 const remove = async (tourId, userId) => {
     try {
         await _Favourite.deleteOne({ tourId: tourId, userId: userId });
-        return 0;
+        return 1;
     }
     catch (error) {
         console.log(error);
