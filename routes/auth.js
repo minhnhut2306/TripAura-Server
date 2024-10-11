@@ -170,6 +170,26 @@ router.post('/register', async (req, res) => {
     }
 });
 
+router.post('/api/updateUser', async (req, res) => {
+    try {
+        console.log('Request Body:', req.body);
+        const { fullname, email, phone, gender, nationality, dateofbirth, userId } = req.body;
+        const response = await authController.updateUserController(fullname, email, phone, gender, nationality, dateofbirth, userId);
+        res.status(response.code || 500).json({
+            message: response.msg,
+            status: response.status,
+            data: response.data
+        });
+    } catch (error) {
+        console.error('Lỗi không mong muốn ở /register:', error.message);
+        res.status(500).json({
+            message: 'Đã xảy ra lỗi không mong muốn. Vui lòng thử lại sau.',
+            status: false,
+            data: null
+        });
+    }
+});
+
 // Đăng nhập
 router.post('/login', async (req, res) => {
     try {

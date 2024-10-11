@@ -1,14 +1,23 @@
 const passport = require('passport');
-const { register, login, forgotpasswordService, verifyOtpService, resetpasswordService } = require('../service/userservice');
+const { register, login, forgotpasswordService, verifyOtpService, resetpasswordService, update } = require('../service/userservice');
 const { createResponse } = require('../helper/createResponse.helper');
 const bcrypt = require('bcryptjs');
 
-const saltRounds = 10; 
+const saltRounds = 10;
 
 // Controller đăng ký
 exports.registerController = async (email, phone, password) => {
     try {
         const response = await register(email, phone, password);
+        return response;
+    } catch (error) {
+        console.error('Lỗi trong registerController:', error.message);
+        return createResponse(500, 'Lỗi trong quá trình xử lý đăng ký.', false);
+    }
+};
+exports.updateUserController = async (fullname, email, phone, gender, nationality, dateofbirth, userId) => {
+    try {
+        const response = await update(fullname, email, phone, gender, nationality, dateofbirth, userId);
         return response;
     } catch (error) {
         console.error('Lỗi trong registerController:', error.message);

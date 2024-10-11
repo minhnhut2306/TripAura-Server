@@ -9,7 +9,7 @@ const { sendEmail } = require('./emailService');
 const saltRounds = 10;
 
 const validateRegisterInput = (email, phone, password) => {
-    if ( !password || (!email && !phone)) {
+    if (!password || (!email && !phone)) {
         return createResponse(401, "Vui lòng điền đầy đủ thông tin. Phải có password và một trong email hoặc số điện thoại.", false);
     }
     if (email && !validator.isEmail(email)) return createResponse(401, "Email không hợp lệ.", false);
@@ -27,16 +27,43 @@ const validateLoginInput = (email, phone, password) => {
     return null;
 };
 
-const register = async ( email, phone, password) => {
+const register = async (email, phone, password) => {
     try {
-        const validationResponse = validateRegisterInput( email, phone, password);
+        const validationResponse = validateRegisterInput(email, phone, password);
         if (validationResponse) return validationResponse;
 
         const existing = await UserModel.findOne({ $or: [{ email }, { phone }] });
         if (existing) return createResponse(401, "Email hoặc số điện thoại đã tồn tại.", false);
 
-        await createAccount( email, phone, password);
+        await createAccount(email, phone, password);
         return createResponse(200, "Đăng ký thành công.", true);
+    } catch (error) {
+        console.error('Lỗi đăng ký:', error.message);
+        return createResponse(500, "Đã xảy ra lỗi trong quá trình đăng ký. Vui lòng thử lại sau.", false);
+    }
+}
+
+const update = async (fullname, email, phone, gender, nationality, dateofbirth, userId) => {
+    try {
+        if (!fullname || !email || !phone || !gender || !nationality || !dateofbirth) {
+            return createResponse(401, "Vui lòng điền đầy đủ thông tin.", false);
+        }
+        if (email && !validator.isEmail(email)) return createResponse(401, "Email không hợp lệ.", false);
+        if (phone && !validator.isPhone(phone)) return createResponse(401, "Số điện thoại không hợp lệ.", false);
+        const user = await UserModel.findOne({ _id: userId })
+        if (user) {
+            await user.updateOne({
+                fullname: fullname,
+                email: email,
+                phone: phone,
+                gender: gender,
+                nationality: nationality,
+                dateofbirth: dateofbirth
+            })
+            return createResponse(200, "Cập  nhật thành công", true);
+        } else {
+            return createResponse(500, "Lỗi update user", false);
+        }
     } catch (error) {
         console.error('Lỗi đăng ký:', error.message);
         return createResponse(500, "Đã xảy ra lỗi trong quá trình đăng ký. Vui lòng thử lại sau.", false);
@@ -48,7 +75,7 @@ const login = async (email, phone, password) => {
     try {
         const validationResponse = validateLoginInput(email, phone, password);
         if (validationResponse) return validationResponse;
-        
+
         const user = await UserModel.findOne({ $or: [{ email }, { phone }] });
         if (!user) return createResponse(401, "Tên đăng nhập hoặc số điện thoại không tồn tại.", false);
 
@@ -96,7 +123,7 @@ const generateOtp = () => Math.floor(1000 + Math.random() * 9000);
 const forgotpasswordService = async (email) => {
     try {
         const existingOtp = await otpModel.findOne({ email, expiry: { $gte: moment().toDate() } });
-        console.log('Existing OTP:', existingOtp); 
+        console.log('Existing OTP:', existingOtp);
         if (existingOtp) {
             const timeDifference = moment().diff(moment(existingOtp.createdAt), 'minutes');
             if (timeDifference < 1) {
@@ -152,7 +179,7 @@ const verifyOtpService = async (email, otp) => {
 
 
 // đổi mật khẩu
- const resetpasswordService = async (email, hashedPassword) => {
+const resetpasswordService = async (email, hashedPassword) => {
     try {
         const user = await UserModel.findOne({ email });
         if (!user) return createResponse(401, "Email không tồn tại.", false);
@@ -167,4 +194,4 @@ const verifyOtpService = async (email, otp) => {
     }
 };
 
-module.exports = { register, login, forgotpasswordService, verifyOtpService, resetpasswordService };
+module.exports = { register, login, forgotpasswordService, verifyOtpService, resetpasswordService, update };
