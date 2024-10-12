@@ -115,9 +115,8 @@ const updateDetailByDay = async () => {
 
 
         const data = await DetailModule.updateMany(
-            { startDay: afterSevenDays, status: '1' },
+            { startDay: { $lte: afterSevenDays }, status: '1' },
             { status: 0 },
-            { new: true }
         )
 
         console.log("========== detail cần update ==========", data);
@@ -127,6 +126,6 @@ const updateDetailByDay = async () => {
         return false
     }
 }
-updateDetailByDay()
+// updateDetailByDay()
 
 module.exports = { insert, getByTourId }
