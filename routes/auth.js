@@ -173,8 +173,8 @@ router.post('/register', async (req, res) => {
 router.post('/api/updateUser', async (req, res) => {
     try {
         console.log('Request Body:', req.body);
-        const { fullname, email, phone, gender, nationality, dateofbirth, userId } = req.body;
-        const response = await authController.updateUserController(fullname, email, phone, gender, nationality, dateofbirth, userId);
+        const { fullname, email, phone, gender, nationality, dateofbirth, userId, address } = req.body;
+        const response = await authController.updateUserController(fullname, email, phone, gender, nationality, dateofbirth, userId, address);
         res.status(response.code || 500).json({
             message: response.msg,
             status: response.status,
@@ -192,9 +192,9 @@ router.post('/api/updateUser', async (req, res) => {
 router.get('/user/:id', async (req, res) => {
     const { id } = req.params;
 
-    const response = await authController.getUserController(id); 
+    const response = await authController.getUserController(id);
     if (response.success) {
-        return res.status(200).json(response); 
+        return res.status(200).json(response);
     } else {
         return res.status(404).json(response);
     }
