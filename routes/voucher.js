@@ -106,6 +106,7 @@ router.get('/api/getByUserId', async function (req, res) {
         return res.json(createResponse(500, "Lỗi máy chủ", "error"));
     }
 })
+
 router.post('/api/receiveVoucher', async function (req, res) {
     try {
         const { userId, voucherId } = req.body
@@ -113,7 +114,7 @@ router.post('/api/receiveVoucher', async function (req, res) {
         if (data) {
             return res.json(createResponse(200, "Nhận voucher thành công", "success", data));
         } else {
-            return res.json(createResponse(500, "Lỗi khi Nhận sách voucher", "error"));
+            return res.json(createResponse(500, "Lỗi khi Nhận voucher", "error"));
         }
     } catch (error) {
         console.log(error);

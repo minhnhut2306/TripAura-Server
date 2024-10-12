@@ -105,4 +105,28 @@ const getByTourId = async (tourId) => {
     }
 }
 
+const updateDetailByDay = async () => {
+    try {
+
+        const today = new Date()
+        const afterSevenDays = new Date()
+        afterSevenDays.setDate(today.getDate() + 7)
+        console.log(afterSevenDays);
+
+
+        const data = await DetailModule.updateMany(
+            { startDay: afterSevenDays, status: '1' },
+            { status: 0 },
+            { new: true }
+        )
+
+        console.log("========== detail cần update ==========", data);
+
+    } catch (error) {
+        console.log("========== Lỗi update status detail ==========", error);
+        return false
+    }
+}
+updateDetailByDay()
+
 module.exports = { insert, getByTourId }
