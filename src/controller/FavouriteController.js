@@ -129,8 +129,8 @@ const getByUser = async (userId) => {
             },
             {
                 $project: {
-                    _id: 1,
                     tour: {
+                        _id: 1,
                         tourName: 1,
                         description: 1,
                         status: 1,
