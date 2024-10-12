@@ -15,9 +15,9 @@ exports.registerController = async (email, phone, password) => {
         return createResponse(500, 'Lỗi trong quá trình xử lý đăng ký.', false);
     }
 };
-exports.updateUserController = async (fullname, email, phone, gender, nationality, dateofbirth, userId) => {
+exports.updateUserController = async (fullname, email, phone, gender, nationality, dateofbirth, userId, address) => {
     try {
-        const response = await update(fullname, email, phone, gender, nationality, dateofbirth, userId);
+        const response = await update(fullname, email, phone, gender, nationality, dateofbirth, userId, address);
         return response;
     } catch (error) {
         console.error('Lỗi trong registerController:', error.message);

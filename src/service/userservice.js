@@ -28,6 +28,8 @@ const validateLoginInput = (email, phone, password) => {
 };
 
 const register = async (email, phone, password) => {
+    console.log("====== service========", email, phone, password);
+
     try {
         const validationResponse = validateRegisterInput(email, phone, password);
         if (validationResponse) return validationResponse;
@@ -42,7 +44,7 @@ const register = async (email, phone, password) => {
     }
 }
 
-const update = async (fullname, email, phone, gender, nationality, dateofbirth, userId) => {
+const update = async (fullname, email, phone, gender, nationality, dateofbirth, userId, address) => {
     try {
         if (email && !validator.isEmail(email)) return createResponse(401, "Email không hợp lệ.", false);
         if (phone && !validator.isPhone(phone)) return createResponse(401, "Số điện thoại không hợp lệ.", false);
@@ -54,7 +56,8 @@ const update = async (fullname, email, phone, gender, nationality, dateofbirth, 
                 phone: phone,
                 gender: gender,
                 nationality: nationality,
-                dateofbirth: dateofbirth
+                dateofbirth: dateofbirth,
+                address: address
             },
             { new: true }
         )
@@ -112,7 +115,7 @@ const createAccount = async (email, phone, password) => {
             password: hashedPassword,
             avatar: '',
             gender: '',
-            address: [],
+            address: "",
             dateofbirth: '',
             nationality: '',
             providerId: '',

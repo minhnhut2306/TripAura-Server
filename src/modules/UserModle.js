@@ -7,17 +7,13 @@ const userSchema = new mongoose.Schema({
     email: { type: String, default: '', sparse: true },
     avatar: { type: String, default: '' },
     gender: { type: String, default: '' },
-    address: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Address',
-        default: null,  
-    }],
+    address: { type: String, default: '' },
     nationality: { type: String, default: '' },
     dateofbirth: { type: String, default: '' },
     created_at: { type: String, default: () => moment().format('YYYY-MM-DD') },
     providerId: { type: String, required: null },
     password: { type: String, default: '' },
-    
+
 });
 
 module.exports = mongoose.model('User', userSchema);
