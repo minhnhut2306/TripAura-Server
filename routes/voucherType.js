@@ -67,14 +67,32 @@ const { createResponse } = require('../src/helper/createResponse.helper');
 
 
 
-router.post('/api/addVoucherType', async function (req, res) {
+router.post('/api/add', async function (req, res) {
     try {
         const { name } = req.body
+        if (!name) {
+            return res.json(createResponse(500, "Vui lòng nhập đầy đủ thông tin.", "failed"));
+        }
         const data = await vouchetController.insert({ name: name })
         if (data) {
-            return res.json(createResponse(200, "Thêm loại voucher thành công", "success", data)); 
+            return res.json(createResponse(200, "Thêm loại voucher thành công", "success", data));
         } else {
             return res.json(createResponse(500, "Lỗi khi thêm loại voucher", "error"));
+        }
+    } catch (error) {
+        console.log("===== lỗi api addVoucherType ======", error);
+        return res.json(createResponse(500, "Lỗi máy chủ", "error"));
+    }
+})
+
+router.get('/api/getAll', async function (req, res) {
+    try {
+
+        const data = await vouchetController.getAll()
+        if (data) {
+            return res.json(createResponse(200, "Lấy danh sách loại voucher thành công", "success", data));
+        } else {
+            return res.json(createResponse(200, "Không tìm thấy dữ liệu", "success"));
         }
     } catch (error) {
         console.log("===== lỗi api addVoucherType ======", error);

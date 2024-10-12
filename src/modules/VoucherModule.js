@@ -3,13 +3,13 @@ const Schema = mongoose.Schema;
 const ObjectId = Schema.ObjectId;
 
 const VoucherSchema = new Schema({
-    tourId: { type: ObjectId, ref: 'Tour' },
+    userId: { type: ObjectId, ref: 'User' },
     voucherTypeId: { type: ObjectId, ref: 'VoucherType' },
     discount: { type: Number, required: true },
     status: { type: String, required: true },
-    startDay: { type: String, required: true },
-    endDay: { type: String, required: true },
-    decription: { type: String, required: true },
+    startDay: { type: Date, required: true },
+    endDay: { type: Date, required: true },
+    description: { type: String, required: true },
     condition: { type: String, required: true },
 });
 

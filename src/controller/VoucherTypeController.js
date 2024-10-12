@@ -12,4 +12,17 @@ const insert = async (name) => {
     }
 }
 
-module.exports = { insert }
+const getAll = async () => {
+    try {
+        const data = _VoucherType.find()
+        if (!data) {
+            return []
+        }
+        return data
+    } catch (error) {
+        console.log("====== lỗi getAll VoucherTypeController =====", error);
+        return false
+    }
+}
+
+module.exports = { insert, getAll }

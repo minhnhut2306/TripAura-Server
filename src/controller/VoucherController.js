@@ -1,8 +1,18 @@
 const _Voucher = require('../modules/VoucherModule')
 
-const insert = async (userId, voucherTypeId, discount, status, startDay, endDay, condition, description) => {
+const insert = async (voucherTypeId, discount, status, startDay, endDay, description, condition) => {
     try {
-        const data = new _Voucher(userId, voucherTypeId, discount, status, startDay, endDay, description, condition)
+        console.log("============ insert========", voucherTypeId, discount, status, startDay, endDay, description, condition);
+
+        const data = new _Voucher({
+            voucherTypeI: voucherTypeId,
+            discount: discount,
+            status: status,
+            startDay: startDay,
+            endDay: endDay,
+            description: description,
+            condition: condition
+        })
         await data.save()
         return data
     } catch (error) {
@@ -11,4 +21,51 @@ const insert = async (userId, voucherTypeId, discount, status, startDay, endDay,
     }
 }
 
-module.exports = { insert }
+const getAll = async () => {
+    try {
+        const data = await _Voucher.find()
+        if (!data) {
+            return []
+        }
+        return data
+    } catch (error) {
+        console.log("====== lỗi getAll VoucherController =======", error);
+        return false
+
+    }
+}
+
+const getByUserId = async (userId) => {
+    try {
+        const data = await _Voucher.find({ userId: userId })
+        if (!data) {
+            return []
+        }
+        return data
+    } catch (error) {
+        console.log("====== lỗi getAll VoucherController =======", error);
+        return false
+
+    }
+}
+
+const receiveVoucher = async (userId, voucherId) => {
+    try {
+        const data = await _Voucher.findByIdAndUpdate(
+            { _id: voucherId },
+            { userId: userId },
+            { new: true }
+        )
+        if (!data) {
+            return false
+        }
+        return data
+    } catch (error) {
+        console.log("======= lỗi receiveVoucher VoucherController");
+        return false
+
+    }
+}
+
+
+module.exports = { insert, getAll, getByUserId, receiveVoucher }

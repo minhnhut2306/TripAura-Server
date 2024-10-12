@@ -50,27 +50,74 @@ const { createResponse } = require('../src/helper/createResponse.helper');
  *         description: Lỗi khi thêm voucher hoặc lỗi máy chủ
  */
 
-router.post('/api/addVoucher', async function (req, res) {
+router.post('/api/add', async function (req, res) {
     try {
-        const { userId, voucherTypeId, discount, status, startDay, endDay, description, condition } = req.body
-        const data = await voucherController.insert({
-            userId,
+        const { voucherTypeId, discount, status, startDay, endDay, description, condition } = req.body
+        console.log("========= body ========", voucherTypeId, discount, status, startDay, endDay, description, condition);
+
+
+        if (!voucherTypeId || !discount || !status || !startDay || !endDay || !description || !condition) {
+            return res.json(createResponse(500, "Vui lòng nhập đầy đủ thông tin.", "failed"));
+        }
+        const data = await voucherController.insert(
             voucherTypeId,
             discount,
             status,
             startDay,
             endDay,
-            description,  
+            description,
             condition
-        });
+        );
         if (data) {
-            return res.json(createResponse(200, "Thêm voucher thành công", "success", data)); 
+            return res.json(createResponse(200, "Thêm voucher thành công", "success", data));
         } else {
-            return res.json(createResponse(500, "Lỗi khi thêm voucher", "error")); 
+            return res.json(createResponse(500, "Lỗi khi thêm voucher", "error"));
         }
     } catch (error) {
         console.log(error);
-        return res.json(createResponse(500, "Lỗi máy chủ", "error")); 
+        return res.json(createResponse(500, "Lỗi máy chủ", "error"));
+    }
+})
+router.get('/api/getAll', async function (req, res) {
+    try {
+        const data = await voucherController.getAll()
+        if (data) {
+            return res.json(createResponse(200, "Lấy danh sách voucher thành công", "success", data));
+        } else {
+            return res.json(createResponse(500, "Lỗi khi Lấy danh sách voucher", "error"));
+        }
+    } catch (error) {
+        console.log(error);
+        return res.json(createResponse(500, "Lỗi máy chủ", "error"));
+    }
+})
+
+router.get('/api/getByUserId', async function (req, res) {
+    try {
+        const { userId } = req.query
+        const data = await voucherController.getByUserId(userId)
+        if (data) {
+            return res.json(createResponse(200, "Lấy danh sách voucher thành công", "success", data));
+        } else {
+            return res.json(createResponse(500, "Lỗi khi Lấy danh sách voucher", "error"));
+        }
+    } catch (error) {
+        console.log(error);
+        return res.json(createResponse(500, "Lỗi máy chủ", "error"));
+    }
+})
+router.post('/api/receiveVoucher', async function (req, res) {
+    try {
+        const { userId, voucherId } = req.body
+        const data = await voucherController.receiveVoucher(userId, voucherId)
+        if (data) {
+            return res.json(createResponse(200, "Nhận voucher thành công", "success", data));
+        } else {
+            return res.json(createResponse(500, "Lỗi khi Nhận sách voucher", "error"));
+        }
+    } catch (error) {
+        console.log(error);
+        return res.json(createResponse(500, "Lỗi máy chủ", "error"));
     }
 })
 
