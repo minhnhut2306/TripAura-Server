@@ -1,13 +1,13 @@
 const _Voucher = require('../modules/VoucherModule')
 
-const insert = async (voucherTypeId, discount, status, startDay, endDay, description, condition) => {
+const insert = async (voucherTypeId, discount, startDay, endDay, description, condition) => {
     try {
-        console.log("============ insert========", voucherTypeId, discount, status, startDay, endDay, description, condition);
+        console.log("============ insert========", voucherTypeId, discount, startDay, endDay, description, condition);
 
         const data = new _Voucher({
             voucherTypeI: voucherTypeId,
             discount: discount,
-            status: status,
+            status: 1,
             startDay: startDay,
             endDay: endDay,
             description: description,

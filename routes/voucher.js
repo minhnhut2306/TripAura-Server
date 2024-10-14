@@ -52,17 +52,16 @@ const { createResponse } = require('../src/helper/createResponse.helper');
 
 router.post('/api/add', async function (req, res) {
     try {
-        const { voucherTypeId, discount, status, startDay, endDay, description, condition } = req.body
-        console.log("========= body ========", voucherTypeId, discount, status, startDay, endDay, description, condition);
+        const { voucherTypeId, discount, startDay, endDay, description, condition } = req.body
+        console.log("========= body ========", voucherTypeId, discount, startDay, endDay, description, condition);
 
 
-        if (!voucherTypeId || !discount || !status || !startDay || !endDay || !description || !condition) {
+        if (!voucherTypeId || !discount  || !startDay || !endDay || !description || !condition) {
             return res.json(createResponse(500, "Vui lòng nhập đầy đủ thông tin.", "failed"));
         }
         const data = await voucherController.insert(
             voucherTypeId,
             discount,
-            status,
             startDay,
             endDay,
             description,
@@ -92,34 +91,5 @@ router.get('/api/getAll', async function (req, res) {
     }
 })
 
-router.get('/api/getByUserId', async function (req, res) {
-    try {
-        const { userId } = req.query
-        const data = await voucherController.getByUserId(userId)
-        if (data) {
-            return res.json(createResponse(200, "Lấy danh sách voucher thành công", "success", data));
-        } else {
-            return res.json(createResponse(500, "Lỗi khi Lấy danh sách voucher", "error"));
-        }
-    } catch (error) {
-        console.log(error);
-        return res.json(createResponse(500, "Lỗi máy chủ", "error"));
-    }
-})
-
-router.post('/api/receiveVoucher', async function (req, res) {
-    try {
-        const { userId, voucherId } = req.body
-        const data = await voucherController.receiveVoucher(userId, voucherId)
-        if (data) {
-            return res.json(createResponse(200, "Nhận voucher thành công", "success", data));
-        } else {
-            return res.json(createResponse(500, "Lỗi khi Nhận voucher", "error"));
-        }
-    } catch (error) {
-        console.log(error);
-        return res.json(createResponse(500, "Lỗi máy chủ", "error"));
-    }
-})
 
 module.exports = router;

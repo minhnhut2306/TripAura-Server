@@ -33,11 +33,6 @@ const favourite = async (userId, tourId) => {
 // favourite("670603408e6c85a630295708", "6704a28526be2256863506e1")
 
 
-
-
-
-
-
 const insert = async (userId, tourId) => {
     try {
         const data = new _Favourite(userId, tourId)

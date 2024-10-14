@@ -3,7 +3,6 @@ const Schema = mongoose.Schema;
 const ObjectId = Schema.ObjectId;
 
 const VoucherSchema = new Schema({
-    userId: { type: ObjectId, ref: 'User' },
     voucherTypeId: { type: ObjectId, ref: 'VoucherType' },
     discount: { type: Number, required: true },
     status: { type: String, required: true },

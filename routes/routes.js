@@ -13,7 +13,8 @@ const bookingRouter = require('./booking');
 const voucherRouter = require('./voucher');
 const voucherTypeRouter = require('./voucherType');
 const auth = require('./auth');
-const advRouter = require('./adv')
+const advRouter = require('./adv');
+const couponRouter = require('./coupon')
 
 // Định tuyến tất cả các router
 router.get('/', index);
@@ -28,6 +29,7 @@ router.use('/booking', bookingRouter);
 router.use('/voucher', voucherRouter);
 router.use('/voucherType', voucherTypeRouter);
 router.use('/auth', auth);
-router.use('/adv', advRouter)
+router.use('/adv', advRouter);
+router.use('/coupon', couponRouter);
 
 module.exports = router;
