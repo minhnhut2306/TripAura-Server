@@ -273,7 +273,7 @@ const insert = async (tourName, description, category) => {
 const getPopularTour = async () => {
     try {
         
-        const popularTours = await Tour.find()
+        const popularTours = await TourModule.find()
             .sort({ popularity: -1 })  
             .limit(5)  
             .exec();
