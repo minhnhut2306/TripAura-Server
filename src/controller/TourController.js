@@ -270,4 +270,20 @@ const insert = async (tourName, description, category) => {
     }
 }
 
-module.exports = { insert, getToursByCategory, filter, getToursAll }
+const getPopularTour = async () => {
+    try {
+        
+        const popularTours = await Tour.find()
+            .sort({ popularity: -1 })  
+            .limit(5)  
+            .exec();
+        return popularTours;
+        
+    } catch (error) {
+        console.error(error);  
+        throw error;  
+    }
+};
+
+
+module.exports = { insert, getToursByCategory, filter, getToursAll ,getPopularTour }

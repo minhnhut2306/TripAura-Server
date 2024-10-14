@@ -7,7 +7,8 @@ const TourSchema = new Schema({
     description: { type: String, required: true },
     status:{type: String, required: true},
     createAt:{type: Date, required: true},
-    category:{ type: ObjectId, ref:'Category' }
+    category:{ type: ObjectId, ref:'Category' },
+    popularity: { type: Number, default: 0 }
     
 })
 

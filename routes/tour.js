@@ -3,6 +3,7 @@ var router = express.Router();
 
 var tourController = require('../src/controller/TourController');
 const { createResponse } = require('../src/helper/createResponse.helper');
+const TourModule = require('../src/modules/TourModule');
 /**
  * @swagger
  * /tour/api/searchTour:
@@ -182,5 +183,32 @@ router.get('/api/getAll', async function (req, res) {
         return res.json(createResponse(500, "Lỗi máy chủ.", "error"));
     }
 })
+
+router.get('/popular', async (req, res) => {
+    try {
+        
+        const tours = await tourController.getPopularTour();
+
+        if (!tours || tours.length === 0) {
+            return res.status(404).json({
+                message: 'No popular tours found'
+            });
+        }
+
+       
+        return res.status(200).json({
+            message: 'Popular tours fetched successfully',
+            data: tours
+        });
+        
+    } catch (error) {
+        console.error(error);  
+        return res.status(500).json({
+            message: 'Error fetching popular tours',
+            error: error.message
+        });
+    }
+});
+
 
 module.exports = router;
