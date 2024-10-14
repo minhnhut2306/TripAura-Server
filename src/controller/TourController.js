@@ -275,7 +275,7 @@ const insert = async (tourName, description, category) => {
 
 const getPopularTour = async () => {
     try {
-        const toursWithDetails = await Tour.aggregate([
+        const toursWithDetails = await TourModule.aggregate([
           {
             $sort: { popularity: -1 } 
           },
