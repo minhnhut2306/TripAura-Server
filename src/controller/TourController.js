@@ -274,20 +274,29 @@ const insert = async (tourName, description, category) => {
 };
 
 const getPopularTour = async () => {
-  try {
-    const popularTours = await TourModule.find()
-      .sort({ popularity: -1 })
-      .limit(5)
-      .populate({
-        path: "detailId",
-        model: "Detail",
-      })
-      .exec();
-    return popularTours;
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
+    try {
+        const toursWithDetails = await Tour.aggregate([
+          {
+            $sort: { popularity: -1 } 
+          },
+          {
+            $limit: 10 
+          },
+          {
+            $lookup: {
+              from: 'details', 
+              localField: '_id', 
+              foreignField: 'tourId',
+              as: 'details'
+            }
+          }
+        ]);
+    
+        return toursWithDetails;
+      } catch (err) {
+        console.error('Error getting popular tours with details:', err);
+        throw err;
+      }
 };
 
 module.exports = {
