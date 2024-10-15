@@ -273,30 +273,51 @@ const insert = async (tourName, description, category) => {
   }
 };
 
-const getPopularTour = async () => {
+const getPopularTour = async (page, limit) => {
     try {
-        const toursWithDetails = await TourModule.aggregate([
-          {
-            $sort: { popularity: -1 } 
-          },
-          {
-            $limit: 10 
-          },
-          {
-            $lookup: {
-              from: 'details', 
-              localField: '_id', 
-              foreignField: 'tourId',
-              as: 'details'
-            }
-          }
-        ]);
-    
-        return toursWithDetails;
-      } catch (err) {
-        console.error('Error getting popular tours with details:', err);
-        throw err;
-      }
+
+        const query = [
+            { $sort: { popularity: -1 } },
+            { $skip: (page - 1) * limit },
+            {
+                $lookup: {
+                    from: "images",
+                    localField: "_id",
+                    foreignField: "tourId",
+                    as: "images", 
+                },
+            },
+            {
+                $lookup: {
+                    from: "locations",
+                    localField: "_id",
+                    foreignField: "tourId",
+                    as: "locations",
+                },
+            },
+            {
+                $lookup: {
+                    from: "details",
+                    localField: "_id",
+                    foreignField: "tourId",
+                    as: "details",
+                },
+            },
+            {
+                $project: {
+                    tourID: "$_id",
+                    tourName: 1,
+                    destination: { $arrayElemAt: ["$locations.destination", 0] },
+                    image: { $arrayElemAt: ["$images.linkImage", 0] },
+                },
+            },
+        ];
+
+        return await TourModule.aggregate(query);
+    } catch (err) {
+        console.error("Error getting popular tours with details:", err);
+        throw err; 
+    }
 };
 
 module.exports = {
