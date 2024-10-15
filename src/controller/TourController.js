@@ -325,4 +325,5 @@ module.exports = {
   getToursByCategory,
   filter,
   getToursAll,
+  // getPopularTour,
 };
