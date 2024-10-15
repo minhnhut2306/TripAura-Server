@@ -184,34 +184,18 @@ router.get('/api/getAll', async function (req, res) {
     }
 })
 
-// router.get('/popular', async (req, res) => {
-//     try {
-//         const { page = 1 , limit = 10 } = req.query;
-//         const pageNumber = parseInt(page, 10);
-//         const limitNumber = parseInt(limit, 10);
-       
-//         const tours = await tourController.getPopularTour(pageNumber,limitNumber);
+router.get('/popular-tours', async (req, res) => {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
 
-//         if (!tours || tours.length === 0) {
-//             return res.status(404).json({
-//                 message: 'No popular tours found'
-//             });
-//         }
-
-       
-//         return res.status(200).json({
-//             message: 'Popular tours fetched successfully',
-//             data: tours
-//         });
-        
-//     } catch (error) {
-//         console.error(error);  
-//         return res.status(500).json({
-//             message: 'Error fetching popular tours',
-//             error: error.message
-//         });
-//     }
-// });
+    try {
+        const popularTours = await tourController.getPopularTour(page, limit);
+        res.status(200).json(popularTours);
+    } catch (error) {
+        console.error('Error fetching popular tours:', error);
+        res.status(500).json({ message: 'Failed to get popular tours.' });
+    }
+});
 
 
 module.exports = router;
