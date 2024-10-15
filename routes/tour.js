@@ -186,8 +186,11 @@ router.get('/api/getAll', async function (req, res) {
 
 router.get('/popular', async (req, res) => {
     try {
-        
-        const tours = await tourController.getPopularTour();
+        const { page = 1 , limit = 10 } = req.query;
+        const pageNumber = parseInt(page, 10);
+        const limitNumber = parseInt(limit, 10);
+       
+        const tours = await tourController.getPopularTour(pageNumber,limitNumber);
 
         if (!tours || tours.length === 0) {
             return res.status(404).json({
