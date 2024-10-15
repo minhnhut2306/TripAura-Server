@@ -184,34 +184,34 @@ router.get('/api/getAll', async function (req, res) {
     }
 })
 
-router.get('/popular', async (req, res) => {
-    try {
-        const { page = 1 , limit = 10 } = req.query;
-        const pageNumber = parseInt(page, 10);
-        const limitNumber = parseInt(limit, 10);
+// router.get('/popular', async (req, res) => {
+//     try {
+//         const { page = 1 , limit = 10 } = req.query;
+//         const pageNumber = parseInt(page, 10);
+//         const limitNumber = parseInt(limit, 10);
        
-        const tours = await tourController.getPopularTour(pageNumber,limitNumber);
+//         const tours = await tourController.getPopularTour(pageNumber,limitNumber);
 
-        if (!tours || tours.length === 0) {
-            return res.status(404).json({
-                message: 'No popular tours found'
-            });
-        }
+//         if (!tours || tours.length === 0) {
+//             return res.status(404).json({
+//                 message: 'No popular tours found'
+//             });
+//         }
 
        
-        return res.status(200).json({
-            message: 'Popular tours fetched successfully',
-            data: tours
-        });
+//         return res.status(200).json({
+//             message: 'Popular tours fetched successfully',
+//             data: tours
+//         });
         
-    } catch (error) {
-        console.error(error);  
-        return res.status(500).json({
-            message: 'Error fetching popular tours',
-            error: error.message
-        });
-    }
-});
+//     } catch (error) {
+//         console.error(error);  
+//         return res.status(500).json({
+//             message: 'Error fetching popular tours',
+//             error: error.message
+//         });
+//     }
+// });
 
 
 module.exports = router;
