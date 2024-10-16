@@ -56,7 +56,7 @@ router.post('/api/add', async function (req, res) {
         console.log("========= body ========", voucherTypeId, discount, startDay, endDay, description, condition);
 
 
-        if (!voucherTypeId || !discount  || !startDay || !endDay || !description || !condition) {
+        if (!voucherTypeId || !discount || !startDay || !endDay || !description || !condition) {
             return res.json(createResponse(500, "Vui lòng nhập đầy đủ thông tin.", "failed"));
         }
         const data = await voucherController.insert(
@@ -91,5 +91,18 @@ router.get('/api/getAll', async function (req, res) {
     }
 })
 
+router.get('/api/getVoucher', async (req, res) => {
+    try {
+        const { userId } = req.query
+        const data = await voucherController.getVoucher(userId)
+        if (!data) {
+            return res.json(createResponse(500, "Lỗi khi Lấy danh sách voucher", "error"));
+        }
+        return res.json(createResponse(200, "Lấy danh sách voucher thành công", "success", data));
+    } catch (error) {
+        console.log(error);
+        return res.json(createResponse(500, "Lỗi máy chủ", "error"));
+    }
+})
 
 module.exports = router;

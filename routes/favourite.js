@@ -80,31 +80,6 @@ const { createResponse } = require('../src/helper/createResponse.helper');
  *       404:
  *         description: Không tìm thấy yêu thích để xóa
  */
-/**
- * @swagger
- * /favourite/api/getFavouriteByUser:
- *   post:
- *     summary: Lấy danh sách yêu thích của người dùng
- *     description: Lấy danh sách tour yêu thích theo User ID
- *     tags: [Favourite]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               userId:
- *                 type: string
- *                 example: "60c72b2f9b1d4e7f5c9f6f8b"
- *     responses:
- *       200:
- *         description: Lấy danh sách yêu thích thành công
- *       400:
- *         description: Không đủ dữ liệu
- *       500:
- *         description: Lỗi máy chủ
- */
 router.post('/api/add', async function (req, res, next) {
     const { userId, tourId } = req.body
     try {
@@ -155,21 +130,5 @@ router.post('/api/deleteFavourite', async function (req, res) {
     }
 })
 
-router.post('/api/getFavouriteByUser', async function (req, res) {
-    const { userId } = req.body
-    try {
-        if (!userId) {
-            return res.json(createResponse(400, "Không đủ dữ liệu.", "false"));
-        }
-        const data = await favouriteController.getByUser(userId)
-        if (data) {
-            return res.json(createResponse(200, "Lấy danh sách yêu thích thành công", "success", data));
-        }
-        return res.json(createResponse(400, "Lỗi favourite", "false"));
-    } catch (error) {
-        console.log("===== Lỗi get Favourite =====", error);
-        return res.json(createResponse(500, "Lỗi máy chủ khi lấy danh sách yêu thích.", "error"));
-    }
-})
 
 module.exports = router;

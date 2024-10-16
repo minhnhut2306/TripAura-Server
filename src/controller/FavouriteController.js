@@ -44,20 +44,6 @@ const insert = async (userId, tourId) => {
     }
 }
 
-const getAll = async (userId) => {
-    try {
-        const data = await _Favourite.find({ userId: userId })
-        if (data) {
-            return data
-        } else {
-            return false
-        }
-    } catch (error) {
-        console.log("===== Lỗi getAll Favourite =====", error);
-        return false
-
-    }
-}
 
 const remove = async (tourId, userId) => {
     try {
@@ -70,96 +56,5 @@ const remove = async (tourId, userId) => {
     }
 }
 
-const getByUser = async (userId) => {
-    try {
-        const tours = await _Favourite.aggregate([
-            {
-                $match: {
-                    userId: new mongoose.Types.ObjectId(userId),
-                }
-            },
-            {
-                $lookup: {
-                    from: 'tours', // Collection Image
-                    localField: 'tourId',
-                    foreignField: '_id',
-                    as: 'tour'
-                }
-            },
-            {
-                $lookup: {
-                    from: 'images', // Collection Image
-                    localField: 'tourId',
-                    foreignField: 'tourId',
-                    as: 'images'
-                }
-            },
-            {
-                $lookup: {
-                    from: 'locations',
-                    localField: 'tourId',
-                    foreignField: 'tourId',
-                    as: 'locations'
-                }
-            },
-            {
-                $lookup: {
-                    from: 'details',
-                    localField: 'tourId',
-                    foreignField: 'tourId',
-                    as: 'details'
-                }
-            },
-            {
-                // Lọc các detail có status là 1
-                $addFields: {
-                    details: {
-                        $filter: {
-                            input: "$details",
-                            as: "detail",
-                            cond: { $eq: ["$$detail.status", "1"] } // Điều kiện: status = 1
-                        }
-                    }
-                }
-            },
-            {
-                $project: {
-                    tour: {
-                        _id: 1,
-                        tourName: 1,
-                        description: 1,
-                        status: 1,
-                        createAt: 1,
-                    },
-                    locations: {
-                        departure: 1,
-                        destination: 1
-                    },
-                    details: {
-                        priceAdult: 1,
-                        startDay: 1,
-                        endDay: 1,
-                        maxTicket: 1,
-                        minTicket: 1,
-                        priceAdult: 1,
-                        priceChildren: 1,
-                        PromotionalPrice: 1
-                    },
-                    images: { linkImage: 1 }
-                }
-            }
 
-        ]);
-
-        if (!tours.length) {
-            return false;
-        }
-
-        return tours;
-    } catch (error) {
-        console.error(error);
-        return false;
-    }
-}
-
-module.exports = { insert, getAll, getByUser, remove, favourite }
+module.exports = { insert, remove, favourite }
