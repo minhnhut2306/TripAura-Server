@@ -38,6 +38,10 @@ app.use((req, res, next) => {
 // });
 
 // General error handler
+
+app.listen(3000, () => {
+  console.log(`Server is running on http://localhost:3000`);
+});
 app.use((err, req, res, next) => {
   res.locals.message = err.message;
   res.locals.error = req.app.get("env") === "development" ? err : {};
