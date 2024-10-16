@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const _Voucher = require('../modules/VoucherModule')
 
 const insert = async (voucherTypeId, discount, startDay, endDay, description, condition) => {
@@ -67,5 +68,52 @@ const receiveVoucher = async (userId, voucherId) => {
     }
 }
 
+const getVoucher = async (userId) => {
 
-module.exports = { insert, getAll, getByUserId, receiveVoucher }
+    const userIdToCheck = new mongoose.Types.ObjectId(userId);
+    try {
+        const vouchers = await _Voucher.aggregate([
+            // Bước 1: Kết nối bảng Coupon và Voucher
+            {
+                $lookup: {
+                    from: 'coupons', // Tên collection của Coupon
+                    localField: '_id', // Trường của Voucher
+                    foreignField: 'voucherId', // Trường của Coupon tham chiếu tới Voucher
+                    as: 'coupons', // Đặt kết quả vào trường 'coupons'
+                }
+            },
+            // Bước 2: Thêm trường userId vào voucher nếu có trong Coupon
+            {
+                $addFields: {
+                    receive: {
+                        $cond: {
+                            if: {
+                                $and: [
+                                    { $gt: [{ $size: '$coupons' }, 0] }, // Kiểm tra nếu có ít nhất 1 coupon
+                                    { $eq: [{ $arrayElemAt: ['$coupons.userId', 0] }, userIdToCheck] } // Kiểm tra userId
+                                ]
+                            },
+                            then: 1, // Nếu thỏa mãn điều kiện, thêm receive = 1
+                            else: 0 // Nếu không, giữ receive là 0 (hoặc có thể không thêm trường này)
+                        }
+                    }
+                }
+            },
+            // Bước 3: Loại bỏ trường 'coupons' không cần thiết khỏi kết quả cuối cùng
+            {
+                $project: {
+                    coupons: 0 // Không trả về coupons
+                }
+            }
+        ]);
+
+        return vouchers;
+    } catch (error) {
+        console.error("Error fetching vouchers with userId:", error);
+        throw error;
+
+    }
+}
+
+
+module.exports = { insert, getAll, getByUserId, receiveVoucher, getVoucher }
