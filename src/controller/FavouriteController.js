@@ -107,11 +107,11 @@ const getByUser = async (userId) => {
             {
                 $project: {
                     _id: 0, // Không lấy _id từ Favourite
+                    tourId: '$tourInfo._id',
                     tourName: '$tourInfo.tourName',
                     description: '$tourInfo.description',
                     status: '$tourInfo.status',
                     createAt: '$tourInfo.createAt',
-                    category: '$tourInfo.category',
                     popularity: '$tourInfo.popularity',
                     images: '$tourImages.linkImage', // Chỉ lấy link hình ảnh
                     location: {
