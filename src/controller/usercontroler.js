@@ -116,8 +116,8 @@ exports.loginGoogle = async (userRequest) => {
     const { uid } = userRequest;
     
     if (!uid) return null; 
-    
-    let user = await UserModle.find({providerId :uid})
+
+    let user = await UserModle.findOne({providerId :uid})
     if (!user) {
       user = await createUser(userRequest); 
     }
