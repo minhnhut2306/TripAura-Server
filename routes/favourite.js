@@ -130,5 +130,22 @@ router.post('/api/deleteFavourite', async function (req, res) {
     }
 })
 
+router.get('/api/getFavouriteByUser', async function (req, res) {
+    try {
+        const { userId } = req.query
+        if (!userId) {
+            return res.json(createResponse(401, "không có userId", "failed"));
+        }
+        const data = await favouriteController.getByUser(userId)
+        if (!data) {
+            return res.json(createResponse(200, "Không có dữ liệu", "failed"));
+        }
+        return res.json(createResponse(200, "Lấy danh sách favourite thành công", "success", data));
+    } catch (error) {
+        console.log(error);
+        return res.json(createResponse(500, "Lỗi máy chủ.", "error"));
+    }
+})
+
 
 module.exports = router;

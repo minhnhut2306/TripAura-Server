@@ -56,5 +56,86 @@ const remove = async (tourId, userId) => {
     }
 }
 
+const getByUser = async (userId) => {
+    try {
+        console.log(`Đang tìm tour yêu thích của userId: ${userId}`);
+        const data = await _Favourite.aggregate([
+            {
 
-module.exports = { insert, remove, favourite }
+                $match: { userId: new mongoose.Types.ObjectId(userId) }
+            },
+            {
+
+                $lookup: {
+                    from: 'tours', // Tên collection của Tour
+                    localField: 'tourId', // Trường trong Favourite để join
+                    foreignField: '_id',  // Trường trong Tour để join
+                    as: 'tourInfo'        // Tên kết quả sau khi join
+                }
+            },
+            {
+                $lookup: {
+                    from: 'images',       // Tên collection của Image
+                    localField: 'tourId', // Trường trong Tour để join
+                    foreignField: 'tourId', // Trường trong Image để join
+                    as: 'tourImages'      // Tên kết quả sau khi join
+                }
+            },
+            {
+                $lookup: {
+                    from: 'locations',       // Tên collection của Image
+                    localField: 'tourId', // Trường trong Tour để join
+                    foreignField: 'tourId', // Trường trong Image để join
+                    as: 'locations'      // Tên kết quả sau khi join
+                }
+            },
+            {
+                $lookup: {
+                    from: "details", // Tên collection Detail
+                    let: { tourId: "$tourId" }, // Đặt tourId hiện tại trong Tour vào biến
+                    pipeline: [
+                        { $match: { $expr: { $eq: ["$tourId", "$$tourId"] } } }, // Lọc detail theo tourId
+                        { $limit: 1 }, // Chỉ lấy 1 detail
+                    ],
+                    as: "details", // Tên field chứa dữ liệu Detail sau khi nối
+                },
+            },
+            {
+                // Unwind tourInfo để dễ dàng truy cập các thuộc tính của tour
+                $unwind: '$tourInfo'
+            },
+            {
+                $project: {
+                    _id: 0, // Không lấy _id từ Favourite
+                    tourName: '$tourInfo.tourName',
+                    description: '$tourInfo.description',
+                    status: '$tourInfo.status',
+                    createAt: '$tourInfo.createAt',
+                    category: '$tourInfo.category',
+                    popularity: '$tourInfo.popularity',
+                    images: '$tourImages.linkImage', // Chỉ lấy link hình ảnh
+                    location: {
+                        departure: 1,
+                        destination: 1
+                    },
+                    details: {
+                        priceAdult: 1,
+                        startDay: 1,
+                    }
+                }
+            }
+        ])
+        if (!data.length) {
+            console.log("k co gì");
+
+            return false
+        }
+
+        return data
+    } catch (error) {
+        console.error(error);
+        return false;
+    }
+}
+
+module.exports = { insert, remove, favourite, getByUser }
