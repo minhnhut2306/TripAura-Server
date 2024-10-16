@@ -25,7 +25,7 @@ const getByTourId = async (tourId) => {
             },
             {
                 $lookup: {
-                    from: 'images', // Collection Image
+                    from: 'images',
                     localField: '_id',
                     foreignField: 'tourId',
                     as: 'images'
