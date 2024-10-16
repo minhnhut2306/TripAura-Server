@@ -12,8 +12,6 @@ const DetailSchema = new Schema({
     PromotionalPrice: { type: Number, required: true },
     status: { type: String, required: true },
     tourId: { type: ObjectId, ref: 'Tour', required: true}
-
-
 })
 
 module.exports = mongoose.model('Detail', DetailSchema);
