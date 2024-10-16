@@ -41,6 +41,41 @@ const moment = require('moment');
  *       500:
  *         description: Lỗi máy chủ khi thêm review
  */
+router.post('/api/addReview', async function (req, res) {
+    try {
+        const formatday = moment().toDate()
+        const { userId, tourId, rating, comment, dayReview } = req.body;
+        
+        console.log("Request body: ", req.body);
+        const booking = await Booking.findOne({ userId });
+
+        console.log("Booking : ", booking); 
+        if (!booking) {
+            return res.json(createResponse(400, "Bạn chưa có đặt tour này.", "error"));
+        }
+        const detail = await Detail.findOne({ tourId });
+        if (!detail) {
+            return res.json(createResponse(400, "K có thông tin tour này.", "error"));
+        }
+        console.log("Detail : ", detail);
+        if (moment().isBefore(detail.endDay)) {
+            return res.json(createResponse(400, "Chưa hoàn thành tour chưa có đánh giá được.", "error"));
+        }
+        console.log("check : ", dayReview);
+
+        const finalDayReview = dayReview || formatday;
+
+        console.log("Day review: ", finalDayReview);
+
+        const review = await reviewController.insert({ userId, tourId, rating, comment, dayReview:formatday });
+        return res.json(createResponse(200, "Thêm review thành công.", "success", review));
+        
+    } catch (error) {
+        console.log("===== Lỗi api addReview =====", error);
+        return res.json(createResponse(500, "Lỗi máy chủ khi thêm review.", "error"));
+    }
+});
+
 /**
  * @swagger
  * /review/api/getByUserId:
