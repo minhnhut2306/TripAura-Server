@@ -2,8 +2,8 @@ const mongoose = require("mongoose");
 const moment = require("moment");
 
 const userSchema = new mongoose.Schema({
-  providerId: { type: String, required: true ,default: "" },
-  provider: { type: String, enum: ["google", "facebook"]},
+  providerId: { type: String ,default: "" },
+  provider: { type: String, enum: ["google", "facebook","phone"]},
   fullname: { type: String, default: "" },
   phone: { type: String, default: "" },
   email: { type: String, default: "", sparse: true },

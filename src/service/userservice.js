@@ -27,8 +27,8 @@ const validateLoginInput = (email, phone, password) => {
     return null;
 };
 
-const register = async (email, phone, password) => {
-    console.log("====== service========", email, phone, password);
+const register = async (email, phone, password, provider) => {
+    console.log("====== service========", email, phone, password, provider);
 
     try {
         const validationResponse = validateRegisterInput(email, phone, password);
@@ -36,13 +36,14 @@ const register = async (email, phone, password) => {
 
         const existing = await UserModel.findOne({ $or: [{ email }, { phone }] });
         if (existing) return createResponse(401, "Email hoặc số điện thoại đã tồn tại.", false);
-        await createAccount(email, phone, password);
+        await createAccount(email, phone, password, provider);
         return createResponse(200, "Đăng ký thành công.", "success", true);
     } catch (error) {
         console.error('Lỗi đăng ký:', error.message);
         return createResponse(500, "Đã xảy ra lỗi trong quá trình đăng ký. Vui lòng thử lại sau.", 'error', false);
     }
 }
+
 
 const update = async (fullname, email, phone, gender, nationality, dateofbirth, userId, address) => {
     try {
@@ -104,14 +105,14 @@ const login = async (email, phone, password) => {
 }
 
 
-const createAccount = async (email, phone, password) => {
+const createAccount = async (email, phone, password,provider) => {
     try {
         const hashedPassword = await bcrypt.hash(password, saltRounds);
 
         const user = new UserModel({
             fullname: '',
             email: email || '',
-            phone,
+            phone: phone || '',
             password: hashedPassword,
             avatar: '',
             gender: '',
@@ -119,6 +120,7 @@ const createAccount = async (email, phone, password) => {
             dateofbirth: '',
             nationality: '',
             providerId: '',
+            provider: provider , 
             created_at: moment().format('YYYY-MM-DD')
         });
 

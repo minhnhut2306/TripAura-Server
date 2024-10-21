@@ -1,7 +1,5 @@
 var express = require('express');
 var router = express.Router();
-
-
 var _Category = require('../modules/CategoryModule')
 
 // Add Category

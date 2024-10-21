@@ -16,6 +16,7 @@ router.post('/api/add', async function (req, res) {
         return res.json(createResponse(500, "Đã xảy ra lỗi máy chủ", "error"));
     }
 })
+
 router.get('/api/getAll', async function (req, res) {
     try {
         const data = await advController.getAll()
