@@ -45,10 +45,11 @@ const register = async (email, phone, password, provider) => {
 }
 
 
-const update = async (fullname, email, phone, gender, nationality, dateofbirth, userId, address) => {
+const update = async (fullname, email, phone, gender, nationality, dateofbirth, userId, address, avatar) => {
     try {
         if (email && !validator.isEmail(email)) return createResponse(401, "Email không hợp lệ.", false);
         if (phone && !validator.isPhone(phone)) return createResponse(401, "Số điện thoại không hợp lệ.", false);
+        
         const user = await UserModel.findByIdAndUpdate(
             { _id: userId },
             {
@@ -58,20 +59,23 @@ const update = async (fullname, email, phone, gender, nationality, dateofbirth, 
                 gender: gender,
                 nationality: nationality,
                 dateofbirth: dateofbirth,
-                address: address
+                address: address,
+                avatar: avatar 
             },
             { new: true }
-        )
+        );
+
         if (user) {
-            return createResponse(200, "Cập  nhật thành công", true, user);
+            return createResponse(200, "Cập nhật thành công", true, user);
         } else {
-            return createResponse(500, "Lỗi update user", false);
+            return createResponse(500, "Lỗi cập nhật người dùng", false);
         }
     } catch (error) {
-        console.error('Lỗi đăng ký:', error.message);
-        return createResponse(500, "Đã xảy ra lỗi trong quá trình đăng ký. Vui lòng thử lại sau.", false);
+        console.error('Lỗi cập nhật:', error.message);
+        return createResponse(500, "Đã xảy ra lỗi trong quá trình cập nhật. Vui lòng thử lại sau.", false);
     }
-}
+};
+
 
 const getUserById = async (userId) => {
     try {

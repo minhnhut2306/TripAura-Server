@@ -32,7 +32,8 @@ exports.updateUserController = async (
   nationality,
   dateofbirth,
   userId,
-  address
+  address,
+  avatar
 ) => {
   try {
     const response = await update(
@@ -43,14 +44,17 @@ exports.updateUserController = async (
       nationality,
       dateofbirth,
       userId,
-      address
+      address,
+      avatar // Đảm bảo truyền avatar vào hàm cập nhật
     );
     return response;
   } catch (error) {
-    console.error("Lỗi trong registerController:", error.message);
-    return createResponse(500, "Lỗi trong quá trình xử lý đăng ký.", false);
+    console.error("Lỗi trong updateUserController:", error.message);
+    return createResponse(500, "Lỗi trong quá trình xử lý cập nhật người dùng.", false);
   }
 };
+
+
 exports.getUserController = async (userId) => {
   try {
     const user = await getUserById(userId);
