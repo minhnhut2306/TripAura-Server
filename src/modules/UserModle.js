@@ -10,7 +10,6 @@ const userSchema = new mongoose.Schema({
   avatar: { type: String, default: "" },
   gender: { type: String, default: "" },
   address: { type: String, default: "" },
-  nationality: { type: String, default: "" },
   dateofbirth: { type: String, default: "" },
   created_at: { type: String, default: () => moment().format("YYYY-MM-DD") },
   password: { type: String, default: "" },
