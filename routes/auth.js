@@ -184,6 +184,7 @@ router.post("/api/updateUser", async (req, res) => {
       dateofbirth,
       userId,
       address,
+      avatar
     } = req.body;
     const response = await authController.updateUserController(
       fullname,
@@ -193,7 +194,8 @@ router.post("/api/updateUser", async (req, res) => {
       nationality,
       dateofbirth,
       userId,
-      address
+      address,
+      avatar
     );
     res.status(response.code || 500).json({
       message: response.msg,

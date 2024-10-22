@@ -45,7 +45,7 @@ exports.updateUserController = async (
       dateofbirth,
       userId,
       address,
-      avatar // Đảm bảo truyền avatar vào hàm cập nhật
+      avatar 
     );
     return response;
   } catch (error) {
