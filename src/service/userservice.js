@@ -44,26 +44,37 @@ const register = async (email, phone, password, provider) => {
     }
 }
 
-
 const update = async (fullname, email, phone, gender, nationality, dateofbirth, userId, address, avatar) => {
     try {
         if (email && !validator.isEmail(email)) return createResponse(401, "Email không hợp lệ.", false);
         if (phone && !validator.isPhone(phone)) return createResponse(401, "Số điện thoại không hợp lệ.", false);
-        
+
         const user = await UserModel.findByIdAndUpdate(
             { _id: userId },
             {
-                fullname: fullname,
-                email: email,
-                phone: phone,
-                gender: gender,
-                nationality: nationality,
-                dateofbirth: dateofbirth,
-                address: address,
-                avatar: avatar 
+                fullname,
+                email,
+                phone,
+                gender,
+                nationality,
+                dateofbirth,
+                address,
+                avatar
             },
             { new: true }
         );
+        console.log("Cập nhật thông tin người dùng với các thông tin sau:", {
+            fullname,
+            email,
+            phone,
+            gender,
+            nationality,
+            dateofbirth,
+            userId,
+            address,
+            avatar
+        });
+
 
         if (user) {
             return createResponse(200, "Cập nhật thành công", true, user);
@@ -109,7 +120,7 @@ const login = async (email, phone, password) => {
 }
 
 
-const createAccount = async (email, phone, password,provider) => {
+const createAccount = async (email, phone, password, provider) => {
     try {
         const hashedPassword = await bcrypt.hash(password, saltRounds);
 
@@ -124,7 +135,7 @@ const createAccount = async (email, phone, password,provider) => {
             dateofbirth: '',
             nationality: '',
             providerId: '',
-            provider: provider , 
+            provider: provider,
             created_at: moment().format('YYYY-MM-DD')
         });
 

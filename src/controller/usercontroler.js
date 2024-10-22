@@ -36,6 +36,9 @@ exports.updateUserController = async (
   avatar
 ) => {
   try {
+    if (!userId) {
+      return createResponse(400, "userId là bắt buộc.", false);
+    }
     const response = await update(
       fullname,
       email,
@@ -45,14 +48,21 @@ exports.updateUserController = async (
       dateofbirth,
       userId,
       address,
-      avatar 
+      avatar
     );
+
+
+    if (!response.data) {
+      return createResponse(404, "Người dùng không tìm thấy.", false);
+    }
+    console.log("Response from updateUserController:", response);
     return response;
   } catch (error) {
     console.error("Lỗi trong updateUserController:", error.message);
     return createResponse(500, "Lỗi trong quá trình xử lý cập nhật người dùng.", false);
   }
 };
+
 
 
 exports.getUserController = async (userId) => {
@@ -118,12 +128,12 @@ exports.resetPassword = async (email, newPassword) => {
 exports.loginGoogle = async (userRequest) => {
   try {
     const { uid } = userRequest;
-    
-    if (!uid) return null; 
 
-    let user = await UserModle.findOne({providerId :uid})
+    if (!uid) return null;
+
+    let user = await UserModle.findOne({ providerId: uid })
     if (!user) {
-      user = await createUser(userRequest); 
+      user = await createUser(userRequest);
     }
 
     return user;
@@ -136,26 +146,26 @@ exports.loginGoogle = async (userRequest) => {
 
 async function createUser(userRequest) {
   const {
-      uid,
-      email,
-      displayName: fullname,
-      photoURL: avatar
+    uid,
+    email,
+    displayName: fullname,
+    photoURL: avatar
   } = userRequest;
 
   try {
-      const user = await UserModle.create({
-          providerId: uid,
-          email,
-          fullname,
-          avatar
-      });
-      return user;
+    const user = await UserModle.create({
+      providerId: uid,
+      email,
+      fullname,
+      avatar
+    });
+    return user;
 
   } catch (err) {
-      console.log("Error creating user:", err);
-      return err;
+    console.log("Error creating user:", err);
+    return err;
   }
 }
 
-  
+
 
