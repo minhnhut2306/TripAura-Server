@@ -138,4 +138,23 @@ const getByUser = async (userId) => {
     }
 }
 
-module.exports = { insert, remove, favourite, getByUser }
+const checkTour = async (userId, tourId) => {
+    try {
+        const data = await _Favourite.find({ userId: userId, tourId: tourId })
+        if (!data || data.length < 0) {
+            console.log(data);
+
+            return false
+        }
+        console.log(data);
+        return data
+    } catch (error) {
+        console.log("=============== lỗi checkTour ==========", error);
+        return false
+    }
+}
+// const userId = "670603408e6c85a630295708"
+// const tourId = "6704a23326be2256863506df"
+// checkTour(userId, tourId)
+
+module.exports = { insert, remove, favourite, getByUser, checkTour }

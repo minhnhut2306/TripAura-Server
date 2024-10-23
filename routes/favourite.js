@@ -147,5 +147,20 @@ router.get('/api/getFavouriteByUser', async function (req, res) {
     }
 })
 
+router.get('/api/checkFavourite', async function (req, res) {
+    try {
+        const { userId, tourId } = req.query
+        const data = await favouriteController.checkTour(userId, tourId)
+        console.log("==================", data);
+        if (data.length > 0) {
+
+            return res.json(createResponse(200, "isFavorited ", "success", true));
+        }
+        return res.json(createResponse(400, "notFavorited ", "failed", false));
+    } catch (error) {
+        console.log(error);
+        return res.json(createResponse(500, "Lỗi máy chủ.", "error"));
+    }
+})
 
 module.exports = router;
