@@ -132,6 +132,19 @@ router.post('/api/searchTour', async function (req, res) {
     }
 })
 
+router.get('/api/findByName', async function (req, res) {
+    try {
+        const { name } = req.query
+        const data = await tourController.findByName(name)
+        if (data.length <= 0) {
+            return res.json(createResponse(404, "Không có dữ liệu", "error"));
+        }
+        return res.json(createResponse(200, "Lấy tour theo danh mục thành công", "success", data));
+    } catch (error) {
+        console.log(error);
+        return res.json(createResponse(500, "Lỗi máy chủ.", "error"));
+    }
+})
 
 router.post('/api/add', async function (req, res) {
     try {
