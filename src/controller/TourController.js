@@ -74,7 +74,18 @@ const filter = async (destination, minPrice, maxPrice, startDate) => {
       {
         $match: matchConditions, // Áp dụng các điều kiện tìm kiếm linh hoạt
       },
-
+      {
+        $group: {
+          _id: "$_id", // Nhóm theo ID tour
+          tourName: { $first: "$tourName" },
+          description: { $first: "$description" },
+          status: { $first: "$status" },
+          createAt: { $first: "$createAt" },
+          locations: { $first: "$locations" },
+          details: { $first: "$details" }, // Chỉ lấy một detail
+          images: { $first: "$images" }, // Chỉ lấy một hình ảnh
+        },
+      },
       {
         $project: {
           _id: 1,
@@ -157,6 +168,18 @@ const findByName = async (name) => {
       },
       {
         $unwind: "$details", // Đảm bảo mỗi tour chỉ có một chi tiết để dễ tìm kiếm
+      },
+      {
+        $group: {
+          _id: "$_id", // Nhóm theo ID tour
+          tourName: { $first: "$tourName" },
+          description: { $first: "$description" },
+          status: { $first: "$status" },
+          createAt: { $first: "$createAt" },
+          locations: { $first: "$locations" },
+          details: { $first: "$details" }, // Chỉ lấy một detail
+          images: { $first: "$images" }, // Chỉ lấy một hình ảnh
+        },
       },
       {
         $project: {
