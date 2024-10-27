@@ -81,7 +81,7 @@ router.post('/api/add', async function (req, res) {
         if (startDay == "" ||
             endDay == "" ||
             maxTicket == "" ||
-            maxTicket == "" ||
+            minTicket == "" ||
             priceAdult == "" ||
             priceChildren == "" ||
             PromotionalPrice == "" ||
