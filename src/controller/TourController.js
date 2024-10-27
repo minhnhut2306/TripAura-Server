@@ -170,6 +170,12 @@ const findByName = async (name) => {
         $unwind: "$details", // Đảm bảo mỗi tour chỉ có một chi tiết để dễ tìm kiếm
       },
       {
+        $unwind: "$locations", // Đảm bảo mỗi tour chỉ có một chi tiết để dễ tìm kiếm
+      },
+      {
+        $unwind: "$images", // Đảm bảo mỗi tour chỉ có một chi tiết để dễ tìm kiếm
+      },
+      {
         $group: {
           _id: "$_id", // Nhóm theo ID tour
           tourName: { $first: "$tourName" },
