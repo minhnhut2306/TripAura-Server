@@ -1,7 +1,9 @@
 var express = require('express');
 var router = express.Router();
-
+const _Favourite = require('../modules/FavouriteModule')
+const _Tour = require('../modules/TourModule')
 const favouriteController = require('../src/controller/FavouriteController');
+const detailController = require('../src/controller/detailController');
 const { createResponse } = require('../src/helper/createResponse.helper');
 
 /**
