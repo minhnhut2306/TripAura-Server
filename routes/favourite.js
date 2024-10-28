@@ -97,25 +97,12 @@ const { createResponse } = require('../src/helper/createResponse.helper');
 //     }
 // });
 
-router.post('/api/add', async function (req, res, next) {
+router.post('/api/add', async function (req, res) {
     const { userId, tourId } = req.body;
 
     try {
-        // Kiểm tra xem mục yêu thích đã tồn tại chưa
-        const existingFavorite = await _Favourite.findOne({ userId, tourId });
-
-        if (existingFavorite) {
-            // Nếu đã có, tiến hành xóa
-            await _Favourite.deleteOne({ userId, tourId });
-             const detailTours = await detailController.getByTourId(tourId);
-            return res.json(createResponse(200, "Đã xóa khỏi mục yêu thích", "success", { detailTours }));
-        } else {
-            // Nếu chưa có, tiến hành thêm
-            const newFavorite = new _Favourite({ userId, tourId });
-            await newFavorite.save();
-             const detailTours = await detailController.getByTourId(tourId);
-            return res.json(createResponse(200, "Thêm vào mục yêu thích thành công", "success", { tourId }));
-        }
+        const response = await favouriteController.toggleFavorite(userId, tourId);
+        return res.json(response);
     } catch (error) {
         console.log(error);
         return res.json(createResponse(500, "Lỗi máy chủ khi thực hiện yêu cầu.", "error"));
