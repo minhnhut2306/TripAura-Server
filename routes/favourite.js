@@ -97,17 +97,17 @@ const { createResponse } = require('../src/helper/createResponse.helper');
 //     }
 // });
 
-router.post('/api/add', async function (req, res) {
-    const { userId, tourId } = req.body;
+// router.post('/api/add', async function (req, res) {
+//     const { userId, tourId } = req.body;
 
-    try {
-        const response = await favouriteController.toggleFavorite(userId, tourId);
-        return res.json(response);
-    } catch (error) {
-        console.log(error);
-        return res.json(createResponse(500, "Lỗi máy chủ khi thực hiện yêu cầu.", "error"));
-    }
-});
+//     try {
+//         const response = await favouriteController.toggleFavorite(userId, tourId);
+//         return res.json(response);
+//     } catch (error) {
+//         console.log(error);
+//         return res.json(createResponse(500, "Lỗi máy chủ khi thực hiện yêu cầu.", "error"));
+//     }
+// });
 
 
 
