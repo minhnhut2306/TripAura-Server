@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const _Favourite = require('../modules/FavouriteModule')
 const _Tour = require('../modules/TourModule')
 const _User = require('../modules/UserModle')
+const detailController = require('./detailController');
 
 
 
@@ -33,29 +34,50 @@ const favourite = async (userId, tourId) => {
 // favourite("670603408e6c85a630295708", "6704a28526be2256863506e1")
 
 
-const insert = async (userId, tourId) => {
-    try {
-        const data = new _Favourite(userId, tourId)
-        await data.save()
-        return data
-    } catch (error) {
-        console.log("=====Lỗi insert Favourite=====", error);
-        return false
-    }
-}
+// const insert = async (userId, tourId) => {
+//     try {
+//         const data = new _Favourite(userId, tourId)
+//         await data.save()
+//         return data
+//     } catch (error) {
+//         console.log("=====Lỗi insert Favourite=====", error);
+//         return false
+//     }
+// }
 
 
-const remove = async (tourId, userId) => {
-    try {
-        await _Favourite.deleteOne({ tourId: tourId, userId: userId });
-        return 1;
-    }
-    catch (error) {
-        console.log(error);
-        return false
-    }
-}
+// const remove = async (tourId, userId) => {
+//     try {
+//         await _Favourite.deleteOne({ tourId: tourId, userId: userId });
+//         return 1;
+//     }
+//     catch (error) {
+//         console.log(error);
+//         return false
+//     }
+// }
 
+const addFavorite = async (userId, tourId) => {
+    const newFavorite = new _Favourite({ userId, tourId });
+    await newFavorite.save();
+    const detailTours = await detailController.getByTourId(tourId);
+    return createResponse(200, "Thêm vào mục yêu thích thành công", "success", { tourId });
+};
+
+const removeFavorite = async (userId, tourId) => {
+    await _Favourite.deleteOne({ userId, tourId });
+    const detailTours = await detailController.getByTourId(tourId);
+    return createResponse(200, "Đã xóa khỏi mục yêu thích", "success", { detailTours });
+};
+
+const toggleFavorite = async (userId, tourId) => {
+    const existingFavorite = await _Favourite.findOne({ userId, tourId });
+    if (existingFavorite) {
+        return await removeFavorite(userId, tourId);
+    } else {
+        return await addFavorite(userId, tourId);
+    }
+};
 const getByUser = async (userId) => {
     try {
         console.log(`Đang tìm tour yêu thích của userId: ${userId}`);
@@ -157,4 +179,4 @@ const checkTour = async (userId, tourId) => {
 // const tourId = "6704a23326be2256863506df"
 // checkTour(userId, tourId)
 
-module.exports = { insert, remove, favourite, getByUser, checkTour }
+module.exports = { addFavorite, removeFavorite,toggleFavorite, favourite, getByUser, checkTour }
