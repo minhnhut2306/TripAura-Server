@@ -105,11 +105,13 @@ router.post('/api/add', async function (req, res, next) {
         if (existingFavorite) {
             // Nếu đã có, tiến hành xóa
             await _Favourite.deleteOne({ userId, tourId });
-            return res.json(createResponse(200, "Đã xóa khỏi mục yêu thích", "success", { tourId }));
+             const detailTours = await detailController.getByTourId(tourId);
+            return res.json(createResponse(200, "Đã xóa khỏi mục yêu thích", "success", { detailTours }));
         } else {
             // Nếu chưa có, tiến hành thêm
             const newFavorite = new _Favourite({ userId, tourId });
             await newFavorite.save();
+             const detailTours = await detailController.getByTourId(tourId);
             return res.json(createResponse(200, "Thêm vào mục yêu thích thành công", "success", { tourId }));
         }
     } catch (error) {
