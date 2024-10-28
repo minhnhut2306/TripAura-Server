@@ -82,20 +82,20 @@ const { createResponse } = require('../src/helper/createResponse.helper');
  *       404:
  *         description: Không tìm thấy yêu thích để xóa
  */
-// router.post('/api/add', async function (req, res, next) {
-//     const { userId, tourId } = req.body
-//     try {
-//         const data = await favouriteController.insert({ userId: userId, tourId: tourId })
-//         if (data) {
-//             return res.json(createResponse(200, "Thêm vào mục yêu thích thành công", "success", data));
-//         } else {
-//             return res.json(createResponse(500, "Thêm vào mục yêu thích thất bại", "error"));
-//         }
-//     } catch (error) {
-//         console.log(error);
-//         return res.json(createResponse(500, "Lỗi máy chủ khi thêm vào mục yêu thích.", "error"));
-//     }
-// });
+router.post('/api/add', async function (req, res, next) {
+    const { userId, tourId } = req.body
+    try {
+        const data = await favouriteController.insert({ userId: userId, tourId: tourId })
+        if (data) {
+            return res.json(createResponse(200, "Thêm vào mục yêu thích thành công", "success", data));
+        } else {
+            return res.json(createResponse(500, "Thêm vào mục yêu thích thất bại", "error"));
+        }
+    } catch (error) {
+        console.log(error);
+        return res.json(createResponse(500, "Lỗi máy chủ khi thêm vào mục yêu thích.", "error"));
+    }
+});
 
 // router.post('/api/add', async function (req, res) {
 //     const { userId, tourId } = req.body;
