@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
 const _Favourite = require('../modules/FavouriteModule')
-const _Tour = require('../modules/TourModule')
+// const _Tour = require('../modules/TourModule')
 const _User = require('../modules/UserModle')
-const detailController = require('./detailController');
+// const detailController = require('./detailController');
 
 
 
