@@ -5,7 +5,7 @@ const { createResponse } = require('../src/helper/createResponse.helper');
 const Booking = require('../src/modules/BookingModule');
 const Detail = require('../src/modules/DetailModule');
 const moment = require('moment');
-
+const User = require('../src/modules/UserModle')
 /**
  * @swagger
  * /review/api/addReview:
@@ -44,7 +44,7 @@ const moment = require('moment');
 router.post('/api/addReview', async function (req, res) {
     try {
         const formatday = moment().toDate()
-        const { userId, tourId, rating, comment, dayReview } = req.body;
+        const { userId, tourId, rating, comment, dayReview,image } = req.body;
         
         console.log("Request body: ", req.body);
         const booking = await Booking.findOne({ userId });
@@ -53,6 +53,16 @@ router.post('/api/addReview', async function (req, res) {
         if (!booking) {
             return res.json(createResponse(400, "Bạn chưa có đặt tour này.", "error"));
         }
+
+        console.log("User ID from request: ", userId);
+        const user = await User.findOne({ _id: userId }); // Sử dụng userId từ request body
+
+        console.log("User Id: ", user);
+
+        const fullname = user.fullname;
+        console.log('fullname: ', fullname);
+        
+
         const detail = await Detail.findOne({ tourId });
         if (!detail) {
             return res.json(createResponse(400, "K có thông tin tour này.", "error"));
@@ -67,7 +77,8 @@ router.post('/api/addReview', async function (req, res) {
 
         console.log("Day review: ", finalDayReview);
 
-        const review = await reviewController.insert({ userId, tourId, rating, comment, dayReview:formatday });
+
+        const review = await reviewController.insert({ userId, tourId, rating, comment, dayReview:formatday,image,fullname });
         return res.json(createResponse(200, "Thêm review thành công.", "success", review));
         
     } catch (error) {

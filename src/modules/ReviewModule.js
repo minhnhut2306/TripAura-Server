@@ -8,7 +8,9 @@ const ReviewSchema = new Schema({
     userId: { type: ObjectId, ref: 'User' },
     rating: { type: Number, required: true },
     comment: { type: String, required: true },
-    dayReview: { type: Date, required: false }
+    dayReview: { type: Date, required: false },
+    image: [{ type: String, required: true }],
+    fullname: { type: String, required: true } 
 });
 
 module.exports = mongoose.model('Review', ReviewSchema)
