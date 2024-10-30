@@ -15,6 +15,7 @@ const voucherTypeRouter = require('./voucherType');
 const auth = require('./auth');
 const advRouter = require('./adv');
 const couponRouter = require('./coupon')
+const payment = require('./payment');
 
 // Định tuyến tất cả các router
 router.get('/', index);
@@ -31,5 +32,6 @@ router.use('/voucherType', voucherTypeRouter);
 router.use('/auth', auth);
 router.use('/adv', advRouter);
 router.use('/coupon', couponRouter);
+router.use('/payment', payment);
 
 module.exports = router;
