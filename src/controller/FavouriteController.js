@@ -78,7 +78,7 @@ const getByUser = async (userId) => {
                     from: 'images',       // Tên collection của Image
                     localField: 'tourId', // Trường trong Tour để join
                     foreignField: 'tourId', // Trường trong Image để join
-                    as: 'tourImages'      // Tên kết quả sau khi join
+                    as: 'images'      // Tên kết quả sau khi join
                 }
             },
             {
@@ -101,8 +101,25 @@ const getByUser = async (userId) => {
                 },
             },
             {
+                $lookup: {
+                    from: 'reviews',
+                    localField: 'tourId',
+                    foreignField: 'tourId',
+                    as: 'reviews'
+                }
+            },
+            {
                 // Unwind tourInfo để dễ dàng truy cập các thuộc tính của tour
                 $unwind: '$tourInfo'
+            },
+            {
+                $unwind: "$details", // Đảm bảo mỗi tour chỉ có một chi tiết để dễ tìm kiếm
+            },
+            {
+                $unwind: "$locations", // Đảm bảo mỗi tour chỉ có một chi tiết để dễ tìm kiếm
+            },
+            {
+                $unwind: "$images", // Đảm bảo mỗi tour chỉ có một chi tiết để dễ tìm kiếm
             },
             {
                 $project: {
@@ -113,15 +130,16 @@ const getByUser = async (userId) => {
                     status: '$tourInfo.status',
                     createAt: '$tourInfo.createAt',
                     popularity: '$tourInfo.popularity',
-                    images: '$tourImages.linkImage', // Chỉ lấy link hình ảnh
-                    location: {
+                    images: '$images.linkImage', // Chỉ lấy link hình ảnh
+                    locations: {
                         departure: 1,
                         destination: 1
                     },
                     details: {
                         priceAdult: 1,
                         startDay: 1,
-                    }
+                    },
+                    totalReviews: { $size: "$reviews" } // Đếm số lượng reviews
                 }
             }
         ])

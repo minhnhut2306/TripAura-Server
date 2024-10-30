@@ -14,8 +14,10 @@ const insert = async (userId, tourId, rating, comment, dayReview) => {
 }
 
 const getByUserId = async (userId) => {
+    console.log(userId);
+
     try {
-        const data = await _Review.find(userId)
+        const data = await _Review.find({ userId: userId })
         if (data) {
             return data
         } else {

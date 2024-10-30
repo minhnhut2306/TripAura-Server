@@ -45,11 +45,11 @@ router.post('/api/addReview', async function (req, res) {
     try {
         const formatday = moment().toDate()
         const { userId, tourId, rating, comment, dayReview } = req.body;
-        
+
         console.log("Request body: ", req.body);
         const booking = await Booking.findOne({ userId });
 
-        console.log("Booking : ", booking); 
+        console.log("Booking : ", booking);
         if (!booking) {
             return res.json(createResponse(400, "Bạn chưa có đặt tour này.", "error"));
         }
@@ -67,9 +67,9 @@ router.post('/api/addReview', async function (req, res) {
 
         console.log("Day review: ", finalDayReview);
 
-        const review = await reviewController.insert({ userId, tourId, rating, comment, dayReview:formatday });
+        const review = await reviewController.insert({ userId, tourId, rating, comment, dayReview: formatday });
         return res.json(createResponse(200, "Thêm review thành công.", "success", review));
-        
+
     } catch (error) {
         console.log("===== Lỗi api addReview =====", error);
         return res.json(createResponse(500, "Lỗi máy chủ khi thêm review.", "error"));
@@ -101,11 +101,11 @@ router.post('/api/addReview', async function (req, res) {
  *       500:
  *         description: Lỗi máy chủ khi lấy review
  */
-router.post('/api/getByUserId', async function (req, res) {
+router.get('/api/getByUserId', async function (req, res) {
     try {
-        const { userId } = req.body;
-        const data = await reviewController.getByUserId({ userId });
-        
+        const { userId } = req.query;
+        const data = await reviewController.getByUserId(userId);
+
         if (data && data.length > 0) {
             return res.json(createResponse(200, "Lấy review thành công.", "success", data));
         } else {
@@ -142,11 +142,11 @@ router.post('/api/getByUserId', async function (req, res) {
  *       500:
  *         description: Lỗi máy chủ khi lấy review
  */
-router.post('/api/getByTourId', async function (req, res) {
+router.get('/api/getByTourId', async function (req, res) {
     try {
-        const { tourId } = req.body;
+        const { tourId } = req.query;
         const data = await reviewController.getByTourId({ tourId });
-        
+
         if (data && data.length > 0) {
             return res.json(createResponse(200, "Lấy review thành công.", "success", data));
         } else {
