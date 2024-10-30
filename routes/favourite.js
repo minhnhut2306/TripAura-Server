@@ -1,8 +1,11 @@
 var express = require('express');
 var router = express.Router();
-
+// const _Favourite = require('../modules/FavouriteModule')
+// const _Tour = require('../modules/TourModule')
 const favouriteController = require('../src/controller/FavouriteController');
+const detailController = require('../src/controller/DetailController');
 const { createResponse } = require('../src/helper/createResponse.helper');
+const _Favourite = require('../src/modules/FavouriteModule')
 
 /**
  * @swagger
@@ -80,20 +83,64 @@ const { createResponse } = require('../src/helper/createResponse.helper');
  *       404:
  *         description: Không tìm thấy yêu thích để xóa
  */
+// router.post('/api/add', async function (req, res, next) {
+//     const { userId, tourId } = req.body
+//     try {
+//         const data = await favouriteController.insert({ userId: userId, tourId: tourId })
+//         if (data) {
+//             return res.json(createResponse(200, "Thêm vào mục yêu thích thành công", "success", data));
+//         } else {
+//             return res.json(createResponse(500, "Thêm vào mục yêu thích thất bại", "error"));
+//         }
+//     } catch (error) {
+//         console.log(error);
+//         return res.json(createResponse(500, "Lỗi máy chủ khi thêm vào mục yêu thích.", "error"));
+//     }
+// });
+
+// router.post('/api/add', async function (req, res) {
+//     const { userId, tourId } = req.body;
+
+//     try {
+//         const response = await favouriteController.toggleFavorite(userId, tourId);
+//         return res.json(response);
+//     } catch (error) {
+//         console.log(error);
+//         return res.json(createResponse(500, "Lỗi máy chủ khi thực hiện yêu cầu.", "error"));
+//     }
+// });
+
 router.post('/api/add', async function (req, res, next) {
-    const { userId, tourId } = req.body
+    const { userId, tourId } = req.body;
+
+   
+    if (!userId || !tourId) {
+        return res.status(400).json(createResponse(400, "Thiếu thông tin người dùng hoặc tour", "error"));
+    }
+
     try {
-        const data = await favouriteController.insert({ userId: userId, tourId: tourId })
-        if (data) {
-            return res.json(createResponse(200, "Thêm vào mục yêu thích thành công", "success", data));
+        // Kiểm tra xem mục yêu thích đã tồn tại chưa
+        const existingFavorite = await _Favourite.findOne({ userId, tourId });
+
+        if (existingFavorite) {
+            // Nếu đã có, tiến hành xóa
+            await _Favourite.deleteOne({ userId, tourId });
+            const detailTours = await detailController.getByTourId(tourId);
+            return res.json(createResponse(200, "Đã xóa khỏi mục yêu thích", "success", { detailTours }));
         } else {
-            return res.json(createResponse(500, "Thêm vào mục yêu thích thất bại", "error"));
+            // Nếu chưa có, tiến hành thêm
+            const newFavorite = new _Favourite({ userId, tourId });
+            await newFavorite.save();
+            const detailTours = await detailController.getByTourId(tourId);
+            return res.json(createResponse(200, "Thêm vào mục yêu thích thành công", "success", { detailTours })); // Thay tourId bằng detailTours
         }
     } catch (error) {
         console.log(error);
-        return res.json(createResponse(500, "Lỗi máy chủ khi thêm vào mục yêu thích.", "error"));
+        return res.status(500).json(createResponse(500, "Lỗi máy chủ khi thực hiện yêu cầu.", "error"));
     }
 });
+
+
 
 
 router.post('/api/favourite', async function (req, res) {

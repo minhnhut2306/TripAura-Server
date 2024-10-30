@@ -1,7 +1,8 @@
 const mongoose = require('mongoose');
 const _Favourite = require('../modules/FavouriteModule')
-const _Tour = require('../modules/TourModule')
+// const _Tour = require('../modules/TourModule')
 const _User = require('../modules/UserModle')
+// const detailController = require('./detailController');
 
 
 
@@ -56,6 +57,27 @@ const remove = async (tourId, userId) => {
     }
 }
 
+// const addFavorite = async (userId, tourId) => {
+//     const newFavorite = new _Favourite({ userId, tourId });
+//     await newFavorite.save();
+//     const detailTours = await detailController.getByTourId(tourId);
+//     return createResponse(200, "Thêm vào mục yêu thích thành công", "success", { tourId });
+// };
+
+// const removeFavorite = async (userId, tourId) => {
+//     await _Favourite.deleteOne({ userId, tourId });
+//     const detailTours = await detailController.getByTourId(tourId);
+//     return createResponse(200, "Đã xóa khỏi mục yêu thích", "success", { detailTours });
+// };
+
+// const toggleFavorite = async (userId, tourId) => {
+//     const existingFavorite = await _Favourite.findOne({ userId, tourId });
+//     if (existingFavorite) {
+//         return await removeFavorite(userId, tourId);
+//     } else {
+//         return await addFavorite(userId, tourId);
+//     }
+// };
 const getByUser = async (userId) => {
     try {
         console.log(`Đang tìm tour yêu thích của userId: ${userId}`);
