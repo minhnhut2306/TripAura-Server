@@ -19,16 +19,16 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
-app.use(cors()); // Sử dụng cors ở đây
+app.use(cors()); 
 app.use("/", router);
 
 app.get('/success', (req, res) => {
-  console.log("Đã gọi route /success"); // Log để kiểm tra
+  console.log("Đã gọi route /success"); 
   res.render('success');
 });
 
 app.get('/cancel', (req, res) => {
-  res.render('cancel'); // Tương tự với cancel.hbs
+  res.render('cancel'); 
 });
 
 app.use((req, res, next) => {
