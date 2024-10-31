@@ -10,7 +10,8 @@ const ReviewSchema = new Schema({
     comment: { type: String, required: true },
     dayReview: { type: Date, required: false },
     image: [{ type: String, required: true }],
-    fullname: { type: String, required: true } 
+    fullname: { type: String, required: true },
+    avatar: { type: String, required: true},
 });
 
 module.exports = mongoose.model('Review', ReviewSchema)

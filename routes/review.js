@@ -55,11 +55,13 @@ router.post('/api/addReview', async function (req, res) {
         }
 
         console.log("User ID from request: ", userId);
-        const user = await User.findOne({ _id: userId }); // Sử dụng userId từ request body
+        const user = await User.findOne({ _id: userId }); 
 
         console.log("User Id: ", user);
 
         const fullname = user.fullname;
+        const avatar = user.avatar;
+        console.log('avatar: ', avatar);
         console.log('fullname: ', fullname);
         
 
@@ -78,7 +80,7 @@ router.post('/api/addReview', async function (req, res) {
         console.log("Day review: ", finalDayReview);
 
 
-        const review = await reviewController.insert({ userId, tourId, rating, comment, dayReview:formatday,image,fullname });
+        const review = await reviewController.insert({ userId, tourId, rating, comment, dayReview:formatday,image,fullname,avatar });
         return res.json(createResponse(200, "Thêm review thành công.", "success", review));
         
     } catch (error) {

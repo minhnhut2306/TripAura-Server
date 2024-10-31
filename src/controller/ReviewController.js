@@ -1,9 +1,9 @@
 const _Review = require('../modules/ReviewModule')
 
-const insert = async (userId, tourId, rating, comment, dayReview,image,fullname ) => {
+const insert = async (userId, tourId, rating, comment, dayReview,image,fullname,avatar ) => {
 
     try {
-        const data = new _Review(userId, tourId, rating, comment, dayReview,image,fullname)
+        const data = new _Review(userId, tourId, rating, comment, dayReview,image,fullname,avatar)
         await data.save()
         return data
     } catch (error) {
