@@ -70,6 +70,12 @@ const getByTourId = async (tourId) => {
                 }
             },
             {
+                $unwind: { path: "$images", preserveNullAndEmptyArrays: true }, // Mở gói imageInfo, nếu không có vẫn trả về null
+            },
+            {
+                $unwind: { path: "$locations", preserveNullAndEmptyArrays: true }, // Mở gói detailInfo, nếu không có vẫn trả về null
+            },
+            {
                 $project: {
                     _id: 1,
                     tourName: 1,
@@ -90,7 +96,7 @@ const getByTourId = async (tourId) => {
                         priceChildren: 1,
                         PromotionalPrice: 1
                     },
-                    images: { _id: 1, linkImage: 1 }
+                    images: { linkImage: 1 }
                 }
             }
         ]);
