@@ -2,13 +2,76 @@ const express = require('express');
 const PayOS = require("@payos/node");
 const router = express.Router();
 
+/**
+ * @swagger
+ * /payment/api/create-payment-link:
+ *   post:
+ *     summary: Tạo liên kết thanh toán
+ *     description: Tạo một liên kết thanh toán cho đơn hàng với số tiền và thông tin mô tả.
+ *     tags: [Payment]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               amount:
+ *                 type: number
+ *                 example: 100000
+ *                 description: "Số tiền cần thanh toán (đơn vị: đồng)." # Chú ý có dấu cách sau dấu hai chấm
+ *               orderId:
+ *                 type: number
+ *                 example: 12345
+ *                 description: "ID của đơn hàng (phải là số dương)."
+ *               description:
+ *                 type: string
+ *                 example: "Thanh toán cho tour du lịch."
+ *                 description: "Mô tả về đơn hàng (tùy chọn)."
+ *     responses:
+ *       201:
+ *         description: Liên kết thanh toán được tạo thành công
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 paymentLink:
+ *                   type: string
+ *                   example: "https://payos.vn/payment-link"
+ *       400:
+ *         description: Dữ liệu đầu vào không hợp lệ
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "amount must be a positive number."
+ *       500:
+ *         description: Lỗi máy chủ khi tạo liên kết thanh toán
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Failed to create payment link"
+ *                 error:
+ *                   type: string
+ *                   example: "Chi tiết lỗi ở đây"
+ */
+
+
 const payos = new PayOS(
     '9643ef8f-e07f-4405-8248-211f9b59adb2', 
     '607fff9d-d752-441e-b55c-4d712afbe0fa', 
     '2094e0b06f2b8f9f1aa9b7155f2126f1ee0d2fa90d461c2dcf77abb4dd586418'
 );
 
-const YOUR_DOMAIN = 'http://localhost:3000';
+const YOUR_DOMAIN = 'https://trip-aura-server.vercel.app';
 
 router.post('/create-payment-link', async (req, res) => {
     const { amount, orderId, description } = req.body;

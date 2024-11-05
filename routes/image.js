@@ -63,6 +63,67 @@ const { createResponse } = require('../src/helper/createResponse.helper');
  *         description: Lỗi máy chủ khi lấy danh sách ảnh
  */
 
+/**
+ * @swagger
+ * /image/api/update/{id}:
+ *   put:
+ *     summary: Cập nhật thông tin ảnh
+ *     description: Cập nhật thông tin của một ảnh liên kết với tour theo ID ảnh
+ *     tags: [Image]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         description: ID của ảnh cần cập nhật
+ *         schema:
+ *           type: string
+ *           example: "60c72b2f9b1d4e7f5c9f6f8d"
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               linkImage:
+ *                 type: string
+ *                 example: "https://example.com/new-image.jpg"
+ *               tourId:
+ *                 type: string
+ *                 example: "60c72b2f9b1d4e7f5c9f6f8b"
+ *     responses:
+ *       200:
+ *         description: Cập nhật thông tin ảnh thành công
+ *       400:
+ *         description: Thông tin không hợp lệ hoặc thiếu
+ *       500:
+ *         description: Lỗi máy chủ khi cập nhật thông tin ảnh
+ */
+
+/**
+ * @swagger
+ * /image/api/delete/{id}:
+ *   delete:
+ *     summary: Xóa ảnh
+ *     description: Xóa một ảnh liên kết với tour theo ID ảnh
+ *     tags: [Image]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         description: ID của ảnh cần xóa
+ *         schema:
+ *           type: string
+ *           example: "60c72b2f9b1d4e7f5c9f6f8d"
+ *     responses:
+ *       200:
+ *         description: Xóa ảnh thành công
+ *       404:
+ *         description: Không tìm thấy ảnh để xóa
+ *       500:
+ *         description: Lỗi máy chủ khi xóa ảnh
+ */
+
 router.post('/api/add', async function (req, res) {
     try {
         const { linkImage, tourId } = req.body;

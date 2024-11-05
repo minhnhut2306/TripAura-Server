@@ -35,6 +35,7 @@ var categoryController = require('../src/controller/CategoryController');
  *       500:
  *         description: Lỗi máy chủ
  */
+
 /**
  * @swagger
  * /category/api/getCategory:
@@ -45,6 +46,65 @@ var categoryController = require('../src/controller/CategoryController');
  *     responses:
  *       200:
  *         description: Lấy danh sách danh mục thành công
+ *       500:
+ *         description: Lỗi máy chủ
+ */
+/**
+ * @swagger
+ * /category/api/update/{id}:
+ *   put:
+ *     summary: Cập nhật danh mục
+ *     description: Cập nhật thông tin của một danh mục
+ *     tags: [Category]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID của danh mục cần cập nhật
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 example: "Giải trí"
+ *               icon:
+ *                 type: string
+ *                 example: "https://example.com/new_icon.png"
+ *     responses:
+ *       200:
+ *         description: Cập nhật thành công
+ *       400:
+ *         description: Nhập thiếu thông tin
+ *       404:
+ *         description: Danh mục không tồn tại
+ *       500:
+ *         description: Lỗi máy chủ
+ */
+/**
+ * @swagger
+ * /category/api/delete/{id}:
+ *   delete:
+ *     summary: Xóa danh mục
+ *     description: Xóa một danh mục khỏi hệ thống
+ *     tags: [Category]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID của danh mục cần xóa
+ *     responses:
+ *       200:
+ *         description: Xóa thành công
+ *       404:
+ *         description: Danh mục không tồn tại
  *       500:
  *         description: Lỗi máy chủ
  */

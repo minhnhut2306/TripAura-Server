@@ -65,6 +65,178 @@ const { createResponse } = require('../src/helper/createResponse.helper');
  *                   example: "error"
  */
 
+/**
+ * @swagger
+ * /voucher/api/getAll:
+ *   get:
+ *     summary: Lấy danh sách tất cả loại voucher
+ *     description: Lấy danh sách tất cả các loại voucher trong hệ thống.
+ *     tags: [VoucherType]
+ *     responses:
+ *       200:
+ *         description: Lấy danh sách loại voucher thành công
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 code:
+ *                   type: number
+ *                   example: 200
+ *                 msg:
+ *                   type: string
+ *                   example: "Lấy danh sách loại voucher thành công"
+ *                 status:
+ *                   type: string
+ *                   example: "success"
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       _id:
+ *                         type: string
+ *                         example: "60c72b2f9b1d4e7f5c9f6f8f"
+ *                       name:
+ *                         type: string
+ *                         example: "Giảm giá cho tour"
+ *       500:
+ *         description: Lỗi khi lấy danh sách loại voucher
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 code:
+ *                   type: number
+ *                   example: 500
+ *                 msg:
+ *                   type: string
+ *                   example: "Lỗi máy chủ"
+ *                 status:
+ *                   type: string
+ *                   example: "error"
+ */
+
+/**
+ * @swagger
+ * /voucher/api/update/{id}:
+ *   put:
+ *     summary: Cập nhật loại voucher
+ *     description: Cập nhật thông tin loại voucher dựa trên ID loại voucher.
+ *     tags: [VoucherType]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID của loại voucher cần cập nhật
+ *         schema:
+ *           type: string
+ *           example: "60c72b2f9b1d4e7f5c9f6f8f"
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 example: "Giảm giá cho tour"
+ *     responses:
+ *       200:
+ *         description: Cập nhật loại voucher thành công
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 code:
+ *                   type: number
+ *                   example: 200
+ *                 msg:
+ *                   type: string
+ *                   example: "Cập nhật loại voucher thành công"
+ *                 status:
+ *                   type: string
+ *                   example: "success"
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     _id:
+ *                       type: string
+ *                       example: "60c72b2f9b1d4e7f5c9f6f8f"
+ *                     name:
+ *                       type: string
+ *                       example: "Giảm giá cho tour"
+ *       500:
+ *         description: Lỗi khi cập nhật loại voucher
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 code:
+ *                   type: number
+ *                   example: 500
+ *                 msg:
+ *                   type: string
+ *                   example: "Lỗi máy chủ"
+ *                 status:
+ *                   type: string
+ *                   example: "error"
+ */
+
+/**
+ * @swagger
+ * /voucher/api/delete/{id}:
+ *   delete:
+ *     summary: Xóa loại voucher
+ *     description: Xóa loại voucher theo ID.
+ *     tags: [VoucherType]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID của loại voucher cần xóa
+ *         schema:
+ *           type: string
+ *           example: "60c72b2f9b1d4e7f5c9f6f8f"
+ *     responses:
+ *       200:
+ *         description: Xóa loại voucher thành công
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 code:
+ *                   type: number
+ *                   example: 200
+ *                 msg:
+ *                   type: string
+ *                   example: "Xóa loại voucher thành công"
+ *                 status:
+ *                   type: string
+ *                   example: "success"
+ *       500:
+ *         description: Lỗi khi xóa loại voucher
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 code:
+ *                   type: number
+ *                   example: 500
+ *                 msg:
+ *                   type: string
+ *                   example: "Lỗi máy chủ"
+ *                 status:
+ *                   type: string
+ *                   example: "error"
+ */
+
 
 
 router.post('/api/add', async function (req, res) {

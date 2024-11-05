@@ -9,7 +9,7 @@ const TourModule = require('../src/modules/TourModule');
  * /tour/api/searchTour:
  *   post:
  *     summary: Tìm kiếm tour theo tiêu chí
- *     description: Tìm kiếm danh sách tour dựa trên điểm đến, giá tối thiểu, giá tối đa và ngày bắt đầu
+ *     description: Tìm kiếm danh sách tour dựa trên điểm đến, giá tối thiểu, giá tối đa và ngày bắt đầu.
  *     tags: [Tour]
  *     requestBody:
  *       required: true
@@ -39,12 +39,13 @@ const TourModule = require('../src/modules/TourModule');
  *       500:
  *         description: Lỗi máy chủ
  */
+
 /**
  * @swagger
  * /tour/api/add:
  *   post:
  *     summary: Thêm tour mới
- *     description: Thêm một tour mới với tên, mô tả và danh mục
+ *     description: Thêm một tour mới với tên, mô tả và danh mục.
  *     tags: [Tour]
  *     requestBody:
  *       required: true
@@ -70,12 +71,13 @@ const TourModule = require('../src/modules/TourModule');
  *       500:
  *         description: Lỗi khi thêm tour
  */
+
 /**
  * @swagger
  * /tour/api/getByCategory:
  *   post:
  *     summary: Lấy danh sách tour theo danh mục
- *     description: Lấy danh sách tour dựa trên ID danh mục
+ *     description: Lấy danh sách tour dựa trên ID danh mục.
  *     tags: [Tour]
  *     requestBody:
  *       required: true
@@ -95,26 +97,100 @@ const TourModule = require('../src/modules/TourModule');
  *       500:
  *         description: Lỗi máy chủ
  */
+
 /**
  * @swagger
  * /tour/api/getAll:
- *   post:
- *     summary: Lấy danh sách 
- *     description: Lấy danh sách 
+ *   get:
+ *     summary: Lấy danh sách tất cả tour
+ *     description: Lấy danh sách tất cả các tour trong hệ thống.
  *     tags: [Tour]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
  *     responses:
  *       200:
- *         description: Lấy tour theo danh mục thành công
+ *         description: Lấy danh sách tour thành công
  *       404:
  *         description: Không có dữ liệu
  *       500:
  *         description: Lỗi máy chủ
  */
+
+/**
+ * @swagger
+ * /tour/api/findByName:
+ *   get:
+ *     summary: Tìm kiếm tour theo tên
+ *     description: Tìm kiếm tour bằng cách sử dụng tên.
+ *     tags: [Tour]
+ *     parameters:
+ *       - in: query
+ *         name: name
+ *         required: true
+ *         description: Tên của tour
+ *         schema:
+ *           type: string
+ *           example: "Hà Nội"
+ *     responses:
+ *       200:
+ *         description: Lấy tour theo tên thành công
+ *       404:
+ *         description: Không có dữ liệu
+ *       500:
+ *         description: Lỗi máy chủ
+ */
+
+/**
+ * @swagger
+ * /tour/popular-tours:
+ *   get:
+ *     summary: Lấy danh sách tour phổ biến
+ *     description: Lấy danh sách các tour phổ biến dựa trên số lượng đặt.
+ *     tags: [Tour]
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         required: false
+ *         description: Số trang để phân trang
+ *         schema:
+ *           type: integer
+ *           example: 1
+ *       - in: query
+ *         name: limit
+ *         required: false
+ *         description: Số lượng tour mỗi trang
+ *         schema:
+ *           type: integer
+ *           example: 10
+ *     responses:
+ *       200:
+ *         description: Lấy tour phổ biến thành công
+ *       500:
+ *         description: Lỗi máy chủ
+ */
+
+/**
+ * @swagger
+ * /tour/api/deleteTour/{tourId}:
+ *   delete:
+ *     summary: Xóa tour
+ *     description: Xóa một tour theo ID.
+ *     tags: [Tour]
+ *     parameters:
+ *       - in: path
+ *         name: tourId
+ *         required: true
+ *         description: ID của tour cần xóa
+ *         schema:
+ *           type: string
+ *           example: "60c72b2f9b1d4e7f5c9f6f8d"
+ *     responses:
+ *       200:
+ *         description: Xóa tour thành công
+ *       400:
+ *         description: Xóa tour thất bại
+ *       500:
+ *         description: Lỗi máy chủ
+ */
+
 router.post('/api/searchTour', async function (req, res) {
     try {
         const { destination, minPrice, maxPrice, startDate } = req.body;

@@ -146,7 +146,31 @@ const authController = require("../src/controller/usercontroler");
  *       500:
  *         description: Lỗi máy chủ
  */
-
+/**
+ * @swagger
+ * /auth/login/google:
+ *   post:
+ *     summary: Đăng nhập bằng Google
+ *     description: Đăng nhập tài khoản người dùng qua Google
+ *     tags: [User]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               token:
+ *                 type: string
+ *                 example: "google_oauth_token"
+ *     responses:
+ *       200:
+ *         description: Đăng nhập bằng Google thành công
+ *       400:
+ *         description: Đăng nhập thất bại
+ *       500:
+ *         description: Lỗi máy chủ
+ */
 router.post("/register", async (req, res) => {
   try {
     console.log("Request Body:", req.body);
@@ -324,22 +348,22 @@ router.post("/reset-password", async (req, res) => {
 
 router.post("/login/google", async (req, res) => {
   try {
-      const userRequest = req.body; 
-      const user = await authController.loginGoogle(userRequest);
-      console.log(user)
+    const userRequest = req.body;
+    const user = await authController.loginGoogle(userRequest);
+    console.log(user)
 
-      if (!user || user instanceof Error) {
-          return res.status(400).json({ message: 'Login failed' }); 
-      }
+    if (!user || user instanceof Error) {
+      return res.status(400).json({ message: 'Login failed' });
+    }
 
-      res.status(200).json({
-          message: 'Login successful',
-          user
-      });
-      
+    res.status(200).json({
+      message: 'Login successful',
+      user
+    });
+
   } catch (error) {
-      console.log("Error during Google login request:", error);
-      res.status(500).json({ message: 'Server error during login' });
+    console.log("Error during Google login request:", error);
+    res.status(500).json({ message: 'Server error during login' });
   }
 });
 // router.get('/google', passport.authenticate('google', { scope: ['profile'], session: false }));

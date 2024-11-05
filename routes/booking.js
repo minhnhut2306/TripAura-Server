@@ -51,7 +51,56 @@ var { createResponse } = require('./../src/helper/createResponse.helper');
  *       500:
  *         description: Lỗi máy chủ
  */
-
+/**
+ * @swagger
+ * /booking/api/update/{id}:
+ *   put:
+ *     summary: Cập nhật trạng thái đặt chỗ
+ *     description: Cập nhật trạng thái của một đơn đặt chỗ
+ *     tags: [Booking]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID của đơn đặt chỗ
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               status:
+ *                 type: number
+ *                 example: 1
+ *     responses:
+ *       200:
+ *         description: Cập nhật thành công
+ *       500:
+ *         description: Lỗi máy chủ
+ */
+/**
+ * @swagger
+ * /booking/api/delete/{id}:
+ *   delete:
+ *     summary: Xóa đặt chỗ
+ *     description: Xóa một đơn đặt chỗ khỏi hệ thống
+ *     tags: [Booking]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID của đơn đặt chỗ cần xóa
+ *     responses:
+ *       200:
+ *         description: Xóa thành công
+ *       500:
+ *         description: Lỗi máy chủ
+ */
 
 router.post('/api/addToCart', async function (req, res) {
     try {

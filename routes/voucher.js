@@ -8,7 +8,7 @@ const { createResponse } = require('../src/helper/createResponse.helper');
  * /voucher/api/addVoucher:
  *   post:
  *     summary: Thêm voucher mới
- *     description: Thêm một voucher mới với thông tin chi tiết như ID người dùng, ID loại voucher, giảm giá, trạng thái, ngày bắt đầu, ngày kết thúc, mô tả và điều kiện
+ *     description: Thêm một voucher mới với thông tin chi tiết như ID người dùng, ID loại voucher, giảm giá, trạng thái, ngày bắt đầu, ngày kết thúc, mô tả và điều kiện.
  *     tags: [Voucher]
  *     requestBody:
  *       required: true
@@ -48,6 +48,113 @@ const { createResponse } = require('../src/helper/createResponse.helper');
  *         description: Thêm voucher thành công
  *       500:
  *         description: Lỗi khi thêm voucher hoặc lỗi máy chủ
+ */
+
+/**
+ * @swagger
+ * /voucher/api/getAll:
+ *   get:
+ *     summary: Lấy danh sách tất cả voucher
+ *     description: Lấy danh sách tất cả các voucher trong hệ thống.
+ *     tags: [Voucher]
+ *     responses:
+ *       200:
+ *         description: Lấy danh sách voucher thành công
+ *       500:
+ *         description: Lỗi khi lấy danh sách voucher
+ */
+
+/**
+ * @swagger
+ * /voucher/api/getVoucher:
+ *   get:
+ *     summary: Lấy danh sách voucher theo ID người dùng
+ *     description: Lấy danh sách voucher dựa trên ID người dùng.
+ *     tags: [Voucher]
+ *     parameters:
+ *       - in: query
+ *         name: userId
+ *         required: true
+ *         description: ID của người dùng
+ *         schema:
+ *           type: string
+ *           example: "60c72b2f9b1d4e7f5c9f6f8d"
+ *     responses:
+ *       200:
+ *         description: Lấy danh sách voucher thành công
+ *       500:
+ *         description: Lỗi khi lấy danh sách voucher
+ */
+
+/**
+ * @swagger
+ * /voucher/api/update/{id}:
+ *   put:
+ *     summary: Cập nhật voucher
+ *     description: Cập nhật thông tin voucher dựa trên ID voucher.
+ *     tags: [Voucher]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID của voucher cần cập nhật
+ *         schema:
+ *           type: string
+ *           example: "60c72b2f9b1d4e7f5c9f6f8d"
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               voucherTypeId:
+ *                 type: string
+ *                 example: "60c72b2f9b1d4e7f5c9f6f8e"
+ *               discount:
+ *                 type: number
+ *                 example: 20
+ *               startDay:
+ *                 type: string
+ *                 format: date
+ *                 example: "2024-10-01"
+ *               endDay:
+ *                 type: string
+ *                 format: date
+ *                 example: "2024-10-31"
+ *               description:
+ *                 type: string
+ *                 example: "Giảm giá cho tour du lịch trong tháng 10"
+ *               condition:
+ *                 type: string
+ *                 example: "Giảm giá áp dụng cho đơn hàng trên 1 triệu đồng"
+ *     responses:
+ *       200:
+ *         description: Cập nhật voucher thành công
+ *       500:
+ *         description: Lỗi khi cập nhật voucher
+ */
+
+/**
+ * @swagger
+ * /voucher/api/delete/{id}:
+ *   delete:
+ *     summary: Xóa voucher
+ *     description: Xóa voucher theo ID.
+ *     tags: [Voucher]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID của voucher cần xóa
+ *         schema:
+ *           type: string
+ *           example: "60c72b2f9b1d4e7f5c9f6f8d"
+ *     responses:
+ *       200:
+ *         description: Xóa voucher thành công
+ *       500:
+ *         description: Lỗi khi xóa voucher
  */
 
 router.post('/api/add', async function (req, res) {

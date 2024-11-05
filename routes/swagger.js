@@ -20,7 +20,12 @@ const options = {
             { name: "Review", description: "Review-related operations" },
             { name: "Tour", description: "Tour-related operations" },
             { name: "Voucher", description: "Voucher-related operations" },
-            { name: "VoucherType", description: "VoucherType-related operations" }
+            { name: "VoucherType", description: "VoucherType-related operations" },
+            { name: "Adv", description: "Adv-related operations" },        
+            { name: "Coupon", description: "Coupon-related operations" },
+            { name: "Payment", description: "Payment-related operations" },
+
+           
         ],
         servers: [
             { url: 'https://trip-aura-server.vercel.app/', description: 'Production server' },
@@ -37,7 +42,7 @@ module.exports = (app) => {
     app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
         swaggerOptions: {
             docExpansion: 'none',
-            defaultModelsExpandDepth: -1  
+            defaultModelsExpandDepth: -1
         }
     }));
 };

@@ -34,6 +34,72 @@ const { createResponse } = require('../src/helper/createResponse.helper');
  *       500:
  *         description: Lỗi máy chủ khi thêm địa điểm
  */
+/**
+ * @swagger
+ * /location/api/update/{id}:
+ *   put:
+ *     summary: Cập nhật thông tin địa điểm
+ *     description: Cập nhật thông tin địa điểm bao gồm điểm khởi hành, điểm đến và tour ID theo ID địa điểm
+ *     tags: [Location]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         description: ID của địa điểm cần cập nhật
+ *         schema:
+ *           type: string
+ *           example: "60c72b2f9b1d4e7f5c9f6f8e"
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               departure:
+ *                 type: string
+ *                 example: "Hà Nội"
+ *               destination:
+ *                 type: string
+ *                 example: "Đà Nẵng"
+ *               tourId:
+ *                 type: string
+ *                 example: "60c72b2f9b1d4e7f5c9f6f8b"
+ *     responses:
+ *       200:
+ *         description: Cập nhật địa điểm thành công
+ *       400:
+ *         description: Thông tin không hợp lệ hoặc thiếu
+ *       404:
+ *         description: Không tìm thấy địa điểm cần cập nhật
+ *       500:
+ *         description: Lỗi máy chủ khi cập nhật địa điểm
+ */
+
+/**
+ * @swagger
+ * /location/api/delete/{id}:
+ *   delete:
+ *     summary: Xóa địa điểm
+ *     description: Xóa một địa điểm dựa trên ID địa điểm
+ *     tags: [Location]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         description: ID của địa điểm cần xóa
+ *         schema:
+ *           type: string
+ *           example: "60c72b2f9b1d4e7f5c9f6f8e"
+ *     responses:
+ *       200:
+ *         description: Xóa địa điểm thành công
+ *       404:
+ *         description: Không tìm thấy địa điểm để xóa
+ *       500:
+ *         description: Lỗi máy chủ khi xóa địa điểm
+ */
+
 
 router.post('/api/add', async function (req, res) {
     try {

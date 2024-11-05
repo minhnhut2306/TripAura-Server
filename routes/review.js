@@ -11,7 +11,7 @@ const User = require('../src/modules/UserModle')
  * /review/api/addReview:
  *   post:
  *     summary: Thêm đánh giá cho tour
- *     description: Thêm một đánh giá mới cho tour với thông tin người dùng, điểm đánh giá, bình luận và ngày đánh giá
+ *     description: Thêm một đánh giá mới cho tour với thông tin người dùng, điểm đánh giá, bình luận và ngày đánh giá.
  *     tags: [Review]
  *     requestBody:
  *       required: true
@@ -38,9 +38,128 @@ const User = require('../src/modules/UserModle')
  *     responses:
  *       200:
  *         description: Thêm review thành công
+ *       400:
+ *         description: Lỗi khi thêm review
  *       500:
  *         description: Lỗi máy chủ khi thêm review
  */
+
+/**
+ * @swagger
+ * /review/api/getByUserId:
+ *   post:
+ *     summary: Lấy danh sách đánh giá của người dùng
+ *     description: Lấy danh sách đánh giá theo User ID.
+ *     tags: [Review]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               userId:
+ *                 type: string
+ *                 example: "60c72b2f9b1d4e7f5c9f6f8b"
+ *     responses:
+ *       200:
+ *         description: Lấy review thành công
+ *       404:
+ *         description: Không có review nào
+ *       500:
+ *         description: Lỗi máy chủ khi lấy review
+ */
+
+/**
+ * @swagger
+ * /review/api/getByTourId:
+ *   post:
+ *     summary: Lấy danh sách đánh giá cho tour
+ *     description: Lấy danh sách đánh giá theo Tour ID.
+ *     tags: [Review]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               tourId:
+ *                 type: string
+ *                 example: "60c72b2f9b1d4e7f5c9f6f8c"
+ *     responses:
+ *       200:
+ *         description: Lấy review thành công
+ *       404:
+ *         description: Không có review nào
+ *       500:
+ *         description: Lỗi máy chủ khi lấy review
+ */
+
+/**
+ * @swagger
+ * /review/api/update/{id}:
+ *   put:
+ *     summary: Cập nhật đánh giá
+ *     description: Cập nhật thông tin đánh giá cho một đánh giá cụ thể theo ID.
+ *     tags: [Review]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID của đánh giá cần cập nhật
+ *         schema:
+ *           type: string
+ *           example: "60c72b2f9b1d4e7f5c9f6f8d"
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               rating:
+ *                 type: number
+ *                 example: 5
+ *               comment:
+ *                 type: string
+ *                 example: "Đánh giá đã được cập nhật!"
+ *               image:
+ *                 type: string
+ *                 example: "https://example.com/image.jpg"
+ *     responses:
+ *       200:
+ *         description: Cập nhật review thành công
+ *       404:
+ *         description: Không tìm thấy review
+ *       500:
+ *         description: Lỗi máy chủ khi cập nhật review
+ */
+
+/**
+ * @swagger
+ * /review/api/delete/{id}:
+ *   delete:
+ *     summary: Xóa đánh giá
+ *     description: Xóa một đánh giá theo ID.
+ *     tags: [Review]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID của đánh giá cần xóa
+ *         schema:
+ *           type: string
+ *           example: "60c72b2f9b1d4e7f5c9f6f8d"
+ *     responses:
+ *       200:
+ *         description: Xóa review thành công
+ *       404:
+ *         description: Không tìm thấy review
+ *       500:
+ *         description: Lỗi máy chủ khi xóa review
+ */
+
 router.post('/api/addReview', async function (req, res) {
     try {
         const formatday = moment().toDate()
@@ -89,31 +208,7 @@ router.post('/api/addReview', async function (req, res) {
     }
 });
 
-/**
- * @swagger
- * /review/api/getByUserId:
- *   post:
- *     summary: Lấy danh sách đánh giá của người dùng
- *     description: Lấy danh sách đánh giá theo User ID
- *     tags: [Review]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               userId:
- *                 type: string
- *                 example: "60c72b2f9b1d4e7f5c9f6f8b"
- *     responses:
- *       200:
- *         description: Lấy review thành công
- *       404:
- *         description: Không có review nào
- *       500:
- *         description: Lỗi máy chủ khi lấy review
- */
+
 router.post('/api/getByUserId', async function (req, res) {
     try {
         const { userId } = req.body;
@@ -130,31 +225,6 @@ router.post('/api/getByUserId', async function (req, res) {
     }
 });
 
-/**
- * @swagger
- * /review/api/getByTourId:
- *   post:
- *     summary: Lấy danh sách đánh giá cho tour
- *     description: Lấy danh sách đánh giá theo Tour ID
- *     tags: [Review]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               tourId:
- *                 type: string
- *                 example: "60c72b2f9b1d4e7f5c9f6f8c"
- *     responses:
- *       200:
- *         description: Lấy review thành công
- *       404:
- *         description: Không có review nào
- *       500:
- *         description: Lỗi máy chủ khi lấy review
- */
 router.post('/api/getByTourId', async function (req, res) {
     try {
         const { tourId } = req.body;
