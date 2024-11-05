@@ -210,5 +210,19 @@ router.get('/popular-tours', async (req, res) => {
     }
 });
 
+router.delete('/api/deleteTour/:tourId', async (req, res) => {
+    try {
+        const { tourId } = req.params
+        const tour = await tourController.deleteTour(tourId)
+        if (tour) {
+            return res.json(createResponse(200, "Xóa tour thành công", "success", tour));
+        } else {
+            return res.json(createResponse(400, "Xóa tour thất bại", "failed"));
+        }
+    } catch (error) {
+        console.log(error);
+        return res.json(createResponse(500, "Lỗi máy chủ.", "error"));
+    }
+})
 
 module.exports = router;

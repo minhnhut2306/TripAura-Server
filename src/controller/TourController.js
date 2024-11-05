@@ -448,6 +448,17 @@ const getPopularTour = async (page = 1, limit = 10) => {
   }
 };
 
+const deleteTour = async (tourId) => {
+  try {
+    const tour = await TourModule.findByIdAndDelete({ _id: tourId })
+    return tour
+  } catch (error) {
+    console.log("====lỗi deletetour", error);
+    return false
+  }
+}
+
+deleteTour("67297d740124911dd5ea90a0")
 
 module.exports = {
   insert,
@@ -455,5 +466,6 @@ module.exports = {
   filter,
   getToursAll,
   getPopularTour,
-  findByName
+  findByName,
+  deleteTour
 };
