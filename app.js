@@ -22,14 +22,14 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(cors()); 
 app.use("/", router);
 
-app.get('/success', (req, res) => {
-  console.log("Đã gọi route /success"); 
-  res.render('success');
-});
+// app.get('/success', (req, res) => {
+//   console.log("Đã gọi route /success"); 
+//   res.render('success');
+// });
 
-app.get('/cancel', (req, res) => {
-  res.render('cancel'); 
-});
+// app.get('/cancel', (req, res) => {
+//   res.render('cancel'); 
+// });
 
 app.use((req, res, next) => {
   next(createError(404));
