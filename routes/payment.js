@@ -89,6 +89,7 @@ router.post('/create-payment-link', async (req, res) => {
         orderCode: orderCode,
         returnUrl: `${YOUR_DOMAIN}/payment/success?orderId=${orderCode}`,
         cancelUrl: `${YOUR_DOMAIN}/payment/cancel?orderId=${orderCode}`,
+        redirectUrl: `${YOUR_DOMAIN}/payment/redirect?orderId=${orderCode}`,
     };
 
     try {
