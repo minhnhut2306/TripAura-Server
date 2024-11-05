@@ -103,6 +103,38 @@ router.post('/api/getByTourId', async function (req, res) {
         console.log(error);
         return res.json(createResponse(500, "Lỗi máy chủ khi lấy danh sách ảnh.", "error"));
     }
+});
+
+router.put('/api/update/:id', async function (req, res) {
+    try {
+        const { id } = req.params;
+        const { linkImage, tourId } = req.body;
+        const data = await imageController.update(id, linkImage, tourId);
+        if (data) {
+            return res.json(createResponse(200, "Cập nhật thành công", "success"));
+        } else {
+            return res.json(createResponse(500, "Cập nhật thông tin thất bại", "error"));
+        }
+    } catch (error) {
+        console.log(error);
+        return res.json(createResponse(500, "Lỗi máy chủ khi cập nhật thông tin ảnh.", "error"));
+
+    }
+});
+
+router.delete('/api/delete/:id', async function (req, res) {
+    try {
+        const { id } = req.params;
+        const data = await imageController.delete(id);
+        if (data) {
+            return res.json(createResponse(200, "Xóa thành công", "success"));
+        } else {
+            return res.json(createResponse(500, "Xóa thông tin ảnh thất bại", "error"));
+        }
+    } catch (error) {
+        console.log(error);
+        return res.json(createResponse(500, "Lỗi máy chủ khi xóa thông tin ảnh.", "error"));
+    }
 })
 
 module.exports = router;

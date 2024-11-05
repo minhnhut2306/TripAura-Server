@@ -100,4 +100,38 @@ router.get('/api/getAll', async function (req, res) {
     }
 })
 
+router.put("./api/update/:id", async function (req, res) {
+    try {
+        const { id } = req.params;
+        const { name } = req.body;
+        const data = await vouchetController.update(id, name);
+        if (data) {
+            return res.json(createResponse(200, "Cập nhật loại voucher thành công", "success", data));
+        } else {
+            return res.json(createResponse(500, "Lỗi khi cập nhật loại voucher", "error"));
+        }
+        
+    } catch (error) {
+        console.log("===== lỗi api updateVoucherType ======", error);
+        return res.json(createResponse(500, "Lỗi máy chủ", "error"));
+
+    }
+});
+
+router.delete("/api/delete/:id", async function (req, res) {
+    try {
+        const { id } = req.params;
+        const data = await vouchetController.delete(id);
+        if (data) {
+            return res.json(createResponse(200, "Xóa loại voucher thành công", "success", data));
+        } else {
+            return res.json(createResponse(500, "Lỗi khi xóa loại voucher", "error"));
+        }
+    } catch (error) {
+        console.log("===== lỗi api deleteVoucherType ======", error);
+        return res.json(createResponse(500, "Lỗi máy chủ", "error"));
+    }
+ 
+})
+
 module.exports = router;

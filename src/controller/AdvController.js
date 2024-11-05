@@ -26,4 +26,28 @@ const getAll = async () => {
     }
 }
 
-module.exports = { insert, getAll }
+const update = async (imageid, image) => {
+    try {
+        const adv = await _Adv.findByIdAndUpdate(imageid,
+            { image }, { new: true });
+        return adv;
+
+    } catch (error) {
+        console.log("==== lôxi update adv ======");
+        return false;
+
+    }
+}
+
+const deleteAdv = async (imageid) => {
+    try {
+        const deleteadv = await _Adv.findByIdAndDelete(imageid);
+        return deleteadv;
+    } catch (error) {
+        console.log("==== lỗi delete adv ======");
+        return false;
+        
+    }
+}
+
+module.exports = { insert, getAll, update,deleteAdv}

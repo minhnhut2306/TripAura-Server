@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
-var _Category = require('../modules/CategoryModule')
+var _Category = require('../modules/CategoryModule');
+const CategoryModule = require('../modules/CategoryModule');
 
 // Add Category
 const insert = async (name, icon) => {
@@ -54,5 +55,29 @@ const getByDate = async (createAt) => {
 }
 // getByDate('2024-10-09')
 
+const update = async (cateId, name, icon) => {
+    try {
+        const categories = await CategoryModule.findByIdAndUpdate(
+            cateId,
+            { name, icon },
+            { new: true }
+        );
+        return categories;
+    } catch (error) {
+        console.log(error);
+        return false;
+    }
+}
 
-module.exports = { insert, getAll };
+const remove = async (cateId) => {
+    try {
+        const deletecategory = await CategoryModule.findByIdAndDelete(cateId);
+        return deletecategory;
+    } catch (error) {
+        console.log(error);
+        return false;
+    }
+
+}
+
+module.exports = { insert, getAll, update ,remove};

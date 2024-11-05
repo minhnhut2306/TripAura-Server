@@ -117,6 +117,39 @@ router.post('/api/getByTourId', async function (req, res) {
     }
 })
 
+router.put('/api/update/:id', async function (req, res) {
+    try {
+        const { id } = req.params;
+        const { startDay, endDay, maxTicket, minTicket, priceAdult, priceChildren, PromotionalPrice, status, tourId } = req.body;
+        const data = await detailController.update(id, startDay, endDay, maxTicket, minTicket, priceAdult, priceChildren, PromotionalPrice, status, tourId)
+
+        if (data) {
+            return res.json(createResponse(200, "Cập nhật thành công", "success"));
+        } else {
+            return res.json(createResponse(500, "Cập nhật thông tin thất bại", "error"));
+        }
+    } catch (error) {
+        console.log(error);
+        return res.json(createResponse(500, "Đã xảy ra lỗi máy chủ", "error"));
+    }
+});
+
+router.delete('/api/delete/:id', async function (req, res) {
+    try {
+        const { id } = req.params;
+        const data = await detailController.remove(id)
+        if (data) {
+            return res.json(createResponse(200, "Xóa thành công", "success"));
+        } else {
+            return res.json(createResponse(500, "Xóa thông tin thất bại", "error"));
+        }
+    }catch (error) {
+        console.log(error);
+        return res.json(createResponse(500, "Đã xảy ra lỗi máy chủ", "error"));
+
+    }
+})
+
 
 
 module.exports = router;

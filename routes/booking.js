@@ -66,6 +66,38 @@ router.post('/api/addToCart', async function (req, res) {
     } catch (error) {
         return res.json(createResponse(500, "Đã xảy ra lỗi máy chủ", "error"));
     }
+});
+
+router.put('/api/update/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { status } = req.body;
+        const data = await bookingController.update(id, status)
+        if (data) {
+            return res.json(createResponse(200, "Cập nhật thành công", "success", data));
+        } else {
+            res.json(createResponse(500, "Cập nhật thất bại", "error"))
+        }
+    } catch (error) {
+        console.log(error);
+        return res.json(createResponse(500, "Đã xảy ra lỗi máy chủ", "error"));
+
+    }
+})
+
+router.delete('/api/delete/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const data = await bookingController.remove(id)
+        if (data) {
+            return res.json(createResponse(200, "Xóa thành công", "success", data));
+        } else {
+            res.json(createResponse(500, "Xóa thất bại", "error"))
+        }
+    } catch (error) {
+        console.log(error);
+        return res.json(createResponse(500, "Đã xảy ra lỗi máy chủ", "error"));
+    }
 })
 
 module.exports = router;

@@ -6,10 +6,34 @@ const insert = async (departure, destination, tourId) => {
         await data.save()
         return data
     } catch (error) {
-        console.log("Lỗi insert Location",error);
+        console.log("Lỗi insert Location", error);
         return false;
-        
+
     }
 }
+const update = async (locationId, departure, destination, tourId) => {
+    try {
+        const data = await _Location.findByIdAndUpdate(locationId,
+            { departure, destination, tourId }, {
+            new: true
+        }
+        )
+        return data;
+    } catch (error) {
+        console.log("Lỗi update Location", error);
+        return false;
+    }
 
-module.exports = {insert}
+}
+
+const remove = async (locationId) => {
+    try {
+        await _Location.deleteOne({ locationId });
+        return 1;
+    } catch (error) {
+        console.log(error);
+    }
+
+}
+
+module.exports = { insert ,update,remove}

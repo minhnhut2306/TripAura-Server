@@ -24,4 +24,29 @@ const insert = async (detailId, userId, voucherId, numAdult, numchildren, priceA
     }
 }
 
-module.exports = { insert };
+const update = async (bookingid, status) => {
+    try {
+        const data = await _Booking.findByIdAndUpdate(bookingid,
+            {
+                status
+            },
+        )
+        return data;
+    } catch (error) {
+        console.log("=============booking update error", error);
+        return false;
+
+    }
+}
+
+const remove = async (bookingid) => {
+    try {
+        const data = await _Booking.findByIdAndDelete(bookingid);
+        return data;
+    } catch (error) {
+        console.log("=============booking remove error", error);
+        return false;
+    }
+}
+
+module.exports = { insert, update, remove };

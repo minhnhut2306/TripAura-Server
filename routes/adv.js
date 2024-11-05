@@ -29,5 +29,33 @@ router.get('/api/getAll', async function (req, res) {
         return res.json(createResponse(500, "Đã xảy ra lỗi máy chủ", "error"));
     }
 })
+router.put('/api/update/:id', async (req, res) => {
+    try {
+        const { id } = req.params
+        const { image } = req.body
+        const data = await advController.update(id, image)
+        if (data) {
+            return res.json(createResponse(200, "Sửa thành công", "success", data));
+        } else {
+            res.json(createResponse(500, "Sửa thất bại", "error"))
+        }
+    } catch (error) {
+        return res.json(createResponse(500, "Đã xảy ra lỗi máy chủ", "error"));
+    }
+})
 
+router.delete('/api/delete/:id', async (req, res) => {
+    try {
+        
+        const { id } = req.params;
+        const data = await advController.deleteAdv(id)
+        if (data) {
+            return res.json(createResponse(200, "Xóa thành công", "success", data));
+        } else {
+            res.json(createResponse(500, "Xóa thất bại", "error"))
+        }
+    } catch (error) {
+        
+    }
+})
 module.exports = router;

@@ -53,18 +53,18 @@ router.post('/api/add', async function (req, res) {
         const { name, icon } = req.body;
 
         if (!name || !icon) {
-            return res.json(createResponse(400, "Tên và biểu tượng không được để trống", "error")); 
+            return res.json(createResponse(400, "Tên và biểu tượng không được để trống", "error"));
         }
 
         const category = await categoryController.insert(name, icon);
         if (category) {
-            return res.json(createResponse(200, "Thêm danh mục thành công", "success", category)); 
+            return res.json(createResponse(200, "Thêm danh mục thành công", "success", category));
         } else {
-            return res.json(createResponse(409, "Danh mục đã tồn tại", "error")); 
+            return res.json(createResponse(409, "Danh mục đã tồn tại", "error"));
         }
     } catch (error) {
         console.error(error);
-         return res.json(createResponse(500, "Lỗi máy chủ khi thêm danh mục", "error"));
+        return res.json(createResponse(500, "Lỗi máy chủ khi thêm danh mục", "error"));
     }
 });
 
@@ -75,8 +75,42 @@ router.get('/api/getCategory', async function (req, res) {
         return res.json(createResponse(200, "Lấy danh sách danh mục thành công", "success", categories));
     } catch (error) {
         console.error(error);
-         return res.json(createResponse(500, "Lỗi máy chủ khi lấy danh mục.", "error"));
+        return res.json(createResponse(500, "Lỗi máy chủ khi lấy danh mục.", "error"));
     }
 });
 
+router.put('/api/update/:id', async function (req, res) {
+    try {
+        const categoryid = req.params.id;
+        const { name, icon } = req.body;
+        if (!name || !icon) {
+            return res.json(createResponse(400, "Nhập thiếu", "error"));
+        }
+        const category = await categoryController.update(categoryid, name, icon);
+        if (category) {
+            return res.json(createResponse(200, "Sửa thành công", "success", category));
+        } else {
+            return res.json(createResponse(404, "Danh mục không tồn tại", "error"));
+        }
+    } catch (error) {
+        console.error(error);
+        return res.json(createResponse(500, "Lỗi máy chủ khi sửa danh mục", "error"));
+
+    }
+})
+
+router.delete('/api/delete/:id', async function (req, res) {
+    try {
+        const categoryid = req.params.id;
+        const deletecategory = await categoryController.remove(categoryid);
+        if (deletecategory) {
+            return res.json(createResponse(200, "Xóa thành công", "success"));
+        } else {
+            return res.json(createResponse(404, "Danh mục không tồn tại", "error"));
+        }
+    } catch (error) {
+        console.error(error);
+        return res.json(createResponse(500, "Lỗi máy chủ khi xóa danh mục", "error"));
+    }
+});
 module.exports = router;

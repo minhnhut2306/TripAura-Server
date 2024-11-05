@@ -1,9 +1,9 @@
 const _Review = require('../modules/ReviewModule')
 
-const insert = async (userId, tourId, rating, comment, dayReview,image,fullname,avatar ) => {
+const insert = async (userId, tourId, rating, comment, dayReview, image, fullname, avatar) => {
 
     try {
-        const data = new _Review(userId, tourId, rating, comment, dayReview,image,fullname,avatar)
+        const data = new _Review(userId, tourId, rating, comment, dayReview, image, fullname, avatar)
         await data.save()
         return data
     } catch (error) {
@@ -43,4 +43,29 @@ const getByTourId = async (tourId) => {
     }
 }
 
-module.exports = { insert, getByTourId, getByUserId }
+const update = async (reviewId, rating, comment, image) => {
+    try {
+        const data = await _Review.findByIdAndUpdate(reviewId, {
+            rating, comment, image
+        }, {
+            new: true
+        })
+        return data;
+    } catch (error) {
+        console.log("====== Lỗi update Review =====", error);
+        return false
+
+    }
+
+}
+const remove = async (reviewId) => {
+    try {
+        const data = await _Review.findByIdAndDelete(reviewId);
+        return data;
+    } catch (error) {
+        console.log("====== Lỗi remove Review =====", error);
+        return false;
+
+    }
+}
+module.exports = { insert, getByTourId, getByUserId, update, remove}

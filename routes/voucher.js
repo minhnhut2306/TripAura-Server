@@ -103,6 +103,40 @@ router.get('/api/getVoucher', async (req, res) => {
         console.log(error);
         return res.json(createResponse(500, "Lỗi máy chủ", "error"));
     }
-})
+});
+
+router.put('./api/update/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { voucherTypeId, discount, startDay, endDay, description, condition } = req.body;
+        const data = await voucherController.update(id, voucherTypeId, discount, startDay, endDay, description, condition);
+        if (data) {
+            return res.json(createResponse(200, "Cập nhật voucher thành công", "success", data));
+        } else {
+            return res.json(createResponse(500, "Lỗi khi cập nhật voucher", "error"));
+        }
+
+    } catch (error) {
+        console.log(error);
+        return res.json(createResponse(500, "Lỗi máy chủ", "error"));
+
+    }
+}
+)
+
+router.delete('/api/delete/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const data = await voucherController.deleteVoucher(id);
+        if (data) {
+            return res.json(createResponse(200, "Xóa voucher thành công", "success", data));
+        } else {
+            return res.json(createResponse(500, "Lỗi khi xóa voucher", "error"));
+        }
+    } catch (error) {
+        console.log(error);
+        return res.json(createResponse(500, "Lỗi máy chủ", "error"));
+    }
+});
 
 module.exports = router;
