@@ -239,7 +239,7 @@ const { createResponse } = require('../src/helper/createResponse.helper');
 
 
 
-router.post('/api/add', async function (req, res) {
+router.post('', async function (req, res) {
     try {
         const { name } = req.body
         if (!name) {
@@ -293,7 +293,7 @@ router.put("/api/update/:id", async function (req, res) {
 router.delete("/api/delete/:id", async function (req, res) {
     try {
         const { id } = req.params;
-        const data = await vouchetController.delete(id);
+        const data = await vouchetController.remove(id);
         if (data) {
             return res.json(createResponse(200, "Xóa loại voucher thành công", "success", data));
         } else {
