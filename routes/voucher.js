@@ -5,7 +5,7 @@ const { createResponse } = require('../src/helper/createResponse.helper');
 
 /**
  * @swagger
- * /voucher/api/addVoucher:
+ * /voucher/api/add:
  *   post:
  *     summary: Thêm voucher mới
  *     description: Thêm một voucher mới với thông tin chi tiết như ID người dùng, ID loại voucher, giảm giá, trạng thái, ngày bắt đầu, ngày kết thúc, mô tả và điều kiện.
@@ -212,7 +212,7 @@ router.get('/api/getVoucher', async (req, res) => {
     }
 });
 
-router.put('./api/update/:id', async (req, res) => {
+router.put('/api/update/:id', async (req, res) => {
     try {
         const { id } = req.params;
         const { voucherTypeId, discount, startDay, endDay, description, condition } = req.body;

@@ -9,7 +9,7 @@ const paymentSchema = new mongoose.Schema({
         type: Number,
         required: true,
         enum: [0, 1], 
-        default: 1   
+        default: 0   
     }
 }, { timestamps: true });
 

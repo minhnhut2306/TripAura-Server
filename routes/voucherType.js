@@ -272,7 +272,7 @@ router.get('/api/getAll', async function (req, res) {
     }
 })
 
-router.put("./api/update/:id", async function (req, res) {
+router.put("/api/update/:id", async function (req, res) {
     try {
         const { id } = req.params;
         const { name } = req.body;
