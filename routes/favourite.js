@@ -83,56 +83,82 @@ const _Favourite = require('../src/modules/FavouriteModule')
  *       404:
  *         description: Không tìm thấy yêu thích để xóa
  */
-// router.post('/api/add', async function (req, res, next) {
-//     const { userId, tourId } = req.body
-//     try {
-//         const data = await favouriteController.insert({ userId: userId, tourId: tourId })
-//         if (data) {
-//             return res.json(createResponse(200, "Thêm vào mục yêu thích thành công", "success", data));
-//         } else {
-//             return res.json(createResponse(500, "Thêm vào mục yêu thích thất bại", "error"));
-//         }
-//     } catch (error) {
-//         console.log(error);
-//         return res.json(createResponse(500, "Lỗi máy chủ khi thêm vào mục yêu thích.", "error"));
-//     }
-// });
 
-// router.post('/api/add', async function (req, res) {
-//     const { userId, tourId } = req.body;
+/**
+ * @swagger
+ * /favourite/api/getFavouriteByUser:
+ *   get:
+ *     summary: Lấy danh sách tour yêu thích theo người dùng
+ *     description: Lấy danh sách tour yêu thích của người dùng
+ *     tags: [Favourite]
+ *     parameters:
+ *       - name: userId
+ *         in: query
+ *         required: true
+ *         description: ID của người dùng
+ *         schema:
+ *           type: string
+ *           example: "60c72b2f9b1d4e7f5c9f6f8b"
+ *     responses:
+ *       200:
+ *         description: Lấy danh sách yêu thích thành công
+ *       401:
+ *         description: Không có userId
+ *       500:
+ *         description: Lỗi máy chủ
+ */
 
-//     try {
-//         const response = await favouriteController.toggleFavorite(userId, tourId);
-//         return res.json(response);
-//     } catch (error) {
-//         console.log(error);
-//         return res.json(createResponse(500, "Lỗi máy chủ khi thực hiện yêu cầu.", "error"));
-//     }
-// });
+/**
+ * @swagger
+ * /favourite/api/checkFavourite:
+ *   get:
+ *     summary: Kiểm tra tour có trong danh sách yêu thích hay không
+ *     description: Kiểm tra xem tour có trong danh sách yêu thích của người dùng hay không
+ *     tags: [Favourite]
+ *     parameters:
+ *       - name: userId
+ *         in: query
+ *         required: true
+ *         description: ID của người dùng
+ *         schema:
+ *           type: string
+ *           example: "60c72b2f9b1d4e7f5c9f6f8b"
+ *       - name: tourId
+ *         in: query
+ *         required: true
+ *         description: ID của tour
+ *         schema:
+ *           type: string
+ *           example: "60c72b2f9b1d4e7f5c9f6f8c"
+ *     responses:
+ *       200:
+ *         description: Kiểm tra thành công, tour đã có trong danh sách yêu thích
+ *       400:
+ *         description: Kiểm tra không thành công, tour không có trong danh sách yêu thích
+ *       500:
+ *         description: Lỗi máy chủ
+ */
 
 router.post('/api/add', async function (req, res, next) {
     const { userId, tourId } = req.body;
 
-   
+
     if (!userId || !tourId) {
         return res.status(400).json(createResponse(400, "Thiếu thông tin người dùng hoặc tour", "error"));
     }
 
     try {
-        // Kiểm tra xem mục yêu thích đã tồn tại chưa
         const existingFavorite = await _Favourite.findOne({ userId, tourId });
 
         if (existingFavorite) {
-            // Nếu đã có, tiến hành xóa
             await _Favourite.deleteOne({ userId, tourId });
             const detailTours = await detailController.getByTourId(tourId);
             return res.json(createResponse(200, "Đã xóa khỏi mục yêu thích", "success", { detailTours }));
         } else {
-            // Nếu chưa có, tiến hành thêm
             const newFavorite = new _Favourite({ userId, tourId });
             await newFavorite.save();
             const detailTours = await detailController.getByTourId(tourId);
-            return res.json(createResponse(200, "Thêm vào mục yêu thích thành công", "success", { detailTours })); // Thay tourId bằng detailTours
+            return res.json(createResponse(200, "Thêm vào mục yêu thích thành công", "success", { detailTours }));
         }
     } catch (error) {
         console.log(error);

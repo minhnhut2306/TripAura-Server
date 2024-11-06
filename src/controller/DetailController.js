@@ -133,5 +133,39 @@ const updateDetailByDay = async () => {
     }
 }
 // updateDetailByDay()
+const update = async (detalId, startDay, endDay, maxTicket, minTicket, priceAdult, priceChildren, PromotionalPrice, status, tourId) => {
+    try {
+        const data = await DetailModule.findByIdAndUpdate(detalId,
+            {
+                startDay,
+                endDay,
+                maxTicket,
+                minTicket,
+                priceAdult,
+                priceChildren,
+                PromotionalPrice,
+                status,
+                tourId
+            },
+            { new: true });
+        console.log("========== detail đã update ==========", data);
+        return data;
+    } catch (error) {
+        console.log("========== Lỗi update detail ==========", error);
+        return false
 
-module.exports = { insert, getByTourId }
+    }
+
+}
+const remove = async (detalId) => {
+    try {
+        const deletedetails = await DetailModule.findByIdAndDelete(detalId);
+        console.log("========== detail đã xóa ==========", deletedetails);
+        return deletedetails;
+    } catch (error) {
+        console.log("========== Lỗi xóa detail ==========", error);
+        return false
+
+    }
+}
+module.exports = { insert, getByTourId , update, remove}

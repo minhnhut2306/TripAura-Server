@@ -24,5 +24,26 @@ const getAll = async () => {
         return false
     }
 }
+const update = async (voucherTypeId, name) => {
+    try {
+        const data = await _VoucherType.findByIdAndUpdate(voucherTypeId,
+            { name: name },
+            { new: true })
+        return data
+    } catch (error) {
+        console.log("===== Lỗi update VoucherType");
+        return false
+    }
+}
 
-module.exports = { insert, getAll }
+const remove = async (voucherTypeId) => {
+    try {
+        const data = await _VoucherType.findByIdAndRemove(voucherTypeId)
+        return data
+    } catch (error) {
+        console.log("===== Lỗi remove VoucherType");
+        return false
+    }
+}
+
+module.exports = { insert, getAll,update,remove }

@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
-const _Voucher = require('../modules/VoucherModule')
+const _Voucher = require('../modules/VoucherModule');
+const VoucherModule = require('../modules/VoucherModule');
 
 const insert = async (voucherTypeId, discount, startDay, endDay, description, condition) => {
     try {
@@ -115,5 +116,33 @@ const getVoucher = async (userId) => {
     }
 }
 
+const update = async (voucherId, voucherTypeId, discount, startDay, endDay, description, condition) => {
+    try {
+        const data = VoucherModule.findByIdAndUpdate(voucherId, {
+            voucherTypeId, discount, startDay, endDay, description, condition
+        },
+            { new: true }
+        )
+        return data;
+    } catch (error) {
+        console.log("====== lỗi update VoucherController =======", error);
+        return false
 
-module.exports = { insert, getAll, getByUserId, receiveVoucher, getVoucher }
+    }
+
+}
+
+const deleteVoucher = async (voucherId) => {
+    try {
+        const data = await _Voucher.findByIdAndDelete(voucherId)
+        if (!data) {
+            return false
+        }
+        return true
+    } catch (error) {
+        console.log("====== lỗi delete VoucherController =======", error);
+        return false
+    }
+}
+
+module.exports = { insert, getAll, getByUserId, receiveVoucher, getVoucher, update, deleteVoucher }

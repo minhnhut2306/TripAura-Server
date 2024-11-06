@@ -74,6 +74,91 @@ const { createResponse } = require('../src/helper/createResponse.helper');
  *       500:
  *         description: Lỗi khi lấy dữ liệu
  */
+
+/**
+ * @swagger
+ * /detail/api/update/{id}:
+ *   put:
+ *     summary: Cập nhật thông tin chi tiết tour
+ *     description: Cập nhật các thông tin chi tiết cho tour dựa trên ID
+ *     tags: [Detail]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         description: ID của chi tiết tour cần cập nhật
+ *         schema:
+ *           type: string
+ *           example: "60c72b2f9b1d4e7f5c9f6f8b"
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               startDay:
+ *                 type: string
+ *                 example: "2024-01-01"
+ *               endDay:
+ *                 type: string
+ *                 example: "2024-01-05"
+ *               maxTicket:
+ *                 type: number
+ *                 example: 50
+ *               minTicket:
+ *                 type: number
+ *                 example: 10
+ *               priceAdult:
+ *                 type: number
+ *                 example: 2000000
+ *               priceChildren:
+ *                 type: number
+ *                 example: 1000000
+ *               PromotionalPrice:
+ *                 type: number
+ *                 example: 1500000
+ *               status:
+ *                 type: string
+ *                 example: "active"
+ *               tourId:
+ *                 type: string
+ *                 example: "60c72b2f9b1d4e7f5c9f6f8b"
+ *     responses:
+ *       200:
+ *         description: Cập nhật thành công
+ *       400:
+ *         description: Dữ liệu không hợp lệ
+ *       404:
+ *         description: Không tìm thấy chi tiết tour
+ *       500:
+ *         description: Lỗi máy chủ
+ */
+
+/**
+ * @swagger
+ * /detail/api/delete/{id}:
+ *   delete:
+ *     summary: Xóa thông tin chi tiết tour
+ *     description: Xóa thông tin chi tiết cho tour dựa trên ID
+ *     tags: [Detail]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         description: ID của chi tiết tour cần xóa
+ *         schema:
+ *           type: string
+ *           example: "60c72b2f9b1d4e7f5c9f6f8b"
+ *     responses:
+ *       200:
+ *         description: Xóa thành công
+ *       404:
+ *         description: Không tìm thấy chi tiết tour để xóa
+ *       500:
+ *         description: Lỗi máy chủ
+ */
+
 router.post('/api/add', async function (req, res) {
     try {
         const { startDay, endDay, maxTicket, minTicket, priceAdult, priceChildren, PromotionalPrice, tourId } = req.body;
@@ -114,6 +199,39 @@ router.post('/api/getByTourId', async function (req, res) {
 
     } catch (error) {
         console.log(error);
+    }
+})
+
+router.put('/api/update/:id', async function (req, res) {
+    try {
+        const { id } = req.params;
+        const { startDay, endDay, maxTicket, minTicket, priceAdult, priceChildren, PromotionalPrice, status, tourId } = req.body;
+        const data = await detailController.update(id, startDay, endDay, maxTicket, minTicket, priceAdult, priceChildren, PromotionalPrice, status, tourId)
+
+        if (data) {
+            return res.json(createResponse(200, "Cập nhật thành công", "success"));
+        } else {
+            return res.json(createResponse(500, "Cập nhật thông tin thất bại", "error"));
+        }
+    } catch (error) {
+        console.log(error);
+        return res.json(createResponse(500, "Đã xảy ra lỗi máy chủ", "error"));
+    }
+});
+
+router.delete('/api/delete/:id', async function (req, res) {
+    try {
+        const { id } = req.params;
+        const data = await detailController.remove(id)
+        if (data) {
+            return res.json(createResponse(200, "Xóa thành công", "success"));
+        } else {
+            return res.json(createResponse(500, "Xóa thông tin thất bại", "error"));
+        }
+    }catch (error) {
+        console.log(error);
+        return res.json(createResponse(500, "Đã xảy ra lỗi máy chủ", "error"));
+
     }
 })
 

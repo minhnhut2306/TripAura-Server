@@ -11,7 +11,7 @@ const User = require('../src/modules/UserModle')
  * /review/api/addReview:
  *   post:
  *     summary: Thêm đánh giá cho tour
- *     description: Thêm một đánh giá mới cho tour với thông tin người dùng, điểm đánh giá, bình luận và ngày đánh giá
+ *     description: Thêm một đánh giá mới cho tour với thông tin người dùng, điểm đánh giá, bình luận và ngày đánh giá.
  *     tags: [Review]
  *     requestBody:
  *       required: true
@@ -38,63 +38,18 @@ const User = require('../src/modules/UserModle')
  *     responses:
  *       200:
  *         description: Thêm review thành công
+ *       400:
+ *         description: Lỗi khi thêm review
  *       500:
  *         description: Lỗi máy chủ khi thêm review
  */
-router.post('/api/addReview', async function (req, res) {
-    try {
-        const formatday = moment().toDate()
-        const { userId, tourId, rating, comment, dayReview,image } = req.body;
-        
-        console.log("Request body: ", req.body);
-        const booking = await Booking.findOne({ userId });
-
-        console.log("Booking : ", booking); 
-        if (!booking) {
-            return res.json(createResponse(400, "Bạn chưa có đặt tour này.", "error"));
-        }
-
-        console.log("User ID from request: ", userId);
-        const user = await User.findOne({ _id: userId }); 
-
-        console.log("User Id: ", user);
-
-        const fullname = user.fullname;
-        const avatar = user.avatar;
-        console.log('avatar: ', avatar);
-        console.log('fullname: ', fullname);
-        
-
-        const detail = await Detail.findOne({ tourId });
-        if (!detail) {
-            return res.json(createResponse(400, "K có thông tin tour này.", "error"));
-        }
-        console.log("Detail : ", detail);
-        if (moment().isBefore(detail.endDay)) {
-            return res.json(createResponse(400, "Chưa hoàn thành tour chưa có đánh giá được.", "error"));
-        }
-        console.log("check : ", dayReview);
-
-        const finalDayReview = dayReview || formatday;
-
-        console.log("Day review: ", finalDayReview);
-
-
-        const review = await reviewController.insert({ userId, tourId, rating, comment, dayReview:formatday,image,fullname,avatar });
-        return res.json(createResponse(200, "Thêm review thành công.", "success", review));
-        
-    } catch (error) {
-        console.log("===== Lỗi api addReview =====", error);
-        return res.json(createResponse(500, "Lỗi máy chủ khi thêm review.", "error"));
-    }
-});
 
 /**
  * @swagger
  * /review/api/getByUserId:
  *   post:
  *     summary: Lấy danh sách đánh giá của người dùng
- *     description: Lấy danh sách đánh giá theo User ID
+ *     description: Lấy danh sách đánh giá theo User ID.
  *     tags: [Review]
  *     requestBody:
  *       required: true
@@ -114,28 +69,13 @@ router.post('/api/addReview', async function (req, res) {
  *       500:
  *         description: Lỗi máy chủ khi lấy review
  */
-router.post('/api/getByUserId', async function (req, res) {
-    try {
-        const { userId } = req.body;
-        const data = await reviewController.getByUserId({ userId });
-        
-        if (data && data.length > 0) {
-            return res.json(createResponse(200, "Lấy review thành công.", "success", data));
-        } else {
-            return res.json(createResponse(404, "Không có review nào.", "error"));
-        }
-    } catch (error) {
-        console.log("===== Lỗi api getByUserId Review =====", error);
-        return res.json(createResponse(500, "Lỗi máy chủ khi lấy review.", "error"));
-    }
-});
 
 /**
  * @swagger
  * /review/api/getByTourId:
  *   post:
  *     summary: Lấy danh sách đánh giá cho tour
- *     description: Lấy danh sách đánh giá theo Tour ID
+ *     description: Lấy danh sách đánh giá theo Tour ID.
  *     tags: [Review]
  *     requestBody:
  *       required: true
@@ -155,11 +95,141 @@ router.post('/api/getByUserId', async function (req, res) {
  *       500:
  *         description: Lỗi máy chủ khi lấy review
  */
+
+/**
+ * @swagger
+ * /review/api/update/{id}:
+ *   put:
+ *     summary: Cập nhật đánh giá
+ *     description: Cập nhật thông tin đánh giá cho một đánh giá cụ thể theo ID.
+ *     tags: [Review]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID của đánh giá cần cập nhật
+ *         schema:
+ *           type: string
+ *           example: "60c72b2f9b1d4e7f5c9f6f8d"
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               rating:
+ *                 type: number
+ *                 example: 5
+ *               comment:
+ *                 type: string
+ *                 example: "Đánh giá đã được cập nhật!"
+ *               image:
+ *                 type: string
+ *                 example: "https://example.com/image.jpg"
+ *     responses:
+ *       200:
+ *         description: Cập nhật review thành công
+ *       404:
+ *         description: Không tìm thấy review
+ *       500:
+ *         description: Lỗi máy chủ khi cập nhật review
+ */
+
+/**
+ * @swagger
+ * /review/api/delete/{id}:
+ *   delete:
+ *     summary: Xóa đánh giá
+ *     description: Xóa một đánh giá theo ID.
+ *     tags: [Review]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID của đánh giá cần xóa
+ *         schema:
+ *           type: string
+ *           example: "60c72b2f9b1d4e7f5c9f6f8d"
+ *     responses:
+ *       200:
+ *         description: Xóa review thành công
+ *       404:
+ *         description: Không tìm thấy review
+ *       500:
+ *         description: Lỗi máy chủ khi xóa review
+ */
+
+router.post('/api/addReview', async function (req, res) {
+    try {
+        const formatday = moment().toDate()
+        const { userId, tourId, rating, comment, dayReview, image } = req.body;
+
+        console.log("Request body: ", req.body);
+        const booking = await Booking.findOne({ userId });
+
+        console.log("Booking : ", booking);
+        if (!booking) {
+            return res.json(createResponse(400, "Bạn chưa có đặt tour này.", "error"));
+        }
+
+        console.log("User ID from request: ", userId);
+        const user = await User.findOne({ _id: userId });
+
+        console.log("User Id: ", user);
+
+        const fullname = user.fullname;
+        const avatar = user.avatar;
+        console.log('avatar: ', avatar);
+        console.log('fullname: ', fullname);
+
+
+        const detail = await Detail.findOne({ tourId });
+        if (!detail) {
+            return res.json(createResponse(400, "K có thông tin tour này.", "error"));
+        }
+        console.log("Detail : ", detail);
+        if (moment().isBefore(detail.endDay)) {
+            return res.json(createResponse(400, "Chưa hoàn thành tour chưa có đánh giá được.", "error"));
+        }
+        console.log("check : ", dayReview);
+
+        const finalDayReview = dayReview || formatday;
+
+        console.log("Day review: ", finalDayReview);
+
+
+        const review = await reviewController.insert({ userId, tourId, rating, comment, dayReview: formatday, image, fullname, avatar });
+        return res.json(createResponse(200, "Thêm review thành công.", "success", review));
+
+    } catch (error) {
+        console.log("===== Lỗi api addReview =====", error);
+        return res.json(createResponse(500, "Lỗi máy chủ khi thêm review.", "error"));
+    }
+});
+
+
+router.post('/api/getByUserId', async function (req, res) {
+    try {
+        const { userId } = req.body;
+        const data = await reviewController.getByUserId({ userId });
+
+        if (data && data.length > 0) {
+            return res.json(createResponse(200, "Lấy review thành công.", "success", data));
+        } else {
+            return res.json(createResponse(404, "Không có review nào.", "error"));
+        }
+    } catch (error) {
+        console.log("===== Lỗi api getByUserId Review =====", error);
+        return res.json(createResponse(500, "Lỗi máy chủ khi lấy review.", "error"));
+    }
+});
+
 router.post('/api/getByTourId', async function (req, res) {
     try {
         const { tourId } = req.body;
         const data = await reviewController.getByTourId({ tourId });
-        
+
         if (data && data.length > 0) {
             return res.json(createResponse(200, "Lấy review thành công.", "success", data));
         } else {
@@ -170,5 +240,38 @@ router.post('/api/getByTourId', async function (req, res) {
         return res.json(createResponse(500, "Lỗi máy chủ khi lấy review.", "error"));
     }
 });
+
+router.put('/api/update/:id', async function (req, res) {
+    try {
+        const { id } = req.params;
+        const { rating, comment, image } = req.body;
+        const review = await reviewController.update({ id, rating, comment, image });
+        if (review) {
+            return res.json(createResponse(200, "Cập nhật review thành công.", "success", review));
+        } else {
+            return res.json(createResponse(404, "Không tìm thấy review.", "error"));
+        }
+    } catch (error) {
+        console.log("===== Lỗi api update Review =====", error);
+        return res.json(createResponse(500, "Lỗi máy chủ khi cập nhật review.", "error"));
+
+    }
+
+})
+router.delete('/api/delete/:id', async function (req, res) {
+    try {
+        const { id } = req.params;
+        const deletereview = await reviewController.remove({ id });
+        if (deletereview) {
+            return res.json(createResponse(200, "Xóa review thành công.", "success", deletereview));
+        } else {
+            return res.json(createResponse(404, "Không tìm thấy review.", "error"));
+        }
+    } catch (error) {
+        console.log("===== Lỗi api delete Review =====", error);
+        return res.json(createResponse(500, "Lỗi máy chủ khi xóa review.", "error"));
+    }
+
+})
 
 module.exports = router;
