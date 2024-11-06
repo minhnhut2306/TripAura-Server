@@ -173,10 +173,10 @@ router.post('/api/add', async function (req, res) {
             tourId == "") {
             res.json("chưa dduur dữ liệu ")
         } else {
-            const tour = await detailController
+            const option = await detailController
                 .insert(startDay, endDay, maxTicket, minTicket, priceAdult, priceChildren, PromotionalPrice, tourId)
-            if (tour) {
-                res.json(tour)
+            if (option) {
+                return res.json(createResponse(200, "Thêm dữ liệu thành công", "success", option))
             } else {
                 return res.json(createResponse(500, "Lỗi Add", "error"));
             }
@@ -192,7 +192,7 @@ router.post('/api/getByTourId', async function (req, res) {
 
         const detailTours = await detailController.getByTourId(tourId)
         if (detailTours) {
-            res.json(detailTours)
+            return res.json(createResponse(200, "Lấy dữ liệu thành công", "success", detailTours))
         } else {
             return res.json(createResponse(500, "Không có dữ liệu", "error"));
         }
