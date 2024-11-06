@@ -134,7 +134,7 @@ const updateDetailByDay = async () => {
     }
 }
 // updateDetailByDay()
-const update = async (detalId, startDay, endDay, maxTicket, minTicket, priceAdult, priceChildren, PromotionalPrice, status, tourId) => {
+const update = async (detalId, startDay, endDay, maxTicket, minTicket, priceAdult, priceChildren, PromotionalPrice, status) => {
     try {
         const data = await DetailModule.findByIdAndUpdate(detalId,
             {
@@ -146,7 +146,6 @@ const update = async (detalId, startDay, endDay, maxTicket, minTicket, priceAdul
                 priceChildren,
                 PromotionalPrice,
                 status,
-                tourId
             },
             { new: true });
         console.log("========== detail đã update ==========", data);

@@ -205,8 +205,8 @@ router.post('/api/getByTourId', async function (req, res) {
 router.put('/api/update/:id', async function (req, res) {
     try {
         const { id } = req.params;
-        const { startDay, endDay, maxTicket, minTicket, priceAdult, priceChildren, PromotionalPrice, status, tourId } = req.body;
-        const data = await detailController.update(id, startDay, endDay, maxTicket, minTicket, priceAdult, priceChildren, PromotionalPrice, status, tourId)
+        const { startDay, endDay, maxTicket, minTicket, priceAdult, priceChildren, PromotionalPrice, status } = req.body;
+        const data = await detailController.update(id, startDay, endDay, maxTicket, minTicket, priceAdult, priceChildren, PromotionalPrice, status)
 
         if (data) {
             return res.json(createResponse(200, "Cập nhật thành công", "success"));
