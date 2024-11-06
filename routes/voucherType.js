@@ -294,6 +294,8 @@ router.delete("/api/delete/:id", async function (req, res) {
     try {
         const { id } = req.params;
         const data = await vouchetController.remove(id);
+        console.log('id', id);
+        console.log('data', data);
         if (data) {
             return res.json(createResponse(200, "Xóa loại voucher thành công", "success", data));
         } else {

@@ -38,7 +38,7 @@ const update = async (voucherTypeId, name) => {
 
 const remove = async (voucherTypeId) => {
     try {
-        const data = await _VoucherType.findByIdAndRemove(voucherTypeId)
+        const data = await _VoucherType.findByIdAndDelete(voucherTypeId)
         return data
     } catch (error) {
         console.log("===== Lỗi remove VoucherType");
