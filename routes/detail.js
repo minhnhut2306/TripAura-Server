@@ -77,6 +77,7 @@ const { createResponse } = require('../src/helper/createResponse.helper');
 router.post('/api/add', async function (req, res) {
     try {
         const { startDay, endDay, maxTicket, minTicket, priceAdult, priceChildren, PromotionalPrice, tourId } = req.body;
+
         if (startDay == "" ||
             endDay == "" ||
             maxTicket == "" ||
