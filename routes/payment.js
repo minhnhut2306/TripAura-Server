@@ -9,7 +9,7 @@ const payos = new PayOS(
     '2094e0b06f2b8f9f1aa9b7155f2126f1ee0d2fa90d461c2dcf77abb4dd586418'
 );
 
-const YOUR_DOMAIN = 'http://192.168.1.10:3000';
+const YOUR_DOMAIN = 'https://trip-aura-server.vercel.app/';
 
 router.post('/create-payment-link', async (req, res) => {
     const {amount, orderId, description } = req.body;
@@ -80,7 +80,7 @@ router.get('/success', async (req, res) => {
 });
 
 router.get('/cancel', async (req, res) => {
-    console.log('Received cancel request:', req.query); // Log toàn bộ `req.query` để kiểm tra dữ liệu
+    console.log('Received cancel request:', req.query); 
 
     const { orderId } = req.query;
 
