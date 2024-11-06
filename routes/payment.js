@@ -12,7 +12,7 @@ const payos = new PayOS(
 const YOUR_DOMAIN = 'https://trip-aura-server.vercel.app/';
 
 router.post('/create-payment-link', async (req, res) => {
-    const {amount, orderId, description } = req.body;
+    const {amount, orderId, description,fullname,phone,email } = req.body;
     const orderCode = Number(orderId);
 
     if (!orderId || isNaN(orderCode) || orderCode <= 0) {
@@ -39,7 +39,10 @@ router.post('/create-payment-link', async (req, res) => {
                 orderId: orderCode.toString(),
                 description: description || 'No description provided',
                 redirectUrl: order.redirectUrl,
-                status: 1
+                status: 1,
+                fullname: fullname,
+                phone: phone,
+                email: email,
             });
             await payment.save();
             res.status(201).json({ paymentLink: paymentLink.checkoutUrl });

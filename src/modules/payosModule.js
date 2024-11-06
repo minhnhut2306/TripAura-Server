@@ -8,9 +8,12 @@ const paymentSchema = new mongoose.Schema({
     status: {
         type: Number,
         required: true,
-        enum: [0, 1], 
+        enum: [0, 1],
         default: 1
-    }
+    },
+    fullname: { type: String, required: true },
+    phone: { type: String, required: true },
+    email: { type: String, required: true },
 }, { timestamps: true });
 
 const Payment = mongoose.model('Payment', paymentSchema);
