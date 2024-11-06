@@ -87,6 +87,7 @@ const getByTourId = async (tourId) => {
                         destination: 1
                     },
                     details: {
+                        _id: 1,
                         priceAdult: 1,
                         startDay: 1,
                         endDay: 1,
@@ -168,4 +169,4 @@ const remove = async (detalId) => {
 
     }
 }
-module.exports = { insert, getByTourId , update, remove}
+module.exports = { insert, getByTourId, update, remove }
