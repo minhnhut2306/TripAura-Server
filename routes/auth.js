@@ -366,6 +366,21 @@ router.post("/login/google", async (req, res) => {
     res.status(500).json({ message: 'Server error during login' });
   }
 });
+
+router.get('/api/getAll', async (req, res) => {
+  try {
+    const users = await authController.getAllUser()
+    if (users) {
+      return res.status(200).json({ message: 'success', data: users });
+    } else {
+      return res.status(400).json({ message: 'failed' });
+    }
+  } catch (error) {
+    console.log("==== lỗi /api/getAll", error);
+    return res.status(500).json({ message: 'lỗi server' });
+
+  }
+})
 // router.get('/google', passport.authenticate('google', { scope: ['profile'], session: false }));
 // router.get('/google/callback', (req, res, next) => {
 //     console.log('callback')
