@@ -458,7 +458,6 @@ const deleteTour = async (tourId) => {
   }
 }
 
-deleteTour("67297d740124911dd5ea90a0")
 
 module.exports = {
   insert,
