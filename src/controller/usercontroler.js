@@ -166,4 +166,22 @@ async function createUser(userRequest) {
 }
 
 
+// 
+exports.getAllUser = async () => {
+  try {
+    const users = await UserModle.find()
+    if (users.length > 0) {
+      console.log("==== User", users);
+      return users
+    } else {
+      return false
+    }
+  } catch (error) {
+    console.log("==== lỗi getAllUser", error);
+    return false
+  }
+}
+
+
+
 
