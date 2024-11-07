@@ -68,7 +68,7 @@ router.get('/success', async (req, res) => {
 
         if (payment) {
             console.log('Payment found:', payment);
-            payment.status = 0;
+            payment.status = 1;
             await payment.save();
             console.log('Payment updated:', payment);
             res.status(200).send(`Thanh toán thành công với số tiền: ${payment.amount} VNĐ.`);
@@ -97,7 +97,7 @@ router.get('/cancel', async (req, res) => {
         console.log('Payment found:', payment);
 
         if (payment) {
-            payment.status = 1;
+            payment.status = 0;
             await payment.save();
             console.log('Payment status updated to canceled:', payment);
             res.status(200).send("Thanh toán đã bị hủy.");
