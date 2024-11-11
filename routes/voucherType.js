@@ -239,7 +239,7 @@ const { createResponse } = require('../src/helper/createResponse.helper');
 
 
 
-router.post('', async function (req, res) {
+router.post('/api/add', async function (req, res) {
     try {
         const { name } = req.body
         if (!name) {
