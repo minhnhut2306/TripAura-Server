@@ -6,13 +6,20 @@ const mongoose = require("mongoose");
 const TourModule = require("../modules/TourModule");
 const ImageModule = require("../modules/ImageModle");
 
-const filter = async (destination, minPrice, maxPrice, startDate) => {
+const filter = async (tourName, destination, minPrice, maxPrice, startDate) => {
   console.log(destination, minPrice, maxPrice, startDate);
   const a = Number(minPrice)
   const b = Number(maxPrice)
   try {
     // Tạo điều kiện động cho $match
     let matchConditions = {};
+    if (tourName) {
+      // Biểu thức chính quy tìm kiếm tour với ít nhất một ký tự giống nhau
+      const regexPattern = `.*${tourName}.*`; // Tìm kiếm với ít nhất một ký tự giống
+      matchConditions["tourName"] = {
+        $regex: new RegExp(regexPattern, "i"), // Tìm kiếm không phân biệt chữ hoa, thường
+      };
+    }
 
     if (destination) {
       // Biểu thức chính quy tìm kiếm địa chỉ với ít nhất một ký tự giống nhau

@@ -193,9 +193,9 @@ const TourModule = require('../src/modules/TourModule');
 
 router.post('/api/searchTour', async function (req, res) {
     try {
-        const { destination, minPrice, maxPrice, startDate } = req.body;
+        const { tourName, destination, minPrice, maxPrice, startDate } = req.body;
 
-        const tour = await tourController.filter(destination, minPrice, maxPrice, startDate)
+        const tour = await tourController.filter(tourName, destination, minPrice, maxPrice, startDate)
         if (tour && tour.length > 0) {
             return res.json(createResponse(200, "Lấy tour thành công", "success", tour));
         } else {
