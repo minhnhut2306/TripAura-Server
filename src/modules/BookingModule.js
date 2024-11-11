@@ -21,6 +21,8 @@ const BookingSchema = new Schema({
     fullname: { type: String, default: "" },
     phone: { type: String, default: "" },
     email: { type: String, default: "", sparse: true },
+    tourName : { type: String, default: "", sparse: true },
+    linkImage: [{ type: String, required: true }],
 });
 
 module.exports = mongoose.model('Booking', BookingSchema)

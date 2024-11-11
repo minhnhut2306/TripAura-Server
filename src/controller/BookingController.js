@@ -1,7 +1,7 @@
 const _Booking = require('../modules/BookingModule');
 
-const insert = async (detailId, userId, voucherId, numAdult, numChildren, priceAdult, priceChildren, createAt, status,fullname,email,phone) => {
-    console.log(detailId, userId, voucherId, numAdult, numChildren, priceAdult, priceChildren, createAt, status, fullname, email, phone);
+const insert = async (detailId, userId, voucherId, numAdult, numChildren, priceAdult, priceChildren, createAt, status,fullname,email,phone,tourName,linkImage) => {
+    console.log(detailId, userId, voucherId, numAdult, numChildren, priceAdult, priceChildren, createAt, status, fullname, email, phone,tourName,linkImage);
 
     try {
         const data = new _Booking({
@@ -17,6 +17,8 @@ const insert = async (detailId, userId, voucherId, numAdult, numChildren, priceA
             fullname,
             phone,
             email,
+            tourName,
+            linkImage
         });
 
         await data.save();
@@ -45,6 +47,16 @@ const allBookings = async () => {
         return false;
     }
 }
+const allBookingsIduser = async (userId) => {
+    try {
+        const data = await _Booking.find({ userId: userId });
+        return data;
+    } catch (error) {
+        console.log("=============booking findById error", error);
+        return false;
+    }
+};
+
 
 const update = async (bookingid, status) => {
     try {
@@ -71,4 +83,4 @@ const remove = async (bookingid) => {
     }
 }
 
-module.exports = { insert, update, remove, bookingId, allBookings };
+module.exports = { insert, update, remove, bookingId, allBookings,allBookingsIduser };

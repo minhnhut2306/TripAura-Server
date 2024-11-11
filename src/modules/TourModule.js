@@ -9,7 +9,6 @@ const TourSchema = new Schema({
     createAt:{type: Date, required: true},
     category:{ type: ObjectId, ref:'Category' },
     popularity: { type: Number, default: 0 }
-    
 })
 
 module.exports = mongoose.model('Tour', TourSchema);

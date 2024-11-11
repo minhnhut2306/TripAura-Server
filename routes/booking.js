@@ -3,6 +3,9 @@ var router = express.Router();
 const bookingController = require('../src/controller/BookingController')
 var { createResponse } = require('./../src/helper/createResponse.helper');
 const User = require('../src/modules/UserModle')
+const Detail = require('../src/modules/DetailModule')
+const Tour = require('../src/modules/TourModule')
+const Image = require('../src/modules/ImageModle')
 
 
 /**
@@ -111,13 +114,31 @@ router.post('/api/addToCart', async function (req, res) {
         console.log('userId: ' + userId);
         const user = await User.findOne({ _id: userId });
         const fullname = user.fullname;
-        console.log('fullname: ' + fullname);
         const email = user.email;
-        console.log('email: ' + email);
         const phone = user.phone;
-        console.log('phone: ' + phone);
 
-        const data = await bookingController.insert(detailId, userId, voucherId, numAdult, numChildren, priceAdult, priceChildren, createAt, status, fullname, email, phone)
+        console.log('detailId:', detailId);
+        const detail = await Detail.findOne({ _id: detailId });
+        console.log('detail:', detail);
+
+        const idtour = detail.tourId;
+
+        const tour = await Tour.findOne({ _id: idtour });
+
+        console.log('tourId', idtour);
+
+        console.log('tour:', tour);
+        const tourName = tour.tourName;
+
+        console.log('tour name', tourName);
+        const image = await Image.findOne({ tourId: idtour });
+
+        console.log('image:', image);
+
+        const linkImage = image.linkImage;
+        console.log('link image:', linkImage);
+
+        const data = await bookingController.insert(detailId, userId, voucherId, numAdult, numChildren, priceAdult, priceChildren, createAt, status, fullname, email, phone, tourName,linkImage)
         if (data) {
             return res.json(createResponse(200, "Add thành công", "success", data));
         } else {
@@ -138,7 +159,20 @@ router.get('/api/getbookingId/:id', async (req, res) => {
     }
 });
 
-// Route để lấy tất cả bookings
+router.get('/api/bookinguser/:id', async (req, res) => {
+    try {
+        const bookings = await bookingController.allBookingsIduser(req.params.id); 
+        
+        if (bookings.length === 0) {
+            return res.json(createResponse(500, "Lấy danh sách thất bại", "error", bookings));
+        }
+
+        return res.json(createResponse(200, "Lấy danh sách thành công", "success", bookings));
+    } catch (error) {
+        res.status(500).json({ message: "Server error" });
+    }
+});
+
 router.get('/api/allBookings', async (req, res) => {
     const bookings = await bookingController.allBookings();
     if (bookings) {
