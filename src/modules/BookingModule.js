@@ -8,7 +8,7 @@ const BookingSchema = new Schema({
     userId: { type: ObjectId, ref: 'User', required: true },
     voucherId: { type: ObjectId, ref: 'Voucher' },
     numAdult: { type: Number, required: true, min: 1 },
-    numchildren: { type: Number, required: true },
+    numChildren: { type: Number, required: true },
     priceAdult: { type: Number, required: true },
     priceChildren: { type: Number, required: true },
     createAt: { type: Date, required: true },

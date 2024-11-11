@@ -30,7 +30,7 @@ var { createResponse } = require('./../src/helper/createResponse.helper');
  *               numAdult:
  *                 type: number 
  *                 example: 2 
- *               numchildren:
+ *               numChildren:
  *                 type: number 
  *                 example: 1 
  *               priceAdult:
@@ -104,9 +104,9 @@ var { createResponse } = require('./../src/helper/createResponse.helper');
 
 router.post('/api/addToCart', async function (req, res) {
     try {
-        const { detailId, userId, voucherId, numAdult, numchildren, priceAdult, priceChildren } = req.body
+        const { detailId, userId, voucherId, numAdult, numChildren, priceAdult, priceChildren } = req.body
         const createAt = new Date()
-        const data = await bookingController.insert(detailId, userId, voucherId, numAdult, numchildren, priceAdult, priceChildren, createAt, 1)
+        const data = await bookingController.insert(detailId, userId, voucherId, numAdult, numChildren, priceAdult, priceChildren, createAt, 1)
         if (data) {
             return res.json(createResponse(200, "Add thành công", "success", data));
         } else {
