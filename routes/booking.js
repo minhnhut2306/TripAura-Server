@@ -128,6 +128,26 @@ router.post('/api/addToCart', async function (req, res) {
     }
 });
 
+router.get('/api/getbookingId/:id', async (req, res) => {
+    const { id } = req.params;
+    const booking = await bookingController.bookingId(id);
+    if (booking) {
+        res.status(200).json(booking);
+    } else {
+        res.status(404).json({ message: "Booking not found" });
+    }
+});
+
+// Route để lấy tất cả bookings
+router.get('/api/allBookings', async (req, res) => {
+    const bookings = await bookingController.allBookings();
+    if (bookings) {
+        res.status(200).json(bookings);
+    } else {
+        res.status(500).json({ message: "Error retrieving bookings" });
+    }
+});
+
 router.put('/api/update/:id', async (req, res) => {
     try {
         const { id } = req.params;
