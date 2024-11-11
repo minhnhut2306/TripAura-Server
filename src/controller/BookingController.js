@@ -1,7 +1,7 @@
 const _Booking = require('../modules/BookingModule');
 
-const insert = async (detailId, userId, voucherId, numAdult, numChildren, priceAdult, priceChildren, createAt, status,fullname,phone,email) => {
-    console.log(detailId, userId, voucherId, numAdult, numChildren, priceAdult, priceChildren, createAt, status, fullname, phone, email);
+const insert = async (detailId, userId, voucherId, numAdult, numChildren, priceAdult, priceChildren, createAt, status,fullname,email,phone) => {
+    console.log(detailId, userId, voucherId, numAdult, numChildren, priceAdult, priceChildren, createAt, status, fullname, email, phone);
 
     try {
         const data = new _Booking({
