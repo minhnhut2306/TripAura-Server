@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 const bookingController = require('../src/controller/BookingController')
 var { createResponse } = require('./../src/helper/createResponse.helper');
+const User = require('../src/modules/UserModle')
 
 
 /**
@@ -104,9 +105,19 @@ var { createResponse } = require('./../src/helper/createResponse.helper');
 
 router.post('/api/addToCart', async function (req, res) {
     try {
-        const { detailId, userId, voucherId, numAdult, numChildren, priceAdult, priceChildren } = req.body
+        const { detailId, userId, voucherId, numAdult, numChildren, priceAdult, priceChildren, status } = req.body
         const createAt = new Date()
-        const data = await bookingController.insert(detailId, userId, voucherId, numAdult, numChildren, priceAdult, priceChildren, createAt, 1)
+
+        console.log('userId: ' + userId);
+        const user = await User.findOne({ _id: userId });
+        const fullname = user.fullname;
+        console.log('fullname: ' + fullname);
+        const email = user.email;
+        console.log('email: ' + email);
+        const phone = user.phone;
+        console.log('phone: ' + phone);
+
+        const data = await bookingController.insert(detailId, userId, voucherId, numAdult, numChildren, priceAdult, priceChildren, createAt, status, fullname, email, phone)
         if (data) {
             return res.json(createResponse(200, "Add thành công", "success", data));
         } else {
