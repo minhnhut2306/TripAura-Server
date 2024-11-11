@@ -121,11 +121,9 @@ router.put('/api/update/:id', async (req, res) => {
     try {
         const { id } = req.params;
         let { status } = req.body;
-
         if (status === "success") {
             status = 0;
         }
-
         const data = await bookingController.update(id, status);
         if (data) {
             return res.json(createResponse(200, "Cập nhật thành công", "success", data));
