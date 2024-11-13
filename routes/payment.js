@@ -18,7 +18,7 @@ router.post('/create-payment-link', async (req, res) => {
     if (!orderId || isNaN(orderCode) || orderCode <= 0) {
         return res.status(400).json({ message: 'orderId must be a positive number.' });
     }
-    const qrAmount = 5000;
+    const qrAmount = 10000;
     const order = {
         amount: qrAmount,
         description: description || 'No description provided',
