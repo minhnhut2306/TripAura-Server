@@ -15,7 +15,7 @@ const BookingSchema = new Schema({
     status: {
         type: Number,
         required: true,
-        enum: [0, 1],
+        enum: [0, 1, 2],
         default: 1
     },
 
