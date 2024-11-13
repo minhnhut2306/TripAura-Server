@@ -1,4 +1,25 @@
 const imageModule = require('../modules/ImageModle')
+const cloudinary = require('cloudinary').v2;
+
+cloudinary.config({
+  cloud_name: 'dtoazwcfd',
+  api_key: '976765598717887',
+  api_secret: 'MM8f0UKOYIKke1JtCookDu0DpmU'
+})
+
+const uploadFile = async (filePath) => {
+  console.log(filePath);
+
+  try {
+    const result = await cloudinary.uploader.upload(filePath);
+    console.log(result);
+
+    return result
+
+  } catch (error) {
+    console.log(error);
+  }
+}
 
 const insert = async (linkImage, tourId) => {
   try {
@@ -45,4 +66,4 @@ const remove = async (imageId) => {
 }
 
 
-module.exports = { insert, getById, update, remove}
+module.exports = { insert, getById, update, remove, uploadFile }

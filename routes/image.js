@@ -198,4 +198,20 @@ router.delete('/api/delete/:id', async function (req, res) {
     }
 })
 
+router.post('/api/uploadImageCloudinary', async (req, res) => {
+    try {
+        const { image } = req.body
+        const loadImage = await imageController.uploadFile(image)
+        if (loadImage) {
+            return res.json(createResponse(200, "Thêm thành công", "success", loadImage));
+        } else {
+            return res.json(createResponse(500, "Lỗi", "failed"));
+        }
+    } catch (error) {
+        console.log(error);
+        return res.json(createResponse(500, "Lỗi server", "error"));
+
+    }
+})
+
 module.exports = router;
