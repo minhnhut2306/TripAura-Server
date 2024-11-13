@@ -18,11 +18,14 @@ const BookingSchema = new Schema({
         enum: [0, 1],
         default: 1
     },
+
     fullname: { type: String, default: "" },
     phone: { type: String, default: "" },
     email: { type: String, default: "", sparse: true },
+    descriptiontour: { type: String, default: "" },
     tourName : { type: String, default: "", sparse: true },
     linkImage: [{ type: String, required: true }],
+
 });
 
 module.exports = mongoose.model('Booking', BookingSchema)

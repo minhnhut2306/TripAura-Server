@@ -130,15 +130,20 @@ router.post('/api/addToCart', async function (req, res) {
         console.log('tour:', tour);
         const tourName = tour.tourName;
 
-        console.log('tour name', tourName);
-        const image = await Image.findOne({ tourId: idtour });
+        const descriptiontour  = tour.description;
 
+        console.log('description:', descriptiontour);
+
+        console.log('tour name', tourName);
+
+        const image = await Image.findOne({ tourId: idtour });
         console.log('image:', image);
 
         const linkImage = image.linkImage;
         console.log('link image:', linkImage);
 
-        const data = await bookingController.insert(detailId, userId, voucherId, numAdult, numChildren, priceAdult, priceChildren, createAt, status, fullname, email, phone, tourName,linkImage)
+        const data = await bookingController.insert(detailId, userId, voucherId, numAdult, numChildren, priceAdult, priceChildren, createAt, status, fullname, email, phone, descriptiontour,tourName,linkImage)
+        
         if (data) {
             return res.json(createResponse(200, "Add thành công", "success", data));
         } else {
@@ -151,13 +156,17 @@ router.post('/api/addToCart', async function (req, res) {
 
 router.get('/api/getbookingId/:id', async (req, res) => {
     const { id } = req.params;
+
     const booking = await bookingController.bookingId(id);
+    console.log('Booking:', booking);
+
     if (booking) {
-        res.status(200).json(booking);
+        return res.json(createResponse(200, "Lấy danh sách thành công", "success", booking));
     } else {
-        res.status(404).json({ message: "Booking not found" });
+        return res.json(createResponse(500, "Lấy danh sách thất bại", "error", booking));
     }
 });
+
 
 router.get('/api/bookinguser/:id', async (req, res) => {
     try {

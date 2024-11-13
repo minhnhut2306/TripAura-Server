@@ -1,7 +1,8 @@
 const _Booking = require('../modules/BookingModule');
+const { ObjectId } = require('mongodb');
 
-const insert = async (detailId, userId, voucherId, numAdult, numChildren, priceAdult, priceChildren, createAt, status,fullname,email,phone,tourName,linkImage) => {
-    console.log(detailId, userId, voucherId, numAdult, numChildren, priceAdult, priceChildren, createAt, status, fullname, email, phone,tourName,linkImage);
+const insert = async (detailId, userId, voucherId, numAdult, numChildren, priceAdult, priceChildren, createAt, status,fullname,email,phone,descriptiontour,tourName,linkImage) => {
+    console.log(detailId, userId, voucherId, numAdult, numChildren, priceAdult, priceChildren, createAt, status, fullname, email, phone,descriptiontour,tourName,linkImage);
 
     try {
         const data = new _Booking({
@@ -17,8 +18,10 @@ const insert = async (detailId, userId, voucherId, numAdult, numChildren, priceA
             fullname,
             phone,
             email,
+            descriptiontour,
             tourName,
-            linkImage
+            linkImage,
+            
         });
 
         await data.save();
