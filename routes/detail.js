@@ -223,14 +223,33 @@ router.delete('/api/delete/:id', async function (req, res) {
     try {
         const { id } = req.params;
         const data = await detailController.remove(id)
-        if (data) {
+        if (data.status == 1) {
             return res.json(createResponse(200, "Xóa thành công", "success"));
-        } else {
-            return res.json(createResponse(500, "Xóa thông tin thất bại", "error"));
         }
-    }catch (error) {
+        if (data.status == 0) {
+            return res.json(createResponse(500, "Không thể xóa Option này, Obtion hiện đang được bán. Hãy dừng việc bán trước khi xóa", "failed"));
+        }
+    } catch (error) {
         console.log(error);
         return res.json(createResponse(500, "Đã xảy ra lỗi máy chủ", "error"));
+
+    }
+})
+
+router.put('/api/stopSale', async (req, res) => {
+    try {
+        const { id } = req.body
+        const data = await detailController.stopSale(id)
+
+        if (data) {
+            return res.json(createResponse(200, "Dừng bán thành công", "success"));
+        } else {
+            return res.json(createResponse(500, "lỗi Dừng bán", "faile"));
+        }
+    } catch (error) {
+        console.log(error);
+
+        return res.json(createResponse(500, "lỗi Server", "error"));
 
     }
 })
