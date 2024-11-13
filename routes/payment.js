@@ -84,9 +84,7 @@ router.get('/success', async (req, res) => {
 
 router.get('/cancel', async (req, res) => {
     console.log('Received cancel request:', req.query); 
-
     const { orderId } = req.query;
-
     if (!orderId) {
         console.error('No orderId provided');
         return res.status(400).send("orderId is required.");
@@ -97,7 +95,7 @@ router.get('/cancel', async (req, res) => {
         console.log('Payment found:', payment);
 
         if (payment) {
-            payment.status = 1;
+            payment.status = 2;
             await payment.save();
             console.log('Payment status updated to canceled:', payment);
             res.status(200).send("Thanh toán đã bị hủy.");
