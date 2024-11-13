@@ -159,13 +159,39 @@ const update = async (detalId, startDay, endDay, maxTicket, minTicket, priceAdul
 }
 const remove = async (detalId) => {
     try {
-        const deletedetails = await DetailModule.findByIdAndDelete(detalId);
-        console.log("========== detail đã xóa ==========", deletedetails);
-        return deletedetails;
+        const detail = await DetailModule.find({ _id: detalId, status: 1 })
+        console.log("======== detail", detail);
+        if (detail.length > 0) {
+            return { status: 0 }
+        } else {
+            const deletedetails = await DetailModule.findByIdAndDelete(detalId);
+            console.log("========== detail đã xóa ==========", deletedetails);
+            return { status: 1, data: deletedetails };
+        }
+
     } catch (error) {
         console.log("========== Lỗi xóa detail ==========", error);
-        return false
+        return { status: -1 }
 
     }
 }
-module.exports = { insert, getByTourId, update, remove }
+
+const stopSale = async (id) => {console.log(id);
+
+    try {
+        const option = await DetailModule.findByIdAndUpdate({ _id: id },
+            { status: 0 }
+        )
+        if (option) {
+            return option
+        } else {
+            return false
+        }
+    } catch (error) {
+        console.log(error);
+        return false
+    }
+}
+// stopSale('672c1def9ff8f3f4681daf99')
+// remove('670a3280ec685a05cf1ce2ea')
+module.exports = { insert, getByTourId, update, remove, stopSale }
