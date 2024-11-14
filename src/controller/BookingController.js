@@ -1,5 +1,6 @@
 const _Booking = require('../modules/BookingModule');
 const { ObjectId } = require('mongodb');
+const mongoose = require('mongoose'); 
 
 const insert = async (detailId, userId, voucherId, numAdult, numChildren, priceAdult, priceChildren, createAt, status) => {
     console.log(detailId, userId, voucherId, numAdult, numChildren, priceAdult, priceChildren, createAt, status);
@@ -28,14 +29,7 @@ const insert = async (detailId, userId, voucherId, numAdult, numChildren, priceA
 const bookingId = async (bookingId) => {
     try {
         const data = await _Booking.findById(bookingId)
-            .populate('userId', 'fullname email phone')
-            .populate({
-                path: 'detailId',
-                populate: {
-                    path: 'tourId',
-                    select: 'tourName description',
-                }
-            })
+           
         return data;
     } catch (error) {
         console.log("=============booking findById error", error);
@@ -54,22 +48,76 @@ const allBookings = async () => {
 }
 const allBookingsIduser = async (userId) => {
     try {
-        const data = await _Booking.find({ userId: userId })
-            .populate('userId', 'fullname email phone')
-            .populate({
-                path: 'detailId',
-                populate: {
-                    path: 'tourId',
-                    select: 'tourName description',
+        console.log("userId:", userId);  // Kiểm tra giá trị userId
+        const data = await _Booking.aggregate([
+            {
+                $match: {
+                    userId: new mongoose.Types.ObjectId(userId) 
                 }
-            })
+            },
+            {
+                $lookup: {
+                    from: 'users', 
+                    localField: 'userId',
+                    foreignField: '_id',
+                    as: 'userInfo'
+                }
+            },
+            {
+                $unwind: '$userInfo'
+            },
+            {
+                $lookup: {
+                    from: 'details', 
+                    localField: 'detailId',
+                    foreignField: '_id',
+                    as: 'detailInfo'
+                }
+            },
+            {
+                $unwind: '$detailInfo'
+            },
+            {
+                $lookup: {
+                    from: 'tours', 
+                    localField: 'detailInfo.tourId',
+                    foreignField: '_id',
+                    as: 'tourInfo'
+                }
+            },
+            {
+                $unwind: '$tourInfo'
+            },
+            {
+                $lookup: {
+                    from: 'images', 
+                    localField: 'tourInfo._id',
+                    foreignField: 'tourId',
+                    as: 'tourImages'
+                }
+            },
+            {
+                $project: {
+                    'userInfo.fullname': 1,
+                    'userInfo.email': 1,
+                    'userInfo.phone': 1,
+                    'detailInfo.tourId': 1,
+                    'tourInfo.tourName': 1,
+                    'tourInfo.description': 1,
+                    'tourImages.linkImage': 1,
+                    'status': 1,
+                    'createAt': 1
+                }
+            }
+        ]);
+
+        console.log("Aggregated data:", data);  // Kiểm tra dữ liệu trả về từ aggregation
         return data;
     } catch (error) {
         console.log("=============booking findById error", error);
         return false;
     }
 };
-
 
 const update = async (bookingid, status) => {
     try {
@@ -96,4 +144,4 @@ const remove = async (bookingid) => {
     }
 }
 
-module.exports = { insert, update, remove, bookingId, allBookings, allBookingsIduser };
+module.exports = { insert, update, remove, bookingId, allBookings,allBookingsIduser };
