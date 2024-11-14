@@ -101,8 +101,11 @@ const allBookingsIduser = async (userId) => {
                     'tourImages.linkImage': 1,
                     'status': 1,
                     'createAt': 1,
-                    'priceAdult': 1,         // Thêm giá tiền của người lớn
-                    'priceChildren': 1       // Thêm giá tiền của trẻ em
+                    'priceAdult': 1,        
+                    'priceChildren': 1,
+                    'numAdult': 1,
+                    'numChildren': 1,
+        
                 }
             }
         ]);
