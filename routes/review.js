@@ -208,6 +208,30 @@ router.post('/api/addReview', async function (req, res) {
     }
 });
 
+router.post('/api/add', async function (req, res) {
+    try {
+        const { userId, tourId, rating, comment, dayReview, image } = req.body;
+        const formatday = dayReview ? moment(dayReview).toDate() : moment().toDate();
+
+        const user = await User.findOne({ _id: userId });
+        if (!user) {
+            return res.json(createResponse(404, "Không tìm thấy người dùng.", "error"));
+        }
+
+        const fullname = user.fullname;
+        const avatar = user.avatar;
+        
+        const review = await reviewController.insertmau({
+            userId, tourId, rating, comment, dayReview: formatday, image, fullname, avatar
+        });
+
+        return res.json(createResponse(200, "Thêm review thành công.", "success", review));
+    } catch (error) {
+        console.log("===== Lỗi api addReview =====", error);
+        return res.json(createResponse(500, "Lỗi máy chủ khi thêm review.", "error"));
+    }
+});
+
 
 router.post('/api/getByUserId', async function (req, res) {
     try {

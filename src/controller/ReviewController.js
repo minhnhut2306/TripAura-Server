@@ -13,6 +13,19 @@ const insert = async (userId, tourId, rating, comment, dayReview, image, fullnam
 
 }
 
+const insertmau = async (userId, tourId, rating, comment, dayReview, image, fullname, avatar) => {
+
+    try {
+        const data = new _Review(userId, tourId, rating, comment, dayReview, image, fullname, avatar)
+        await data.save()
+        return data
+    } catch (error) {
+        console.log("====== Lỗi insert Review =====", error);
+        return false
+    }
+
+}
+
 const getByUserId = async (userId) => {
     console.log(userId);
 
@@ -68,4 +81,4 @@ const remove = async (reviewId) => {
 
     }
 }
-module.exports = { insert, getByTourId, getByUserId, update, remove}
+module.exports = { insert, getByTourId, getByUserId, update, remove,insertmau}
