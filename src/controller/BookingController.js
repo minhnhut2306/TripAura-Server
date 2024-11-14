@@ -1,8 +1,8 @@
 const _Booking = require('../modules/BookingModule');
 const { ObjectId } = require('mongodb');
 
-const insert = async (detailId, userId, voucherId, numAdult, numChildren, priceAdult, priceChildren, createAt, status,fullname,email,phone,descriptiontour,tourName,linkImage) => {
-    console.log(detailId, userId, voucherId, numAdult, numChildren, priceAdult, priceChildren, createAt, status, fullname, email, phone,descriptiontour,tourName,linkImage);
+const insert = async (detailId, userId, voucherId, numAdult, numChildren, priceAdult, priceChildren, createAt, status) => {
+    console.log(detailId, userId, voucherId, numAdult, numChildren, priceAdult, priceChildren, createAt, status);
 
     try {
         const data = new _Booking({
@@ -15,13 +15,6 @@ const insert = async (detailId, userId, voucherId, numAdult, numChildren, priceA
             priceChildren,
             createAt,
             status,
-            fullname,
-            phone,
-            email,
-            descriptiontour,
-            tourName,
-            linkImage,
-            
         });
 
         await data.save();
@@ -35,12 +28,21 @@ const insert = async (detailId, userId, voucherId, numAdult, numChildren, priceA
 const bookingId = async (bookingId) => {
     try {
         const data = await _Booking.findById(bookingId)
+            .populate('userId', 'fullname email phone')
+            .populate({
+                path: 'detailId',
+                populate: {
+                    path: 'tourId', 
+                    select: 'tourName description', 
+                }
+            })
         return data;
     } catch (error) {
         console.log("=============booking findById error", error);
         return false;
     }
-}
+};
+
 const allBookings = async () => {
     try {
         const data = await _Booking.find();

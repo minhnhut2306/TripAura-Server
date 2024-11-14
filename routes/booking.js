@@ -110,40 +110,7 @@ router.post('/api/addToCart', async function (req, res) {
     try {
         const { detailId, userId, voucherId, numAdult, numChildren, priceAdult, priceChildren, status } = req.body
         const createAt = new Date()
-
-        console.log('userId: ' + userId);
-        const user = await User.findOne({ _id: userId });
-        const fullname = user.fullname;
-        const email = user.email;
-        const phone = user.phone;
-
-        console.log('detailId:', detailId);
-        const detail = await Detail.findOne({ _id: detailId });
-        console.log('detail:', detail);
-
-        const idtour = detail.tourId;
-
-        const tour = await Tour.findOne({ _id: idtour });
-
-        console.log('tourId', idtour);
-
-        console.log('tour:', tour);
-        const tourName = tour.tourName;
-
-        const descriptiontour  = tour.description;
-
-        console.log('description:', descriptiontour);
-
-        console.log('tour name', tourName);
-
-        const image = await Image.findOne({ tourId: idtour });
-        console.log('image:', image);
-
-        const linkImage = image.linkImage;
-        console.log('link image:', linkImage);
-
-        const data = await bookingController.insert(detailId, userId, voucherId, numAdult, numChildren, priceAdult, priceChildren, createAt, status, fullname, email, phone, descriptiontour,tourName,linkImage)
-        
+        const data = await bookingController.insert(detailId, userId, voucherId, numAdult, numChildren, priceAdult, priceChildren, createAt, status)
         if (data) {
             return res.json(createResponse(200, "Add thành công", "success", data));
         } else {
