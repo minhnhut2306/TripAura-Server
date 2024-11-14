@@ -32,8 +32,8 @@ const bookingId = async (bookingId) => {
             .populate({
                 path: 'detailId',
                 populate: {
-                    path: 'tourId', 
-                    select: 'tourName description', 
+                    path: 'tourId',
+                    select: 'tourName description',
                 }
             })
         return data;
@@ -54,7 +54,15 @@ const allBookings = async () => {
 }
 const allBookingsIduser = async (userId) => {
     try {
-        const data = await _Booking.find({ userId: userId });
+        const data = await _Booking.find({ userId: userId })
+            .populate('userId', 'fullname email phone')
+            .populate({
+                path: 'detailId',
+                populate: {
+                    path: 'tourId',
+                    select: 'tourName description',
+                }
+            })
         return data;
     } catch (error) {
         console.log("=============booking findById error", error);
@@ -88,4 +96,4 @@ const remove = async (bookingid) => {
     }
 }
 
-module.exports = { insert, update, remove, bookingId, allBookings,allBookingsIduser };
+module.exports = { insert, update, remove, bookingId, allBookings, allBookingsIduser };
