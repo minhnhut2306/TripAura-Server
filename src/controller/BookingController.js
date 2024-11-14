@@ -48,49 +48,43 @@ const allBookings = async () => {
 }
 const allBookingsIduser = async (userId) => {
     try {
-        console.log("userId:", userId);  // Kiểm tra giá trị userId
+        const userIdObject = new mongoose.Types.ObjectId(userId);
         const data = await _Booking.aggregate([
             {
                 $match: {
-                    userId: new mongoose.Types.ObjectId(userId) 
+                    userId: userIdObject
                 }
             },
             {
                 $lookup: {
-                    from: 'users', 
+                    from: 'users',
                     localField: 'userId',
                     foreignField: '_id',
                     as: 'userInfo'
                 }
             },
-            {
-                $unwind: '$userInfo'
-            },
+            { $unwind: '$userInfo' },
             {
                 $lookup: {
-                    from: 'details', 
+                    from: 'details',
                     localField: 'detailId',
                     foreignField: '_id',
                     as: 'detailInfo'
                 }
             },
-            {
-                $unwind: '$detailInfo'
-            },
+            { $unwind: '$detailInfo' },
             {
                 $lookup: {
-                    from: 'tours', 
+                    from: 'tours',
                     localField: 'detailInfo.tourId',
                     foreignField: '_id',
                     as: 'tourInfo'
                 }
             },
-            {
-                $unwind: '$tourInfo'
-            },
+            { $unwind: '$tourInfo' },
             {
                 $lookup: {
-                    from: 'images', 
+                    from: 'images',
                     localField: 'tourInfo._id',
                     foreignField: 'tourId',
                     as: 'tourImages'
@@ -106,18 +100,21 @@ const allBookingsIduser = async (userId) => {
                     'tourInfo.description': 1,
                     'tourImages.linkImage': 1,
                     'status': 1,
-                    'createAt': 1
+                    'createAt': 1,
+                    'priceAdult': 1,         // Thêm giá tiền của người lớn
+                    'priceChildren': 1       // Thêm giá tiền của trẻ em
                 }
             }
         ]);
 
-        console.log("Aggregated data:", data);  // Kiểm tra dữ liệu trả về từ aggregation
+        console.log("Aggregated data:", data);  // Kiểm tra dữ liệu trả về
         return data;
     } catch (error) {
-        console.log("=============booking findById error", error);
+        console.log("Error in aggregation:", error);
         return false;
     }
 };
+
 
 const update = async (bookingid, status) => {
     try {
