@@ -1,11 +1,13 @@
 const _Booking = require('../modules/BookingModule');
 const { ObjectId } = require('mongodb');
 const mongoose = require('mongoose'); 
+const cron = require('node-cron');
+const moment = require('moment');
 
 const insert = async (detailId, userId, voucherId, numAdult, numChildren, priceAdult, priceChildren, createAt, status) => {
-    console.log(detailId, userId, voucherId, numAdult, numChildren, priceAdult, priceChildren, createAt, status);
-
     try {
+        const expireAt = moment(createAt).add(10, 'minutes').toDate(); 
+
         const data = new _Booking({
             detailId,
             userId,
@@ -15,6 +17,7 @@ const insert = async (detailId, userId, voucherId, numAdult, numChildren, priceA
             priceAdult,
             priceChildren,
             createAt,
+            expireAt, 
             status,
         });
 
@@ -24,7 +27,24 @@ const insert = async (detailId, userId, voucherId, numAdult, numChildren, priceA
         console.log("=============booking", error);
         return false;
     }
-}
+};
+
+cron.schedule('* * * * *', async () => {
+    const now = moment().toDate();
+
+    const bookingsToCancel = await _Booking.find({
+        status: 1,  
+        expireAt: { $lte: now },
+    });
+
+    bookingsToCancel.forEach(async (booking) => {
+        booking.status = 2; 
+        await booking.save();
+        console.log(`Booking ${booking._id} đã bị hủy vì quá thời gian thanh toán.`);
+    });
+});
+
+
 const bookingId = async (bookingId) => {
     try {
         // Convert bookingId to ObjectId using "new"

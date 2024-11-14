@@ -12,6 +12,7 @@ const BookingSchema = new Schema({
     priceAdult: { type: Number, required: true },
     priceChildren: { type: Number, required: true },
     createAt: { type: Date, required: true },
+    expireAt: { type: Date, required: true }, // Thời gian hết hạn
     status: {
         type: Number,
         required: true,
@@ -19,5 +20,6 @@ const BookingSchema = new Schema({
         default: 1
     },
 });
+
 
 module.exports = mongoose.model('Booking', BookingSchema)
