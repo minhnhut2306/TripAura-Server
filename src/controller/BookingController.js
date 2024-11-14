@@ -25,14 +25,76 @@ const insert = async (detailId, userId, voucherId, numAdult, numChildren, priceA
         return false;
     }
 }
-
 const bookingId = async (bookingId) => {
     try {
-        const data = await _Booking.findById(bookingId)
-           
-        return data;
+        // Convert bookingId to ObjectId using "new"
+        if (!ObjectId.isValid(bookingId)) {
+            throw new Error("Invalid bookingId format");
+        }
+
+        const data = await _Booking.aggregate([
+            {
+                $match: {
+                    _id: new ObjectId(bookingId), // Use "new ObjectId(...)"
+                }
+            },
+            {
+                $lookup: {
+                    from: 'users',
+                    localField: 'userId',
+                    foreignField: '_id',
+                    as: 'userInfo'
+                }
+            },
+            { $unwind: '$userInfo' },
+            {
+                $lookup: {
+                    from: 'details',
+                    localField: 'detailId',
+                    foreignField: '_id',
+                    as: 'detailInfo'
+                }
+            },
+            { $unwind: '$detailInfo' },
+            {
+                $lookup: {
+                    from: 'tours',
+                    localField: 'detailInfo.tourId',
+                    foreignField: '_id',
+                    as: 'tourInfo'
+                }
+            },
+            { $unwind: '$tourInfo' },
+            {
+                $lookup: {
+                    from: 'images',
+                    localField: 'tourInfo._id',
+                    foreignField: 'tourId',
+                    as: 'tourImages'
+                }
+            },
+            {
+                $project: {
+                    'userInfo.fullname': 1,
+                    'userInfo.email': 1,
+                    'userInfo.phone': 1,
+                    'status': 1,
+                    'createAt': 1,
+                    'priceAdult': 1,
+                    'priceChildren': 1,
+                    'numAdult': 1,
+                    'numChildren': 1,
+                    'detailInfo.tourId': 1,
+                    'tourInfo.tourName': 1,
+                    'tourInfo.description': 1,
+                    'tourImages.linkImage': 1
+                }
+            }
+        ]);
+
+        return data.length > 0 ? data[0] : null;  // Return the first document if it exists, otherwise null
     } catch (error) {
-        console.log("=============booking findById error", error);
+        console.error("=============booking findById error", error.stack); // Improved error logging
         return false;
     }
 };
@@ -110,7 +172,7 @@ const allBookingsIduser = async (userId) => {
             }
         ]);
 
-        console.log("Aggregated data:", data);  // Kiểm tra dữ liệu trả về
+        console.log("Aggregated data:", data); 
         return data;
     } catch (error) {
         console.log("Error in aggregation:", error);
