@@ -108,9 +108,9 @@ const Image = require('../src/modules/ImageModle')
 
 router.post('/api/addToCart', async function (req, res) {
     try {
-        const { detailId, userId, voucherId, numAdult, numChildren, priceAdult, priceChildren, status } = req.body
+        const { detailId, userId, voucherId, numAdult, numChildren, priceAdult, priceChildren, status,totalPrice } = req.body
         const createAt = new Date()
-        const data = await bookingController.insert(detailId, userId, voucherId, numAdult, numChildren, priceAdult, priceChildren, createAt, status)
+        const data = await bookingController.insert(detailId, userId, voucherId, numAdult, numChildren, priceAdult, priceChildren, createAt, status,totalPrice)
         if (data) {
             return res.json(createResponse(200, "Add thành công", "success", data));
         } else {

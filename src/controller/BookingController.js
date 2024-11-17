@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const cron = require('node-cron');
 const moment = require('moment');
 
-const insert = async (detailId, userId, voucherId, numAdult, numChildren, priceAdult, priceChildren, createAt, status) => {
+const insert = async (detailId, userId, voucherId, numAdult, numChildren, priceAdult, priceChildren, createAt, status,totalPrice) => {
     try {
         const expireAt = moment(createAt).add(10, 'minutes').toDate(); 
 
@@ -19,6 +19,7 @@ const insert = async (detailId, userId, voucherId, numAdult, numChildren, priceA
             createAt,
             expireAt, 
             status,
+            totalPrice
         });
 
         await data.save();
@@ -112,9 +113,9 @@ const bookingId = async (bookingId) => {
             }
         ]);
 
-        return data.length > 0 ? data[0] : null;  // Return the first document if it exists, otherwise null
+        return data.length > 0 ? data[0] : null; 
     } catch (error) {
-        console.error("=============booking findById error", error.stack); // Improved error logging
+        console.error("=============booking findById error", error.stack); 
         return false;
     }
 };

@@ -12,7 +12,8 @@ const BookingSchema = new Schema({
     priceAdult: { type: Number, required: true },
     priceChildren: { type: Number, required: true },
     createAt: { type: Date, required: true },
-    expireAt: { type: Date, required: true }, // Thời gian hết hạn
+    expireAt: { type: Date, required: true },
+    totalPrice :{ type: Number, required: true},
     status: {
         type: Number,
         required: true,
