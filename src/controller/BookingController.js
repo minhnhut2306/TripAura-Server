@@ -103,12 +103,15 @@ const bookingId = async (bookingId) => {
                     'createAt': 1,
                     'priceAdult': 1,
                     'priceChildren': 1,
+                    "totalPrice": 1,
                     'numAdult': 1,
                     'numChildren': 1,
                     'detailInfo.tourId': 1,
                     'tourInfo.tourName': 1,
                     'tourInfo.description': 1,
-                    'tourImages.linkImage': 1
+                    'tourImages.linkImage': 1,
+
+                    
                 }
             }
         ]);
@@ -188,6 +191,7 @@ const allBookingsIduser = async (userId) => {
                     'priceChildren': 1,
                     'numAdult': 1,
                     'numChildren': 1,
+                    'totalPrice':1
         
                 }
             }
