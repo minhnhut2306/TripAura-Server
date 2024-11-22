@@ -188,11 +188,6 @@ router.post('/api/addReview', async function (req, res) {
         if (!detail) {
             return res.json(createResponse(400, "K có thông tin tour này.", "error"));
         }
-        console.log("Detail : ", detail);
-        if (moment().isBefore(detail.endDay)) {
-            return res.json(createResponse(400, "Chưa hoàn thành tour chưa có đánh giá được.", "error"));
-        }
-        console.log("check : ", dayReview);
 
         const finalDayReview = dayReview || formatday;
 
