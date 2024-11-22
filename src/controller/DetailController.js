@@ -211,6 +211,15 @@ const updateMaxTicket = async (detailid, maxTicket) => {
         return false;
     }
 };
+const getAll = async () =>{
+    try {
+        const data = await DetailModule.find({ status: 1 })
+        return data
+    } catch (error) {
+        console.log("========== L��i get all detail ==========", error);
+        return false
+    }
+}
 
 
-module.exports = { insert, getByTourId, update, remove, stopSale,updateMaxTicket }
+module.exports = { insert, getByTourId, update, remove, stopSale,updateMaxTicket, getAll }

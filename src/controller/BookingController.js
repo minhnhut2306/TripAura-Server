@@ -107,11 +107,11 @@ const bookingId = async (bookingId) => {
                     'numAdult': 1,
                     'numChildren': 1,
                     'detailInfo.tourId': 1,
+                    'detailInfo.maxTicket': 1,
                     'tourInfo.tourName': 1,
                     'tourInfo.description': 1,
                     'tourImages.linkImage': 1,
-
-                    
+                    'detailId': 1,
                 }
             }
         ]);

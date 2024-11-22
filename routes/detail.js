@@ -271,6 +271,19 @@ router.put('/api/updateTicket/:id', async (req, res) => {
         return res.json(createResponse(500, "Lỗi hệ thống", "error"));
     }
 });
+router.get('/api/getAll', async (req, res) =>{
+    try {
+        const data = await detailController.getAll();
+        if (data) {
+            return res.json(createResponse(200, "Lấy dữ liệu thành công", "success", data));
+        } else {
+            return res.json(createResponse(500, "Không tìm thấy dữ liệu", "error"));
+        }
+    } catch (error) {
+        console.log(error);
+        return res.json(createResponse(500, "L��i máy chủ", "error"));
+    }
+})
 
 
 module.exports = router;
