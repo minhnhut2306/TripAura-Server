@@ -254,6 +254,25 @@ router.put('/api/stopSale', async (req, res) => {
     }
 })
 
+router.put('/api/updateTicket/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { maxTicket } = req.body; 
+
+        const data = await detailController.updateMaxTicket(id, maxTicket); 
+        console.log('updated', data);
+        
+
+        if (data) {
+            return res.json(createResponse(200, "Cập nhật thành công", "success"));
+        } else {
+            return res.json(createResponse(500, "Cập nhật thông tin thất bại", "error"));
+        }
+    } catch (error) {
+        console.log(error);
+        return res.json(createResponse(500, "Lỗi hệ thống", "error"));
+    }
+});
 
 
 module.exports = router;

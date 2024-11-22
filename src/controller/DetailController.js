@@ -192,6 +192,23 @@ const stopSale = async (id) => {console.log(id);
         return false
     }
 }
-// stopSale('672c1def9ff8f3f4681daf99')
-// remove('670a3280ec685a05cf1ce2ea')
-module.exports = { insert, getByTourId, update, remove, stopSale }
+
+const updateMaxTicket = async (detailid, maxTicket) => {
+    try {
+        const data = await DetailModule.findByIdAndUpdate(
+            detailid,
+            { maxTicket: maxTicket }, 
+            { new: true }  
+        );
+        if (!data) {
+            throw new Error("Không tìm thấy tài liệu để cập nhật.");
+        }
+        return data;
+    } catch (error) {
+        console.log("========== Lỗi update maxTicket ==========", error);
+        return false;
+    }
+};
+
+
+module.exports = { insert, getByTourId, update, remove, stopSale,updateMaxTicket }
