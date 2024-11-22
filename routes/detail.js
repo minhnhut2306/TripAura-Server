@@ -261,10 +261,8 @@ router.put('/api/updateTicket/:id', async (req, res) => {
 
         const data = await detailController.updateMaxTicket(id, maxTicket); 
         console.log('updated', data);
-        
-
         if (data) {
-            return res.json(createResponse(200, "Cập nhật thành công", "success"));
+            return res.json(createResponse(200, "Cập nhật thành công", "success", data));
         } else {
             return res.json(createResponse(500, "Cập nhật thông tin thất bại", "error"));
         }

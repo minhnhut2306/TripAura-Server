@@ -200,6 +200,8 @@ const updateMaxTicket = async (detailid, maxTicket) => {
             { maxTicket: maxTicket }, 
             { new: true }  
         );
+        console.log('data', data);
+        
         if (!data) {
             throw new Error("Không tìm thấy tài liệu để cập nhật.");
         }
