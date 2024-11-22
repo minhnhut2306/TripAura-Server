@@ -1,12 +1,12 @@
 const _Booking = require('../modules/BookingModule');
 const { ObjectId } = require('mongodb');
-const mongoose = require('mongoose'); 
+const mongoose = require('mongoose');
 const cron = require('node-cron');
 const moment = require('moment');
 
-const insert = async (detailId, userId, voucherId, numAdult, numChildren, priceAdult, priceChildren, createAt, status,totalPrice) => {
+const insert = async (detailId, userId, voucherId, numAdult, numChildren, priceAdult, priceChildren, createAt, status, totalPrice) => {
     try {
-        const expireAt = moment(createAt).add(10, 'minutes').toDate(); 
+        const expireAt = moment(createAt).add(10, 'minutes').toDate();
 
         const data = new _Booking({
             detailId,
@@ -17,7 +17,7 @@ const insert = async (detailId, userId, voucherId, numAdult, numChildren, priceA
             priceAdult,
             priceChildren,
             createAt,
-            expireAt, 
+            expireAt,
             status,
             totalPrice
         });
@@ -34,12 +34,12 @@ cron.schedule('* * * * *', async () => {
     const now = moment().toDate();
 
     const bookingsToCancel = await _Booking.find({
-        status: 1,  
+        status: 1,
         expireAt: { $lte: now },
     });
 
     bookingsToCancel.forEach(async (booking) => {
-        booking.status = 2; 
+        booking.status = 2;
         await booking.save();
         console.log(`Booking ${booking._id} đã bị hủy vì quá thời gian thanh toán.`);
     });
@@ -56,7 +56,7 @@ const bookingId = async (bookingId) => {
         const data = await _Booking.aggregate([
             {
                 $match: {
-                    _id: new ObjectId(bookingId), 
+                    _id: new ObjectId(bookingId),
                 }
             },
             {
@@ -96,6 +96,7 @@ const bookingId = async (bookingId) => {
             },
             {
                 $project: {
+                    'userInfo._id': 1,
                     'userInfo.fullname': 1,
                     'userInfo.email': 1,
                     'userInfo.phone': 1,
@@ -117,9 +118,9 @@ const bookingId = async (bookingId) => {
             }
         ]);
 
-        return data.length > 0 ? data[0] : null; 
+        return data.length > 0 ? data[0] : null;
     } catch (error) {
-        console.error("=============booking findById error", error.stack); 
+        console.error("=============booking findById error", error.stack);
         return false;
     }
 };
@@ -190,17 +191,17 @@ const allBookingsIduser = async (userId) => {
                     'tourImages.linkImage': 1,
                     'status': 1,
                     'createAt': 1,
-                    'priceAdult': 1,        
+                    'priceAdult': 1,
                     'priceChildren': 1,
                     'numAdult': 1,
                     'numChildren': 1,
-                    'totalPrice':1
-        
+                    'totalPrice': 1
+
                 }
             }
         ]);
 
-        console.log("Aggregated data:", data); 
+        console.log("Aggregated data:", data);
         return data;
     } catch (error) {
         console.log("Error in aggregation:", error);
@@ -234,4 +235,4 @@ const remove = async (bookingid) => {
     }
 }
 
-module.exports = { insert, update, remove, bookingId, allBookings,allBookingsIduser };
+module.exports = { insert, update, remove, bookingId, allBookings, allBookingsIduser };
