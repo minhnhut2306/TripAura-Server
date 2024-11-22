@@ -48,7 +48,7 @@ cron.schedule('* * * * *', async () => {
 
 const bookingId = async (bookingId) => {
     try {
-        // Convert bookingId to ObjectId using "new"
+
         if (!ObjectId.isValid(bookingId)) {
             throw new Error("Invalid bookingId format");
         }
@@ -56,7 +56,7 @@ const bookingId = async (bookingId) => {
         const data = await _Booking.aggregate([
             {
                 $match: {
-                    _id: new ObjectId(bookingId), // Use "new ObjectId(...)"
+                    _id: new ObjectId(bookingId), 
                 }
             },
             {
@@ -107,6 +107,7 @@ const bookingId = async (bookingId) => {
                     'numAdult': 1,
                     'numChildren': 1,
                     'detailInfo.tourId': 1,
+                    'detailInfo.endDay': 1,
                     'detailInfo.maxTicket': 1,
                     'tourInfo.tourName': 1,
                     'tourInfo.description': 1,
@@ -132,6 +133,7 @@ const allBookings = async () => {
         return false;
     }
 }
+
 const allBookingsIduser = async (userId) => {
     try {
         const userIdObject = new mongoose.Types.ObjectId(userId);
@@ -182,6 +184,7 @@ const allBookingsIduser = async (userId) => {
                     'userInfo.email': 1,
                     'userInfo.phone': 1,
                     'detailInfo.tourId': 1,
+                    'detailInfo.endDay': 1,
                     'tourInfo.tourName': 1,
                     'tourInfo.description': 1,
                     'tourImages.linkImage': 1,
