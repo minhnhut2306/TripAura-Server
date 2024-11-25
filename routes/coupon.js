@@ -54,7 +54,7 @@ const { createResponse } = require('../src/helper/createResponse.helper');
 router.post('/api/add', async (req, res) => {
     try {
         const { userId, voucherId } = req.body
-        if (!userId || !voucherId) {
+        if (userId == "" || voucherId == "") {
             return res.json(createResponse(500, "Vui lòng điền đầy đủ thông tin", "error"));
         }
         const data = await couponController.insert(userId, voucherId)

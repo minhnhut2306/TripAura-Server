@@ -16,6 +16,9 @@ const auth = require('./auth');
 const advRouter = require('./adv');
 const couponRouter = require('./coupon')
 const payment = require('./payment');
+const tinhRouter = require('./lichtrinh/tinh')
+const diaDiemRouter = require('./lichtrinh/diaDiem')
+const lichTrinhRouter = require('./lichtrinh/lichTrinh')
 
 // Định tuyến tất cả các router
 router.get('/', index);
@@ -33,5 +36,8 @@ router.use('/auth', auth);
 router.use('/adv', advRouter);
 router.use('/coupon', couponRouter);
 router.use('/payment', payment);
+router.use('/tinh', tinhRouter);
+router.use('/diaDiem', diaDiemRouter);
+router.use('/lichTrinh', lichTrinhRouter);
 
 module.exports = router;

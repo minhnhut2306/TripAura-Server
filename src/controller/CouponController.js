@@ -34,4 +34,5 @@ const getByUser = async (userId) => {
 }
 
 
+
 module.exports = { insert, getByUser }
