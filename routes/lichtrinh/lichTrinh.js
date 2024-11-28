@@ -14,7 +14,36 @@ router.post('/api/add', async (req, res) => {
         }
     } catch (error) {
         return res.json(createResponse(500, "Lỗi server", "error"));
+
     }
 })
 
+router.get('/api/getAll', async (req, res) => {
+    try {
+        const lichTrinhs = await LichTrinhController.getAll()
+        if (lichTrinhs) {
+            return res.json(createResponse(200, "get thành công", "success", lichTrinhs));
+        } else {
+            return res.json(createResponse(400, "get thất bại", "failed"));
+        }
+    } catch (error) {
+        console.log("====", error);
+        return res.json(createResponse(500, "Lỗi server", "error"));
+    }
+})
+
+router.get('/api/getByLichTrinhId', async (req, res) => {
+    try {
+        const { lichTrinhId } = req.query
+        const lichTrinh = await LichTrinhController.getByLichTrinhId(lichTrinhId)
+        if (lichTrinh) {
+            return res.json(createResponse(200, "get thành công", "success", lichTrinh));
+        } else {
+            return res.json(createResponse(400, "get thất bại", "failed"));
+        }
+    } catch (error) {
+        console.log("====", error);
+        return res.json(createResponse(500, "Lỗi server", "error"));
+    }
+})
 module.exports = router;
