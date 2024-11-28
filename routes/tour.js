@@ -301,4 +301,19 @@ router.delete('/api/deleteTour/:tourId', async (req, res) => {
     }
 })
 
+router.put('/api/update', async (req, res) => {
+    try {
+        const { tourId, description } = req.body
+        const tour = await tourController.update(tourId, description)
+        if (tour) {
+            return res.json(createResponse(200, "Update tour thành công", "success", tour));
+        } else {
+            return res.json(createResponse(400, "Update tour thất bại", "failed"));
+        }
+    } catch (error) {
+        console.log(error);
+        return res.json(createResponse(500, "Lỗi máy chủ.", "error"));
+    }
+})
+
 module.exports = router;

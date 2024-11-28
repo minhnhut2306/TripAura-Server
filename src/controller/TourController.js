@@ -465,8 +465,28 @@ const deleteTour = async (tourId) => {
   }
 }
 
+const update = async (tourId, description) => {
+  try {
+    const tour = await TourModule.findByIdAndUpdate({ _id: tourId }, {
+      description: description
+    },
+      { new: true })
+    console.log("=============tour", tour);
+    if (tour) {
+      return tour
+    } else {
+      return false
+    }
+  } catch (error) {
+    console.log("Lỗi update decription", error);
+    return false
+  }
+}
+
+// update('6735b1f4799d8d81dbe9daf7', 'abcddde')
 
 module.exports = {
+  update,
   insert,
   getToursByCategory,
   filter,
