@@ -59,4 +59,17 @@ const insert = async (departure, destination, endDay, name, person, startDay) =>
     }
 };
 
+const getAll = async () => {
+    try {
+        const lichTrinhs = await _LichTrinh.find()
+        if (lichTrinhs) {
+            return lichTrinhs
+        } else {
+            return false
+        }
+    } catch (error) {
+        return false
+    }
+}
+
 module.exports = { insert };

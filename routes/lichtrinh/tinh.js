@@ -14,7 +14,21 @@ router.post('/api/add', async (req, res) => {
         }
     } catch (error) {
         console.log("===== lỗi add tinh", error);
-        
+
+        return res.json(createResponse(500, "lỗi server", "error"));
+    }
+})
+
+router.get('/api/getAll', async (req, res) => {
+    try {
+        const tinh = await TinhConttroller.getAll()
+        if (tinh) {
+            return res.json(createResponse(200, "Add thành công", "success", tinh));
+        } else {
+            return res.json(createResponse(400, "Lỗi add", "failed"));
+        }
+    } catch (error) {
+        console.log("===== lỗi add tinh", error);
         return res.json(createResponse(500, "lỗi server", "error"));
     }
 })

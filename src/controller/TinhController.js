@@ -12,6 +12,19 @@ const insert = async (name) => {
     }
 }
 
-module.exports = { insert }
+const getAll = async () => {
+    try {
+        const tinh = await _Tinh.find()
+        if (tinh) {
+            return tinh
+        } else {
+            return false
+        }
+    } catch (error) {
+        return false
+    }
+}
+
+module.exports = { insert, getAll }
 
 
