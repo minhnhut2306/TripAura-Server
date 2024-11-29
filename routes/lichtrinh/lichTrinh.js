@@ -61,4 +61,20 @@ router.get('/api/getByUserId', async (req, res) => {
         return res.json(createResponse(500, "Lỗi server", "error"));
     }
 })
+
+router.get('/api/getByDate', async (req, res) => {
+    try {
+        const { lichTrinhId, dayId } = req.query
+        const lichTrinh = await LichTrinhController.getDayById(lichTrinhId, dayId)
+        if (lichTrinh) {
+            return res.json(createResponse(200, "get thành công", "success", lichTrinh));
+        } else {
+            return res.json(createResponse(400, "get thất bại", "failed"));
+        }
+    } catch (error) {
+        console.log("====", error);
+        return res.json(createResponse(500, "Lỗi server", "error"));
+    }
+})
+
 module.exports = router;

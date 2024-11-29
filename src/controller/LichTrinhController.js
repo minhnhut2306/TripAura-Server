@@ -193,6 +193,8 @@ const getDayById = async (lichTrinhId, dayId) => {
 
         // Tìm thông tin chi tiết của ngày dựa vào ID
         const dayInfo = lichTrinh.locations.find(loc => loc._id.toString() === dayId);
+        console.log(dayInfo);
+
 
         if (!dayInfo) {
             throw new Error("Không tìm thấy thông tin ngày với ID được cung cấp.");
@@ -214,6 +216,6 @@ const getDayById = async (lichTrinhId, dayId) => {
     }
 };
 
-// getDayById()
+// getDayById('67495362ea72cd1ced81fef8', '67495362ea72cd1ced81fef9')
 
 module.exports = { insert, getAll, getByLichTrinhId, getDayById, getByUserId };
