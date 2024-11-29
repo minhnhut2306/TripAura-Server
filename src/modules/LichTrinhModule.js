@@ -9,6 +9,7 @@ const LichTrinhSchema = new Schema({
     endDay: { type: Date, required: true },
     departure: { type: String, required: true },
     destination: { type: ObjectId, ref: 'Tinh' },
+    userId: { type: ObjectId, ref: 'User' },
     locations: [
         {
             day: { type: Number, required: true },

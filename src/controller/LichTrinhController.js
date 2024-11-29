@@ -1,7 +1,7 @@
 const _LichTrinh = require('../modules/LichTrinhModule');
 const _DiaDiem = require('../modules/DiaDiemModule');
 
-const insert = async (departure, destination, endDay, name, person, startDay) => {
+const insert = async (departure, destination, endDay, name, person, startDay, userId) => {
     try {
         startDay = new Date(startDay);
         endDay = new Date(endDay);
@@ -62,6 +62,7 @@ const insert = async (departure, destination, endDay, name, person, startDay) =>
             name,
             person,
             startDay,
+            userId,
         });
 
         await lichTrinh.save();
@@ -132,6 +133,87 @@ const getByLichTrinhId = async (lichTrinhId) => {
     }
 }
 
-getByLichTrinhId('6748418e55130b3c8725fa7c')
+const getByUserId = async (userId) => {
+    try {
+        const lichTrinhs = await _LichTrinh.find()
+            .populate('departure', 'name') // Lấy thông tin điểm khởi hành (nếu là một reference)
+            .populate('destination', 'name') // Lấy thông tin điểm đến
+            .populate({
+                path: 'locations.locations', // Populate các địa điểm
+                model: 'DiaDiem',
+                select: 'name images time price ', // Lấy các trường cần thiết
+                populate: {
+                    path: 'TinhId', // Populate thông tin tỉnh của địa điểm
+                    model: 'Tinh',
+                    select: 'name',
+                },
+            });
 
-module.exports = { insert, getAll, getByLichTrinhId };
+        const lt = lichTrinhs.filter((item) => {
+            return item.userId == userId
+        })
+
+        console.log(lt);
+
+        if (lichTrinhs) {
+            return lichTrinhs;
+        } else {
+            return false;
+        }
+    } catch (error) {
+        console.error("Lỗi khi lấy dữ liệu lịch trình:", error.message);
+        return false;
+    }
+};
+
+// getByUserId('671f7cfecc67a0a901ce3d95')
+
+// getByLichTrinhId('6748418e55130b3c8725fa7c')
+
+const getDayById = async (lichTrinhId, dayId) => {
+    try {
+        // Tìm lịch trình theo ID
+        const lichTrinh = await _LichTrinh.findById(lichTrinhId)
+            .populate('departure', 'name') // Lấy thông tin điểm khởi hành
+            .populate('destination', 'name') // Lấy thông tin điểm đến
+            .populate({
+                path: 'locations.locations',
+                model: 'DiaDiem',
+                select: 'name images time price TinhId', // Các trường cần lấy
+                populate: {
+                    path: 'TinhId',
+                    model: 'Tinh',
+                    select: 'name'
+                }
+            });
+
+        if (!lichTrinh) {
+            throw new Error("Không tìm thấy lịch trình.");
+        }
+
+        // Tìm thông tin chi tiết của ngày dựa vào ID
+        const dayInfo = lichTrinh.locations.find(loc => loc._id.toString() === dayId);
+
+        if (!dayInfo) {
+            throw new Error("Không tìm thấy thông tin ngày với ID được cung cấp.");
+        }
+
+        return {
+            lichTrinhId: lichTrinh._id,
+            name: lichTrinh.name,
+            person: lichTrinh.person,
+            startDay: lichTrinh.startDay,
+            endDay: lichTrinh.endDay,
+            departure: lichTrinh.departure,
+            destination: lichTrinh.destination,
+            dayInfo
+        };
+    } catch (error) {
+        console.error("Lỗi khi lấy thông tin theo ngày:", error.message);
+        return false;
+    }
+};
+
+// getDayById()
+
+module.exports = { insert, getAll, getByLichTrinhId, getDayById, getByUserId };
