@@ -155,8 +155,8 @@ const getByUserId = async (userId) => {
 
         console.log(lt);
 
-        if (lichTrinhs) {
-            return lichTrinhs;
+        if (lt) {
+            return lt;
         } else {
             return false;
         }
@@ -166,7 +166,7 @@ const getByUserId = async (userId) => {
     }
 };
 
-// getByUserId('671f7cfecc67a0a901ce3d95')
+getByUserId('671c6043e625a8fa72d3d45f')
 
 // getByLichTrinhId('6748418e55130b3c8725fa7c')
 
