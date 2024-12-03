@@ -76,5 +76,34 @@ router.get('/api/getByDate', async (req, res) => {
         return res.json(createResponse(500, "Lỗi server", "error"));
     }
 })
+router.put('/api/deleteDiaDiem', async (req, res) => {
+    try {
+        const { lichTrinhId, dayId, diaDiemId } = req.body
+        const lichTrinh = await LichTrinhController.deleteDiaDiem(lichTrinhId, dayId, diaDiemId)
+        if (lichTrinh) {
+            return res.json(createResponse(200, "delete thành công", "success", lichTrinh));
+        } else {
+            return res.json(createResponse(400, "delete thất bại", "failed"));
+        }
+    } catch (error) {
+        console.log("====", error);
+        return res.json(createResponse(500, "Lỗi server", "error"));
+    }
+})
+
+router.put('/api/addDiaDiem', async (req, res) => {
+    try {
+        const { lichTrinhId, dayId, diaDiemId } = req.body
+        const lichTrinh = await LichTrinhController.insertDiaDiem(lichTrinhId, dayId, diaDiemId)
+        if (lichTrinh) {
+            return res.json(createResponse(200, "add thành công", "success", lichTrinh));
+        } else {
+            return res.json(createResponse(400, "add thất bại", "failed"));
+        }
+    } catch (error) {
+        console.log("====", error);
+        return res.json(createResponse(500, "Lỗi server", "error"));
+    }
+})
 
 module.exports = router;

@@ -166,7 +166,7 @@ const getByUserId = async (userId) => {
     }
 };
 
-getByUserId('671c6043e625a8fa72d3d45f')
+// getByUserId('671c6043e625a8fa72d3d45f')
 
 // getByLichTrinhId('6748418e55130b3c8725fa7c')
 
@@ -179,7 +179,7 @@ const getDayById = async (lichTrinhId, dayId) => {
             .populate({
                 path: 'locations.locations',
                 model: 'DiaDiem',
-                select: 'name images time price TinhId', // Các trường cần lấy
+                select: 'name images time price', // Các trường cần lấy
                 populate: {
                     path: 'TinhId',
                     model: 'Tinh',
@@ -193,7 +193,7 @@ const getDayById = async (lichTrinhId, dayId) => {
 
         // Tìm thông tin chi tiết của ngày dựa vào ID
         const dayInfo = lichTrinh.locations.find(loc => loc._id.toString() === dayId);
-        console.log(dayInfo);
+        // console.log(dayInfo);
 
 
         if (!dayInfo) {
@@ -218,4 +218,96 @@ const getDayById = async (lichTrinhId, dayId) => {
 
 // getDayById('67495362ea72cd1ced81fef8', '67495362ea72cd1ced81fef9')
 
-module.exports = { insert, getAll, getByLichTrinhId, getDayById, getByUserId };
+const deleteDiaDiem = async (lichTrinhId, dayId, diaDiemId) => {
+    try {
+        const lichTrinh = await _LichTrinh.findById(lichTrinhId);
+        if (!lichTrinh) {
+            throw new Error("Lịch trình không tồn tại");
+        }
+
+        const dayInfo = Array.isArray(lichTrinh.locations)
+            ? lichTrinh.locations.find(loc => loc._id.toString() === dayId)
+            : null;
+
+        if (dayInfo && Array.isArray(dayInfo.locations)) {
+            const diaDiem = dayInfo.locations.filter(diaDiem => diaDiem._id.toString() !== diaDiemId);
+            await lichTrinh.save();
+            console.log("Đã xóa địa điểm và lưu lịch trình thành công");
+            return diaDiem
+        } else {
+            throw new Error("Không tìm thấy thông tin ngày hoặc danh sách địa điểm không hợp lệ");
+        }
+    } catch (error) {
+        console.error("Lỗi xảy ra trong deleteDiaDiem:", error.message);
+    }
+};
+
+const insertDiaDiem = async (lichTrinhId, dayId, diaDiemId) => {
+    try {
+        const lichTrinh = await _LichTrinh.findById(lichTrinhId);
+        if (!lichTrinh) {
+            throw new Error("Lịch trình không tồn tại");
+        }
+
+        const dayInfo = Array.isArray(lichTrinh.locations)
+            ? lichTrinh.locations.find(loc => loc._id.toString() === dayId)
+            : null;
+
+        if (dayInfo && Array.isArray(dayInfo.locations)) {
+            const diaDiem = dayInfo.locations.find(diaDiem => diaDiem._id.toString() === diaDiemId);
+            console.log("điaiem", diaDiem);
+
+            if (!diaDiem) {
+                dayInfo.locations.push(diaDiemId);
+                await lichTrinh.save(); // Lưu thay đổi
+                console.log("Thêm địa điểm thành công");
+                return dayInfo
+            } else {
+                console.log("Địa điểm đã tồn tại");
+            }
+        } else {
+            throw new Error("Không tìm thấy thông tin ngày hoặc danh sách địa điểm không hợp lệ");
+        }
+    } catch (error) {
+
+    }
+}
+const insertDiaDiema = async (lichTrinhId, dayId, diaDiemId, newDiaDiem) => {
+    try {
+        // Tìm lịch trình theo ID
+        const lichTrinh = await _LichTrinh.findById(lichTrinhId);
+        if (!lichTrinh) {
+            throw new Error("Lịch trình không tồn tại");
+        }
+
+        // Tìm ngày (dayInfo) theo ID
+        const dayInfo = Array.isArray(lichTrinh.locations)
+            ? lichTrinh.locations.find(loc => loc._id.toString() === dayId)
+            : null;
+
+        if (dayInfo && Array.isArray(dayInfo.locations)) {
+            // Kiểm tra xem địa điểm đã tồn tại chưa
+            const diaDiemExists = dayInfo.locations.some(diaDiem => diaDiem._id.toString() === diaDiemId);
+
+            if (!diaDiemExists) {
+                // Thêm địa điểm mới
+                dayInfo.locations.push(newDiaDiem);
+                await lichTrinh.save(); // Lưu thay đổi
+                console.log("Thêm địa điểm thành công");
+            } else {
+                console.log("Địa điểm đã tồn tại");
+            }
+        } else {
+            throw new Error("Không tìm thấy thông tin ngày hoặc danh sách địa điểm không hợp lệ");
+        }
+    } catch (error) {
+        console.error("Lỗi xảy ra trong insertDiaDiem:", error.message);
+    }
+};
+
+
+// insertDiaDiem('674b1cf5c60d8f64f65511c2', '674b1cf5c60d8f64f65511c3', '673ffd09e515ded16e93c99b')
+
+// deleteDiaDiem('674b1cf5c60d8f64f65511c2', '674b1cf5c60d8f64f65511c3', '6740004fe515ded16e93c9bb')
+
+module.exports = { insert, getAll, getByLichTrinhId, getDayById, getByUserId, deleteDiaDiem, insertDiaDiem };
