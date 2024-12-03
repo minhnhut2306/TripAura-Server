@@ -220,20 +220,24 @@ const getDayById = async (lichTrinhId, dayId) => {
 
 const deleteDiaDiem = async (lichTrinhId, dayId, diaDiemId) => {
     try {
+        // Tìm lịch trình theo ID
         const lichTrinh = await _LichTrinh.findById(lichTrinhId);
         if (!lichTrinh) {
             throw new Error("Lịch trình không tồn tại");
         }
 
+        // Tìm ngày (dayInfo) theo ID
         const dayInfo = Array.isArray(lichTrinh.locations)
             ? lichTrinh.locations.find(loc => loc._id.toString() === dayId)
             : null;
 
         if (dayInfo && Array.isArray(dayInfo.locations)) {
-            const diaDiem = dayInfo.locations.filter(diaDiem => diaDiem._id.toString() !== diaDiemId);
+            // Loại bỏ địa điểm có ID trùng với diaDiemId
+            dayInfo.locations = dayInfo.locations.filter(diaDiem => diaDiem._id.toString() !== diaDiemId);
+            // Lưu lịch trình sau khi xóa
             await lichTrinh.save();
             console.log("Đã xóa địa điểm và lưu lịch trình thành công");
-            return diaDiem
+            return dayInfo
         } else {
             throw new Error("Không tìm thấy thông tin ngày hoặc danh sách địa điểm không hợp lệ");
         }
@@ -241,6 +245,7 @@ const deleteDiaDiem = async (lichTrinhId, dayId, diaDiemId) => {
         console.error("Lỗi xảy ra trong deleteDiaDiem:", error.message);
     }
 };
+
 
 const insertDiaDiem = async (lichTrinhId, dayId, diaDiemId) => {
     try {
