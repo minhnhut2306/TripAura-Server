@@ -97,7 +97,7 @@ router.put('/api/deleteDiaDiem', async (req, res) => {
 router.put('/api/addDiaDiem', async (req, res) => {
     try {
         const { lichTrinhId, dayId, diaDiemId } = req.body
-        if (lichTrinhId = '' || dayId == '' || diaDiemId == '') {
+        if (lichTrinhId == '' || dayId == '' || diaDiemId == '') {
             return res.json(createResponse(400, "thiếu data", "error"));
         }
         const lichTrinh = await LichTrinhController.insertDiaDiem(lichTrinhId, dayId, diaDiemId)
