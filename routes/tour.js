@@ -243,8 +243,8 @@ router.post('/api/add', async function (req, res) {
 
 router.post('/api/getByCategory', async function (req, res) {
     try {
-        const { categoryId, page } = req.body;
-        const tour = await tourController.getToursByCategory(categoryId, page)
+        const { categoryId } = req.body;
+        const tour = await tourController.getToursByCategory(categoryId)
         if (tour && tour.length > 0) {
             return res.json(createResponse(200, "Lấy tour theo danh mục thành công", "success", tour));
         } else {

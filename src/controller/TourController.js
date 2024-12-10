@@ -232,15 +232,9 @@ const findByName = async (name) => {
 
 // findByName("rừng")
 
-const getToursByCategory = async (categoryId, page, limit = 10) => {
+const getToursByCategory = async (categoryId) => {
   try {
-    if (page == "" || page <= 0) {
-      page = 1
-    }
-    console.log("page", page);
-
-    const skip = (page - 1) * limit;
-
+    
     const tours = await TourModule.aggregate([
       {
         $match: {
@@ -270,7 +264,7 @@ const getToursByCategory = async (categoryId, page, limit = 10) => {
           let: { tourId: "$_id" }, // Đặt tourId hiện tại trong Tour vào biến
           pipeline: [
             { $match: { $expr: { $eq: ["$tourId", "$$tourId"] } } }, // Lọc detail theo tourId
-            { $limit: 1 }, // Chỉ lấy 1 detail
+           // Chỉ lấy 1 detail
           ],
           as: "detailInfo", // Tên field chứa dữ liệu Detail sau khi nối
         },
@@ -305,8 +299,6 @@ const getToursByCategory = async (categoryId, page, limit = 10) => {
           },
         },
       },
-      { $skip: skip }, // Bỏ qua số lượng bản ghi
-      { $limit: limit }, // Giới hạn số lượng bản ghi trả về
     ]);
 
     if (!tours.length) {
