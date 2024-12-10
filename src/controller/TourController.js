@@ -234,7 +234,6 @@ const findByName = async (name) => {
 
 const getToursByCategory = async (categoryId) => {
   try {
-    
     const tours = await TourModule.aggregate([
       {
         $match: {
@@ -264,7 +263,7 @@ const getToursByCategory = async (categoryId) => {
           let: { tourId: "$_id" }, // Đặt tourId hiện tại trong Tour vào biến
           pipeline: [
             { $match: { $expr: { $eq: ["$tourId", "$$tourId"] } } }, // Lọc detail theo tourId
-           // Chỉ lấy 1 detail
+            { $limit: 1 }, // Chỉ lấy 1 detail
           ],
           as: "detailInfo", // Tên field chứa dữ liệu Detail sau khi nối
         },
