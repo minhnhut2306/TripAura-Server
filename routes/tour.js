@@ -241,11 +241,12 @@ router.post('/api/add', async function (req, res) {
     }
 })
 
-router.post('/api/getByCategory', async function (req, res) {
+router.get('/api/getByCategory', async function (req, res) {
     try {
-        const { categoryId } = req.body;
+        const { categoryId, page } = req.query;
 
-        const tour = await tourController.getToursByCategory(categoryId)
+
+        const tour = await tourController.getToursByCategory(categoryId, page)
         if (tour && tour.length > 0) {
             return res.json(createResponse(200, "Lấy tour theo danh mục thành công", "success", tour));
         } else {
@@ -260,7 +261,8 @@ router.post('/api/getByCategory', async function (req, res) {
 
 router.get('/api/getAll', async function (req, res) {
     try {
-        const tours = await tourController.getToursAll()
+        const { page } = req.query
+        const tours = await tourController.getToursAll(page)
         if (tours && tours.length > 0) {
             return res.json(createResponse(200, "Lấy tour theo danh mục thành công", "success", tours));
         } else {

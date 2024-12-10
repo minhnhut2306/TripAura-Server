@@ -232,8 +232,15 @@ const findByName = async (name) => {
 
 // findByName("rừng")
 
-const getToursByCategory = async (categoryId) => {
+const getToursByCategory = async (categoryId, page, limit = 10) => {
   try {
+    if (page == "" || page <= 0) {
+      page = 1
+    }
+    console.log("page", page);
+
+    const skip = (page - 1) * limit;
+
     const tours = await TourModule.aggregate([
       {
         $match: {
@@ -278,7 +285,7 @@ const getToursByCategory = async (categoryId) => {
         $unwind: { path: "$imageInfo", preserveNullAndEmptyArrays: true }, // Mở gói imageInfo, nếu không có vẫn trả về null
       },
       {
-        $unwind: { path: "$locationInfo", preserveNullAndEmptyArrays: true }, // Mở gói detailInfo, nếu không có vẫn trả về null
+        $unwind: { path: "$locationInfo", preserveNullAndEmptyArrays: true }, // Mở gói locationInfo, nếu không có vẫn trả về null
       },
       {
         $project: {
@@ -294,12 +301,12 @@ const getToursByCategory = async (categoryId) => {
           imageInfo: { linkImage: 1 },
           detailInfo: {
             priceAdult: 1,
-            // startDay: 1,
-            priceAdult: 1,
             PromotionalPrice: 1,
           },
         },
       },
+      { $skip: skip }, // Bỏ qua số lượng bản ghi
+      { $limit: limit }, // Giới hạn số lượng bản ghi trả về
     ]);
 
     if (!tours.length) {
@@ -313,8 +320,15 @@ const getToursByCategory = async (categoryId) => {
   }
 };
 
-const getToursAll = async () => {
+
+const getToursAll = async (page, limit = 10) => {
   try {
+    if (page == "" || page <= 0) {
+      page = 1
+    }
+    console.log("page", page);
+
+    const skip = (page - 1) * limit;
     const tours = await TourModule.aggregate([
       {
         $match: {
@@ -380,6 +394,8 @@ const getToursAll = async () => {
           },
         },
       },
+      { $skip: skip }, // Bỏ qua số lượng bản ghi
+      { $limit: limit }, // Giới hạn số lượng bản ghi trả về
     ]);
 
     if (!tours.length) {
