@@ -33,6 +33,20 @@ const getByUser = async (userId) => {
     }
 }
 
+const deleteCoupon = async (couponId) => {
+    try {
+        const coupon = await _Coupon.findByIdAndDelete({ _id: couponId })
+        if (coupon) {
+            console.log("coupon", coupon);
+            return coupon
+        } else {
+            return false
+        }
+    } catch (error) {
+
+    }
+}
+// deleteCoupon("670c8bf2158535a5b3be9b7c")
 
 
-module.exports = { insert, getByUser }
+module.exports = { insert, getByUser, deleteCoupon }

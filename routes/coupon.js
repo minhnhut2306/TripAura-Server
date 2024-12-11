@@ -82,4 +82,20 @@ router.get('/api/getByUserId', async (req, res) => {
     }
 })
 
+router.delete('/api/delete', async (req, res) => {
+    try {
+        const { couponId } = req.query
+        const coupon = await couponController.deleteCoupon(couponId)
+        if (coupon) {
+            return res.json(createResponse(200, "xóa vouchers thành công", "success", coupon));
+        } else {
+            return res.json(createResponse(400, "Xóa thất bại", "failed"));
+        }
+    } catch (error) {
+        console.log(error);
+
+        return res.json(createResponse(500, "Không tìm thấy vouchers", "error"));
+    }
+})
+
 module.exports = router;
