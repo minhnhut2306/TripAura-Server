@@ -235,4 +235,27 @@ const remove = async (bookingid) => {
     }
 }
 
-module.exports = { insert, update, remove, bookingId, allBookings, allBookingsIduser };
+const getByYear = async (year) => {
+    try {
+        year = parseInt(year)
+        console.log(year);
+
+        const bookings = await (await _Booking.find({ status: 2 }))
+            .filter((item) => new Date(item.createAt).getFullYear() === year
+            )
+
+        if (bookings) {
+            return bookings
+        } else {
+            return false
+        }
+
+    } catch (error) {
+        console.log(error);
+        return false
+    }
+}
+
+// getByYear("2024")
+
+module.exports = { insert, update, remove, bookingId, allBookings, allBookingsIduser, getByYear };

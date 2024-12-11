@@ -108,9 +108,9 @@ const Image = require('../src/modules/ImageModle')
 
 router.post('/api/addToCart', async function (req, res) {
     try {
-        const { detailId, userId, voucherId, numAdult, numChildren, priceAdult, priceChildren, status,totalPrice } = req.body
+        const { detailId, userId, voucherId, numAdult, numChildren, priceAdult, priceChildren, status, totalPrice } = req.body
         const createAt = new Date()
-        const data = await bookingController.insert(detailId, userId, voucherId, numAdult, numChildren, priceAdult, priceChildren, createAt, status,totalPrice)
+        const data = await bookingController.insert(detailId, userId, voucherId, numAdult, numChildren, priceAdult, priceChildren, createAt, status, totalPrice)
         if (data) {
             return res.json(createResponse(200, "Add thành công", "success", data));
         } else {
@@ -137,8 +137,8 @@ router.get('/api/getbookingId/:id', async (req, res) => {
 
 router.get('/api/bookinguser/:id', async (req, res) => {
     try {
-        const bookings = await bookingController.allBookingsIduser(req.params.id); 
-        
+        const bookings = await bookingController.allBookingsIduser(req.params.id);
+
         if (bookings.length === 0) {
             return res.json(createResponse(500, "Lấy danh sách thất bại", "error", bookings));
         }
@@ -193,6 +193,21 @@ router.delete('/api/delete/:id', async (req, res) => {
     } catch (error) {
         console.log(error);
         return res.json(createResponse(500, "Đã xảy ra lỗi máy chủ", "error"));
+    }
+})
+
+router.get('/api/getBookingByYear', async (req, res) => {
+    try {
+        const { year } = req.query
+        const bookings = await bookingController.getByYear(year)
+        if (bookings) {
+            return res.json(createResponse(200, "get thành công", "success", bookings));
+        } else {
+            return res.json(createResponse(400, "không có dữ liệu", "failed"));
+        }
+    } catch (error) {
+        console.log(error);
+        return res.json(createResponse(500, "Lỗi server", "error"));
     }
 })
 
