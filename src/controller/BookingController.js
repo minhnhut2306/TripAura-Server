@@ -196,7 +196,12 @@ const allBookingsIduser = async (userId) => {
                     'numAdult': 1,
                     'numChildren': 1,
                     'totalPrice': 1
+                }
+            },
 
+            {
+                $sort: {
+                    createAt: -1
                 }
             }
         ]);
