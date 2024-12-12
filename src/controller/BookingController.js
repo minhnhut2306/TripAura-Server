@@ -240,7 +240,7 @@ const getByYear = async (year) => {
         year = parseInt(year)
         console.log(year);
 
-        const bookings = await (await _Booking.find({ status: 2 }))
+        const bookings = await (await _Booking.find({ status: 0 }))
             .filter((item) => new Date(item.createAt).getFullYear() === year
             )
 
