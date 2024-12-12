@@ -312,14 +312,9 @@ const getToursByCategory = async (categoryId) => {
 };
 
 
-const getToursAll = async (page, limit = 10) => {
+const getToursAll = async () => {
   try {
-    if (page == "" || page <= 0) {
-      page = 1
-    }
-    console.log("page", page);
 
-    const skip = (page - 1) * limit;
     const tours = await TourModule.aggregate([
       {
         $match: {
@@ -385,8 +380,6 @@ const getToursAll = async (page, limit = 10) => {
           },
         },
       },
-      { $skip: skip }, // Bỏ qua số lượng bản ghi
-      { $limit: limit }, // Giới hạn số lượng bản ghi trả về
     ]);
 
     if (!tours.length) {
