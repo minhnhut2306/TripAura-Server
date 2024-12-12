@@ -24,7 +24,7 @@ const filter = async (tourName, destination, minPrice, maxPrice, startDate) => {
     if (destination) {
       // Biểu thức chính quy tìm kiếm địa chỉ với ít nhất một ký tự giống nhau
       const regexPattern = `.*${destination}.*`; // Tìm kiếm với ít nhất một ký tự giống
-      matchConditions["locations.destination"] = {
+      matchConditions["locations.province"] = {
         $regex: new RegExp(regexPattern, "i"), // Tìm kiếm không phân biệt chữ hoa, thường
       };
     }
@@ -103,6 +103,7 @@ const filter = async (tourName, destination, minPrice, maxPrice, startDate) => {
           locations: {
             departure: 1,
             destination: 1,
+            province: 1
           },
           details: {
             priceAdult: 1,
@@ -204,6 +205,7 @@ const findByName = async (name) => {
           locations: {
             departure: 1,
             destination: 1,
+            province: 1
           },
           details: {
             priceAdult: 1,

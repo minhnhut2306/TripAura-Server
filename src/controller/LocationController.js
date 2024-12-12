@@ -1,8 +1,8 @@
 const _Location = require('../modules/LocationModule')
 
-const insert = async (departure, destination, tourId) => {
+const insert = async (departure, destination,province, tourId) => {
     try {
-        const data = new _Location({ departure, destination, tourId })
+        const data = new _Location({ departure, destination,province, tourId })
         await data.save()
         return data
     } catch (error) {
