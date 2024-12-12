@@ -263,7 +263,7 @@ router.get('/getreviewbytouridandbyuserid', async (req, res) => {
     console.log('Route /getreviewbytouridandbyuserid called');
     try {
         const { userId, tourId } = req.query;
-        console.log('get review by tour', tourId);  // This log should show in the console
+        console.log('get review by tour', tourId); 
 
         const filter = {};
 
