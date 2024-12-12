@@ -259,6 +259,29 @@ router.post('/api/getByTourId', async function (req, res) {
         return res.json(createResponse(500, "Lỗi máy chủ khi lấy review.", "error"));
     }
 });
+router.get('/getreviewbytouridandbyuserid', async (req, res) => {
+    console.log('Route /getreviewbytouridandbyuserid called');
+    try {
+        const { userId, tourId } = req.query;
+        console.log('get review by tour', tourId);  // This log should show in the console
+
+        const filter = {};
+
+        if (userId) filter.userId = userId;
+        if (tourId) filter.tourId = tourId;
+
+        const reviews = await reviewController.getReviewsByUseridandTourId(filter);
+
+        if (reviews) {
+            res.status(200).json({ success: true, data: reviews });
+        } else {
+            res.status(404).json({ success: false, message: "No reviews found" });
+        }
+    } catch (error) {
+        console.error("Error in /getreviewbytouridandbyuserid route:", error);
+        res.status(500).json({ success: false, message: "Internal server error" });
+    }
+});
 
 router.put('/api/update/:id', async function (req, res) {
     try {

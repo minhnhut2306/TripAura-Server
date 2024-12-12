@@ -42,6 +42,22 @@ const getByUserId = async (userId) => {
     }
 }
 
+const getReviewsByUseridandTourId = async (filter) => {
+    try {
+        console.log('Inside getReviewsByUseridandTourId, filter:', filter); // Log filter here
+        const validFilter = {};
+        if (filter.userId) validFilter.userId = filter.userId;
+        if (filter.tourId) validFilter.tourId = filter.tourId;
+        const data = await _Review.find(validFilter);
+        console.log('Fetched data:', data); // Log the data fetched from the database
+        return data.length > 0 ? data : false;
+    } catch (error) {
+        console.log("====== Lỗi getReviews =====", error);
+        return false;
+    }
+};
+
+
 const getByTourId = async (tourId) => {
     try {
         const data = await _Review.find(tourId)
@@ -81,4 +97,4 @@ const remove = async (reviewId) => {
 
     }
 }
-module.exports = { insert, getByTourId, getByUserId, update, remove,insertmau}
+module.exports = { insert, getByTourId, getByUserId, update, remove,insertmau,getReviewsByUseridandTourId}
