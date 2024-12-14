@@ -394,6 +394,80 @@ const getToursAll = async () => {
   }
 };
 
+const getToursAllAdmin = async () => {
+  try {
+    const tours = await TourModule.aggregate([
+      {
+        $lookup: {
+          from: "images",
+          localField: "_id",
+          foreignField: "tourId",
+          as: "imageInfo",
+        },
+      },
+      {
+        $lookup: {
+          from: "locations",
+          localField: "_id",
+          foreignField: "tourId",
+          as: "locationInfo",
+        },
+      },
+      {
+        $lookup: {
+          from: "details", // Tên collection Detail
+          let: { tourId: "$_id" }, // Đặt tourId hiện tại trong Tour vào biến
+          pipeline: [
+            { $match: { $expr: { $eq: ["$tourId", "$$tourId"] } } }, // Lọc detail theo tourId
+            { $limit: 1 }, // Chỉ lấy 1 detail
+          ],
+          as: "detailInfo", // Tên field chứa dữ liệu Detail sau khi nối
+        },
+      },
+      {
+        $unwind: "$category",
+      },
+      {
+        $unwind: { path: "$detailInfo", preserveNullAndEmptyArrays: true }, // Mở gói detailInfo, nếu không có vẫn trả về null
+      },
+      {
+        $unwind: { path: "$imageInfo", preserveNullAndEmptyArrays: true }, // Mở gói imageInfo, nếu không có vẫn trả về null
+      },
+      {
+        $unwind: { path: "$locationInfo", preserveNullAndEmptyArrays: true }, // Mở gói detailInfo, nếu không có vẫn trả về null
+      },
+      {
+        $project: {
+          _id: 1, // Đảm bảo `_id` được bao gồm trong kết quả
+          tourName: 1,
+          description: 1,
+          status: 1,
+          createAt: 1,
+          locationInfo: {
+            departure: 1,
+            destination: 1,
+          },
+          imageInfo: { linkImage: 1 },
+          detailInfo: {
+            priceAdult: 1,
+            // startDay: 1,
+            priceAdult: 1,
+            PromotionalPrice: 1,
+          },
+        },
+      },
+    ]);
+
+    if (!tours.length) {
+      return false;
+    }
+    return tours;
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
+};
+
 const insert = async (tourName, description, category) => {
   try {
     const createAt = new Date();
@@ -542,7 +616,7 @@ const update = async (tourId, description) => {
   }
 };
 
-update('675cfd24247496ef8ee15c61', 'a b b d');
+// update('675cfd24247496ef8ee15c61', 'a b b d');
 
 
 module.exports = {
@@ -553,5 +627,6 @@ module.exports = {
   getToursAll,
   getPopularTour,
   findByName,
-  deleteTour
+  deleteTour,
+  getToursAllAdmin
 };

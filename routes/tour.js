@@ -316,4 +316,18 @@ router.put('/api/update', async (req, res) => {
     }
 })
 
+router.get('/api/getAllTourAdmin', async (req, res) => {
+    try {
+        const tours = await tourController.getToursAllAdmin()
+        if (tours && tours.length > 0) {
+            return res.json(createResponse(200, "Lấy tour theo danh mục thành công", "success", tours));
+        } else {
+            return res.json(createResponse(404, "Không có dữ liệu", "error"));
+        }
+    } catch (error) {
+        console.log(error);
+        return res.json(createResponse(500, "Lỗi máy chủ.", "error"));
+    }
+})
+
 module.exports = router;
