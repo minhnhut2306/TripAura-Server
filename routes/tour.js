@@ -330,4 +330,19 @@ router.get('/api/getAllTourAdmin', async (req, res) => {
     }
 })
 
+router.get('/api/getTourById', async (req, res) => {
+    try {
+        const { tourId } = req.query
+        const tour = await tourController.getByTourId(tourId)
+        if (tour) {
+            return res.json(createResponse(200, "Update tour thành công", "success", tour));
+        } else {
+            return res.json(createResponse(400, "Update tour thất bại", "failed"));
+        }
+    } catch (error) {
+        console.log(error);
+        return res.json(createResponse(500, "Lỗi máy chủ.", "error"));
+    }
+})
+
 module.exports = router;

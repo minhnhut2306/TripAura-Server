@@ -618,6 +618,20 @@ const update = async (tourId, description) => {
 
 // update('675cfd24247496ef8ee15c61', 'a b b d');
 
+const getByTourId = async (tourId) => {
+  try {
+    const tour = await TourModule.findOne({ _id: tourId })
+    if (tour) {
+      return tour
+    } else {
+      return false
+    }
+  } catch (error) {
+    console.log(error);
+    return false
+  }
+}
+
 
 module.exports = {
   update,
@@ -628,5 +642,6 @@ module.exports = {
   getPopularTour,
   findByName,
   deleteTour,
-  getToursAllAdmin
+  getToursAllAdmin,
+  getByTourId
 };
