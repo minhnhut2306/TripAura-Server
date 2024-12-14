@@ -16,6 +16,11 @@ const insert = async (startDay, endDay, maxTicket, minTicket, priceAdult, priceC
 
 const getByTourId = async (tourId) => {
     try {
+        await updateDetailByDay()
+        const sevenDaysAgo = new Date();
+        sevenDaysAgo.setDate(sevenDaysAgo.getDate() + 7); // Tính ngày trước 7 ngày
+        console.log(sevenDaysAgo);
+
         const tour = await TourModule.aggregate([
             {
                 $match: {
@@ -54,7 +59,12 @@ const getByTourId = async (tourId) => {
                         $filter: {
                             input: "$details",
                             as: "detail",
-                            cond: { $eq: ["$$detail.status", "1"] } // Điều kiện: status = 1
+                            cond: {
+                                $and: [
+                                    { $eq: ["$$detail.status", "1"] }, // Điều kiện status = "1"
+                                    { $gte: ["$$detail.startDay", sevenDaysAgo] } // Điều kiện startDay < 7 ngày trước
+                                ]
+                            }
                         }
                     }
                 }
@@ -176,7 +186,8 @@ const remove = async (detalId) => {
     }
 }
 
-const stopSale = async (id) => {console.log(id);
+const stopSale = async (id) => {
+    console.log(id);
 
     try {
         const option = await DetailModule.findByIdAndUpdate({ _id: id },
@@ -197,11 +208,11 @@ const updateMaxTicket = async (detailid, maxTicket) => {
     try {
         const data = await DetailModule.findByIdAndUpdate(
             detailid,
-            { maxTicket: maxTicket }, 
-            { new: true }  
+            { maxTicket: maxTicket },
+            { new: true }
         );
         console.log('data', data);
-        
+
         if (!data) {
             throw new Error("Không tìm thấy tài liệu để cập nhật.");
         }
@@ -211,7 +222,7 @@ const updateMaxTicket = async (detailid, maxTicket) => {
         return false;
     }
 };
-const getAll = async () =>{
+const getAll = async () => {
     try {
         const data = await DetailModule.find({ status: 1 })
         return data
@@ -222,4 +233,4 @@ const getAll = async () =>{
 }
 
 
-module.exports = { insert, getByTourId, update, remove, stopSale,updateMaxTicket, getAll }
+module.exports = { insert, getByTourId, update, remove, stopSale, updateMaxTicket, getAll }
