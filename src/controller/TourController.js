@@ -571,7 +571,7 @@ const deleteTour = async (tourId) => {
 };
 
 // deleteTour('675cfc25247496ef8ee15c5f')
-const update = async (tourId, description) => {
+const update = async (tourId, description, status) => {
   try {
     const tour = await TourModule.findOne({ _id: tourId });
     if (!tour) {
@@ -595,7 +595,7 @@ const update = async (tourId, description) => {
     }
 
     const result = await tour.updateOne(
-      { $set: { description: sanitizedDescription } }
+      { $set: { description: sanitizedDescription, status: status } }
     );
 
     console.log("Matched Count:", result.matchedCount);
