@@ -459,33 +459,91 @@ const getPopularTour = async (page = 1, limit = 10) => {
 
 const deleteTour = async (tourId) => {
   try {
-    const tour = await TourModule.findByIdAndDelete({ _id: tourId })
-    return tour
-  } catch (error) {
-    console.log("====lỗi deletetour", error);
-    return false
-  }
-}
+    // Tìm tour dựa trên tourId
+    const tour = await TourModule.findOne({ _id: tourId });
 
+    if (!tour) {
+      // Nếu không tìm thấy tour, trả về thông báo lỗi
+      console.log("Tour không tồn tại");
+      return false;
+    }
+    // Kiểm tra trạng thái của tour
+    if (tour.status === "1") {
+      console.log("Tour đang hoạt động, không thể xóa");
+      return false;
+
+    } else {
+      const result = await tour.deleteOne();
+
+      if (result.deletedCount > 0) {
+        // Nếu xóa thành công, trả về true
+        console.log("Xóa tour thành công");
+        return true;
+      } else {
+        // Nếu không xóa được, trả về false
+        console.log("Không thể xóa tour");
+        return false;
+      }
+    }
+
+    // Thực hiện xóa tour
+
+
+  } catch (error) {
+    // Xử lý lỗi nếu có
+    console.log("Lỗi khi xóa tour:", error);
+    return false;
+  }
+};
+
+// deleteTour('675cfc25247496ef8ee15c5f')
 const update = async (tourId, description) => {
   try {
-    const tour = await TourModule.findByIdAndUpdate({ _id: tourId }, {
-      description: description
-    },
-      { new: true })
-    console.log("=============tour", tour);
-    if (tour) {
-      return tour
+    const tour = await TourModule.findOne({ _id: tourId });
+    if (!tour) {
+      console.log("Không tìm thấy tour");
+      return false;
+    }
+
+    const sanitizedDescription = description.trim(); // Loại bỏ khoảng trắng thừa
+    // console.log("Giá trị description cũ:", tour.description);
+    // console.log("Giá trị description mới:", sanitizedDescription);
+
+    // Kiểm tra nếu giá trị thực sự thay đổi
+    if (tour.description === sanitizedDescription) {
+      console.log("Giá trị description không thay đổi");
+      return false; // Không cần cập nhật nếu không có sự thay đổi
+    }
+
+    if (tour.status === "1") {
+      console.log("Tour đang bán, không thể cập nhật");
+      return false;
+    }
+
+    const result = await tour.updateOne(
+      { $set: { description: sanitizedDescription } }
+    );
+
+    console.log("Matched Count:", result.matchedCount);
+    console.log("Modified Count:", result.modifiedCount);
+
+    if (result.modifiedCount > 0) {
+      console.log("Cập nhật thành công");
+      const updatedTour = await TourModule.findOne({ _id: tourId });
+      console.log("Giá trị description mới:", updatedTour.description);
+      return updatedTour;
     } else {
-      return false
+      console.log("Không có thay đổi nào được thực hiện");
+      return false;
     }
   } catch (error) {
-    console.log("Lỗi update decription", error);
-    return false
+    console.log("Lỗi khi cập nhật description:", error);
+    return false;
   }
-}
+};
 
-// update('6735b1f4799d8d81dbe9daf7', 'abcddde')
+update('675cfd24247496ef8ee15c61', 'a b b d');
+
 
 module.exports = {
   update,
