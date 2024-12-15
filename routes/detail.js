@@ -199,7 +199,25 @@ router.post('/api/getByTourId', async function (req, res) {
 
     } catch (error) {
         console.log(error);
+        return res.json(createResponse(500, "Lỗi server", "error"));
     }
+})
+
+router.get('/api/admin/getBytouId', async (req, res) => {
+    try {
+        const { tourId } = req.query
+        const details = await detailController.getByTourIdWeb(tourId)
+        if (details) {
+            return res.json(createResponse(200, "Lấy dữ liệu thành công", "success", details))
+        } else {
+            return res.json(createResponse(400, "Không có dữ liệu", "failed"));
+        }
+
+    } catch (error) {
+        console.log(error);
+        return res.json(createResponse(500, "Lỗi server", "error"));
+    }
+
 })
 
 router.put('/api/update/:id', async function (req, res) {
