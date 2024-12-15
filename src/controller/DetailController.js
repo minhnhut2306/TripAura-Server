@@ -4,6 +4,26 @@ const TourModule = require('../modules/TourModule')
 
 const insert = async (startDay, endDay, maxTicket, minTicket, priceAdult, priceChildren, PromotionalPrice, tourId) => {
     try {
+        startDay = new Date(startDay)
+        endDay = new Date(endDay)
+
+        const startOfDay = new Date(startDay);
+        startOfDay.setHours(0, 0, 0, 0); // Đặt thời gian là 00:00:00
+
+        const endOfDay = new Date(startDay);
+        endOfDay.setHours(23, 59, 59, 999); // Đặt thời gian là 23:59:59.999
+
+        if (startDay > endDay) {
+            console.log("Lỗi ngày");
+            return false
+        }
+        const detail = await DetailModule.find({ tourId: tourId, startDay: { $gte: startOfDay, $lt: endOfDay } })
+        console.log("=========== detail", detail);
+        if (detail.length >0) {
+            console.log(detail);
+            
+            return false
+        }
         const detailTour = new DetailModule({
             startDay, endDay, maxTicket, minTicket, priceAdult, priceChildren, PromotionalPrice, status: 1, tourId
         });
@@ -13,6 +33,7 @@ const insert = async (startDay, endDay, maxTicket, minTicket, priceAdult, priceC
         console.log("loi insert", error);
     }
 }
+
 
 const getByTourId = async (tourId) => {
     try {
@@ -188,7 +209,6 @@ const remove = async (detalId) => {
 
 const stopSale = async (id) => {
     console.log(id);
-
     try {
         const option = await DetailModule.findByIdAndUpdate({ _id: id },
             { status: 0 }
@@ -222,6 +242,7 @@ const updateMaxTicket = async (detailid, maxTicket) => {
         return false;
     }
 };
+
 const getAll = async () => {
     try {
         const data = await DetailModule.find({ status: 1 })
@@ -232,5 +253,21 @@ const getAll = async () => {
     }
 }
 
+const getByDetailId = async (detailId) => {
+    try {
+        const detail = await DetailModule.findOne({ _id: detailId })
+        if (detail) {
+            console.log("=====", detail);
+            return detail
+        } else {
+            return false
+        }
+    } catch (error) {
+        console.log("========= lỗi", error);
+        return false
+    }
+}
 
-module.exports = { insert, getByTourId, update, remove, stopSale, updateMaxTicket, getAll }
+// getByDetailId("6735acef6d63ba4cbaa52b5f")
+
+module.exports = { insert, getByTourId, update, remove, stopSale, updateMaxTicket, getAll, getByDetailId }
