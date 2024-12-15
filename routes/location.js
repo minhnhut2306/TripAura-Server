@@ -103,11 +103,11 @@ const { createResponse } = require('../src/helper/createResponse.helper');
 
 router.post('/api/add', async function (req, res) {
     try {
-        const { departure, destination, tourId } = req.body;
-        if (departure == "" || destination == "" || tourId == "") {
+        const { departure, destination, province, tourId } = req.body;
+        if (departure == "" || destination == "" || tourId == "" || province == "") {
             return res.json(createResponse(400, "Không được để trống.", "error"));
         } else {
-            const data = await locationController.insert(departure, destination, tourId)
+            const data = await locationController.insert(departure, destination, province, tourId)
             if (data) {
                 return res.json(createResponse(200, "Thêm địa điểm thành công.", "success", data));
             } else {

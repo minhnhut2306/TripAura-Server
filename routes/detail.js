@@ -257,9 +257,9 @@ router.put('/api/stopSale', async (req, res) => {
 router.put('/api/updateTicket/:id', async (req, res) => {
     try {
         const { id } = req.params;
-        const { maxTicket } = req.body; 
+        const { maxTicket } = req.body;
 
-        const data = await detailController.updateMaxTicket(id, maxTicket); 
+        const data = await detailController.updateMaxTicket(id, maxTicket);
         console.log('updated', data);
         if (data) {
             return res.json(createResponse(200, "Cập nhật thành công", "success", data));
@@ -271,7 +271,7 @@ router.put('/api/updateTicket/:id', async (req, res) => {
         return res.json(createResponse(500, "Lỗi hệ thống", "error"));
     }
 });
-router.get('/api/getAll', async (req, res) =>{
+router.get('/api/getAll', async (req, res) => {
     try {
         const data = await detailController.getAll();
         if (data) {
@@ -285,5 +285,19 @@ router.get('/api/getAll', async (req, res) =>{
     }
 })
 
+router.get('/api/getDetail', async (req, res) => {
+    try {
+        const { detailId } = req.query
+        const detail = await detailController.getByDetailId(detailId)
+        if (detail) {
+            return res.json(createResponse(200, "get thành công", "success", detail));
+        } else {
+            return res.json(createResponse(400, "get Thất bại", "failed"));
+        }
+    } catch (error) {
+        console.log(error);
+        return res.json(createResponse(500, "Lỗi thất bại", "error"));
+    }
+})
 
 module.exports = router;

@@ -24,7 +24,7 @@ const filter = async (tourName, destination, minPrice, maxPrice, startDate) => {
     if (destination) {
       // Biểu thức chính quy tìm kiếm địa chỉ với ít nhất một ký tự giống nhau
       const regexPattern = `.*${destination}.*`; // Tìm kiếm với ít nhất một ký tự giống
-      matchConditions["locations.destination"] = {
+      matchConditions["locations.province"] = {
         $regex: new RegExp(regexPattern, "i"), // Tìm kiếm không phân biệt chữ hoa, thường
       };
     }
@@ -103,6 +103,7 @@ const filter = async (tourName, destination, minPrice, maxPrice, startDate) => {
           locations: {
             departure: 1,
             destination: 1,
+            province: 1
           },
           details: {
             priceAdult: 1,
@@ -204,6 +205,7 @@ const findByName = async (name) => {
           locations: {
             departure: 1,
             destination: 1,
+            province: 1
           },
           details: {
             priceAdult: 1,
@@ -392,6 +394,80 @@ const getToursAll = async () => {
   }
 };
 
+const getToursAllAdmin = async () => {
+  try {
+    const tours = await TourModule.aggregate([
+      {
+        $lookup: {
+          from: "images",
+          localField: "_id",
+          foreignField: "tourId",
+          as: "imageInfo",
+        },
+      },
+      {
+        $lookup: {
+          from: "locations",
+          localField: "_id",
+          foreignField: "tourId",
+          as: "locationInfo",
+        },
+      },
+      {
+        $lookup: {
+          from: "details", // Tên collection Detail
+          let: { tourId: "$_id" }, // Đặt tourId hiện tại trong Tour vào biến
+          pipeline: [
+            { $match: { $expr: { $eq: ["$tourId", "$$tourId"] } } }, // Lọc detail theo tourId
+            { $limit: 1 }, // Chỉ lấy 1 detail
+          ],
+          as: "detailInfo", // Tên field chứa dữ liệu Detail sau khi nối
+        },
+      },
+      {
+        $unwind: "$category",
+      },
+      {
+        $unwind: { path: "$detailInfo", preserveNullAndEmptyArrays: true }, // Mở gói detailInfo, nếu không có vẫn trả về null
+      },
+      {
+        $unwind: { path: "$imageInfo", preserveNullAndEmptyArrays: true }, // Mở gói imageInfo, nếu không có vẫn trả về null
+      },
+      {
+        $unwind: { path: "$locationInfo", preserveNullAndEmptyArrays: true }, // Mở gói detailInfo, nếu không có vẫn trả về null
+      },
+      {
+        $project: {
+          _id: 1, // Đảm bảo `_id` được bao gồm trong kết quả
+          tourName: 1,
+          description: 1,
+          status: 1,
+          createAt: 1,
+          locationInfo: {
+            departure: 1,
+            destination: 1,
+          },
+          imageInfo: { linkImage: 1 },
+          detailInfo: {
+            priceAdult: 1,
+            // startDay: 1,
+            priceAdult: 1,
+            PromotionalPrice: 1,
+          },
+        },
+      },
+    ]);
+
+    if (!tours.length) {
+      return false;
+    }
+    return tours;
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
+};
+
 const insert = async (tourName, description, category) => {
   try {
     const createAt = new Date();
@@ -457,33 +533,105 @@ const getPopularTour = async (page = 1, limit = 10) => {
 
 const deleteTour = async (tourId) => {
   try {
-    const tour = await TourModule.findByIdAndDelete({ _id: tourId })
-    return tour
-  } catch (error) {
-    console.log("====lỗi deletetour", error);
-    return false
-  }
-}
+    // Tìm tour dựa trên tourId
+    const tour = await TourModule.findOne({ _id: tourId });
 
-const update = async (tourId, description) => {
+    if (!tour) {
+      // Nếu không tìm thấy tour, trả về thông báo lỗi
+      console.log("Tour không tồn tại");
+      return false;
+    }
+    // Kiểm tra trạng thái của tour
+    if (tour.status === "1") {
+      console.log("Tour đang hoạt động, không thể xóa");
+      return false;
+
+    } else {
+      const result = await tour.deleteOne();
+
+      if (result.deletedCount > 0) {
+        // Nếu xóa thành công, trả về true
+        console.log("Xóa tour thành công");
+        return true;
+      } else {
+        // Nếu không xóa được, trả về false
+        console.log("Không thể xóa tour");
+        return false;
+      }
+    }
+
+    // Thực hiện xóa tour
+
+
+  } catch (error) {
+    // Xử lý lỗi nếu có
+    console.log("Lỗi khi xóa tour:", error);
+    return false;
+  }
+};
+
+// deleteTour('675cfc25247496ef8ee15c5f')
+const update = async (tourId, description, status) => {
   try {
-    const tour = await TourModule.findByIdAndUpdate({ _id: tourId }, {
-      description: description
-    },
-      { new: true })
-    console.log("=============tour", tour);
+    const tour = await TourModule.findOne({ _id: tourId });
+    if (!tour) {
+      console.log("Không tìm thấy tour");
+      return false;
+    }
+
+    const sanitizedDescription = description.trim(); // Loại bỏ khoảng trắng thừa
+    // console.log("Giá trị description cũ:", tour.description);
+    // console.log("Giá trị description mới:", sanitizedDescription);
+
+    // Kiểm tra nếu giá trị thực sự thay đổi
+    if (tour.description === sanitizedDescription) {
+      console.log("Giá trị description không thay đổi");
+      return false; // Không cần cập nhật nếu không có sự thay đổi
+    }
+
+    if (tour.status === "1") {
+      console.log("Tour đang bán, không thể cập nhật");
+      return false;
+    }
+
+    const result = await tour.updateOne(
+      { $set: { description: sanitizedDescription, status: status } }
+    );
+
+    console.log("Matched Count:", result.matchedCount);
+    console.log("Modified Count:", result.modifiedCount);
+
+    if (result.modifiedCount > 0) {
+      console.log("Cập nhật thành công");
+      const updatedTour = await TourModule.findOne({ _id: tourId });
+      console.log("Giá trị description mới:", updatedTour.description);
+      return updatedTour;
+    } else {
+      console.log("Không có thay đổi nào được thực hiện");
+      return false;
+    }
+  } catch (error) {
+    console.log("Lỗi khi cập nhật description:", error);
+    return false;
+  }
+};
+
+// update('675cfd24247496ef8ee15c61', 'a b b d');
+
+const getByTourId = async (tourId) => {
+  try {
+    const tour = await TourModule.findOne({ _id: tourId })
     if (tour) {
       return tour
     } else {
       return false
     }
   } catch (error) {
-    console.log("Lỗi update decription", error);
+    console.log(error);
     return false
   }
 }
 
-// update('6735b1f4799d8d81dbe9daf7', 'abcddde')
 
 module.exports = {
   update,
@@ -493,5 +641,7 @@ module.exports = {
   getToursAll,
   getPopularTour,
   findByName,
-  deleteTour
+  deleteTour,
+  getToursAllAdmin,
+  getByTourId
 };

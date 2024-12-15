@@ -303,8 +303,37 @@ router.delete('/api/deleteTour/:tourId', async (req, res) => {
 
 router.put('/api/update', async (req, res) => {
     try {
-        const { tourId, description } = req.body
-        const tour = await tourController.update(tourId, description)
+        const { tourId, description, status } = req.body
+        const tour = await tourController.update(tourId, description, status)
+        if (tour) {
+            return res.json(createResponse(200, "Update tour thành công", "success", tour));
+        } else {
+            return res.json(createResponse(400, "Update tour thất bại", "failed"));
+        }
+    } catch (error) {
+        console.log(error);
+        return res.json(createResponse(500, "Lỗi máy chủ.", "error"));
+    }
+})
+
+router.get('/api/getAllTourAdmin', async (req, res) => {
+    try {
+        const tours = await tourController.getToursAllAdmin()
+        if (tours && tours.length > 0) {
+            return res.json(createResponse(200, "Lấy tour theo danh mục thành công", "success", tours));
+        } else {
+            return res.json(createResponse(404, "Không có dữ liệu", "error"));
+        }
+    } catch (error) {
+        console.log(error);
+        return res.json(createResponse(500, "Lỗi máy chủ.", "error"));
+    }
+})
+
+router.get('/api/getTourById', async (req, res) => {
+    try {
+        const { tourId } = req.query
+        const tour = await tourController.getByTourId(tourId)
         if (tour) {
             return res.json(createResponse(200, "Update tour thành công", "success", tour));
         } else {
