@@ -287,8 +287,8 @@ router.get('/api/getAll', async (req, res) => {
 
 router.get('/api/getDetail', async (req, res) => {
     try {
-        const { tourId } = req.query
-        const detail = await detailController.getByDetailId(tourId)
+        const { detailId } = req.query
+        const detail = await detailController.getByDetailId(detailId)
         if (detail) {
             return res.json(createResponse(200, "get thành công", "success", detail));
         } else {
