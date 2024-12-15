@@ -6,6 +6,10 @@ const User = require('../src/modules/UserModle')
 const Detail = require('../src/modules/DetailModule')
 const Tour = require('../src/modules/TourModule')
 const Image = require('../src/modules/ImageModle')
+const config = require('./../config');
+const BookingModule = require('../src/modules/BookingModule');
+const nodemailer = require('nodemailer');
+const UserModle = require('../src/modules/UserModle');
 
 
 /**
@@ -164,9 +168,126 @@ router.put('/api/update/:id', async (req, res) => {
         let { status } = req.body;
         if (status === "success") {
             status = 0;
+            const transporter = nodemailer.createTransport({
+                host: 'smtp.gmail.com',
+                port: 465,
+                secure: true,
+                auth: {
+                    user: config.email_user,
+                    pass: config.email_pass,
+                },
+                tls: {
+                    rejectUnauthorized: false,
+                },
+            });
+
+            const { userId } = await BookingModule.findOne({ _id: id });
+            const { email } = await UserModle.findOne({ _id: userId });
+
+            const content = `
+              <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; background-color: #f9f9f9; border: 1px solid #ddd; border-radius: 8px;">
+                <div style="background-color: #003375; padding: 20px; text-align: center; border-radius: 8px 8px 0 0;">
+                  <h2 style="color: #fff; margin: 0;">Thanh toán thành công</h2>
+                </div>
+                <div style="padding: 20px; background-color: #ffffff;">
+                  <p style="font-size: 16px; color: #333; line-height: 1.5;">
+                    Chào bạn,
+                  </p>
+                  <p style="font-size: 16px; color: #333; line-height: 1.5;">
+                    Đơn hàng của bạn đã được thanh toán thành công. Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi!
+                  </p>
+                  <p style="font-size: 16px; color: #333; line-height: 1.5;">
+                    Nếu bạn có bất kỳ câu hỏi nào, vui lòng liên hệ với chúng tôi qua email tripaura@gmail.com hoặc hotline 0999998888.
+                  </p>
+                  <hr style="border: none; border-top: 1px solid #ddd; margin: 20px 0;">
+                  <p style="font-size: 14px; color: #999; text-align: center;">
+                    Đây là email tự động, vui lòng không trả lời email này.
+                  </p>
+                </div>
+                <div style="background-color: #003375; padding: 10px; text-align: center; border-radius: 0 0 8px 8px;">
+                  <p style="color: #fff; font-size: 14px; margin: 0;">
+                    © TripAura
+                  </p>
+                </div>
+              </div>
+            `;
+            const mainOptions = {
+                from: 'TripAura',
+                to: email,
+                subject: 'Thanh toán thành công đơn hàng',
+                html: content,
+            };
+
+
+            transporter.sendMail(mainOptions, function (err, info) {
+                if (err) {
+                    console.error('Lỗi gửi mail:', err);
+                    return res.status(500).json({ message: 'Lỗi gửi mail', error: err.message });
+                } else {
+                    console.log('Message sent:', info.response);
+                    return res.status(200).json({ message: 'Email đã được gửi thành công', info: info.response });
+                }
+            });
         }
         if (status === "cancel") {
             status = 2;
+            const transporter = nodemailer.createTransport({
+                host: 'smtp.gmail.com',
+                port: 465,
+                secure: true,
+                auth: {
+                    user: config.email_user,
+                    pass: config.email_pass,
+                },
+                tls: {
+                    rejectUnauthorized: false,
+                },
+            });
+            const { userId } = await BookingModule.findOne({ _id: id });
+            const { email } = await UserModle.findOne({ _id: userId });
+            const content = `
+              <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; background-color: #f9f9f9; border: 1px solid #ddd; border-radius: 8px;">
+                <div style="background-color: #003375; padding: 20px; text-align: center; border-radius: 8px 8px 0 0;">
+                  <h2 style="color: #fff; margin: 0;">Hủy đơn hàng thành công</h2>
+                </div>
+                <div style="padding: 20px; background-color: #ffffff;">
+                  <p style="font-size: 16px; color: #333; line-height: 1.5;">
+                    Chào bạn,
+                  </p>
+                  <p style="font-size: 16px; color: #333; line-height: 1.5;">
+                    Đơn hàng của bạn đã được hủy thành công. Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi!
+                  </p>
+                  <p style="font-size: 16px; color: #333; line-height: 1.5;">
+                    Nếu bạn có bất kỳ câu hỏi nào, vui lòng liên hệ với chúng tôi qua email tripaura@gmail.com hoặc hotline 0999998888.
+                  </p>
+                  <hr style="border: none; border-top: 1px solid #ddd; margin: 20px 0;">
+                  <p style="font-size: 14px; color: #999; text-align: center;">
+                    Đây là email tự động, vui lòng không trả lời email này.
+                  </p>
+                </div>
+                <div style="background-color: #003375; padding: 10px; text-align: center; border-radius: 0 0 8px 8px;">
+                  <p style="color: #fff; font-size: 14px; margin: 0;">
+                    © TripAura
+                  </p>
+                </div>
+              </div>
+            `;
+            const mainOptions = {
+                from: 'TripAura',
+                to: email,
+                subject: 'Thanh toán thành công đơn hàng',
+                html: content,
+            };
+            transporter.sendMail(mainOptions, function (err, info) {
+                if (err) {
+                    console.error('Lỗi gửi mail:', err);
+                    return res.status(500).json({ message: 'Lỗi gửi mail', error: err.message });
+                } else {
+                    console.log('Message sent:', info.response);
+                    return res.status(200).json({ message: 'Email đã được gửi thành công', info: info.response });
+                }
+            });
+
         }
         const data = await bookingController.update(id, status);
         if (data) {
@@ -175,7 +296,8 @@ router.put('/api/update/:id', async (req, res) => {
             return res.json(createResponse(500, "Cập nhật thất bại", "error"));
         }
     } catch (error) {
-        console.log(error);
+        console.log(er +
+            ror);
         return res.json(createResponse(500, "Đã xảy ra lỗi máy chủ", "error"));
     }
 });
@@ -210,5 +332,62 @@ router.get('/api/getBookingByYear', async (req, res) => {
         return res.json(createResponse(500, "Lỗi server", "error"));
     }
 })
+
+router.post('/send-mail', async function (req, res) {
+
+    const transporter = nodemailer.createTransport({
+        host: 'smtp.gmail.com',
+        port: 465,
+        secure: true,
+        auth: {
+            user: config.email_user,
+            pass: config.email_pass,
+        },
+        tls: {
+            rejectUnauthorized: false,
+        },
+    });
+
+    const content = `
+      <div style="padding: 10px; background-color: #003375">
+        <div style="padding: 10px; background-color: white;">
+          <h4 style="color: #0085ff">Gửi mail với Nodemailer và Express</h4>
+          <span style="color: black">Đây là mail test</span>
+        </div>
+      </div>
+    `;
+
+    const { userId } = await BookingModule.findOne({ bookingId })
+    console.log('userId:......... ', userId);
+    const email = UserModle.findOne({ _id: userId });
+    console.log('email:......... ', email);
+
+
+    const mainOptions = {
+        from: 'Test email',
+        to: email,
+        subject: 'Test Nodemailer',
+        text: 'Hello, đây là email test',
+        html: `
+      <div style="padding: 10px; background-color: #003375">
+        <div style="padding: 10px; background-color: white;">
+          <h4 style="color: #0085ff">Thanh toán thành công</h4>
+          <span style="color: black">Bạn đã đặt thành công </span>
+        </div>
+      </div>
+    `,
+    };
+
+
+    transporter.sendMail(mainOptions, function (err, info) {
+        if (err) {
+            console.error('Lỗi gửi mail:', err);
+            return res.status(500).json({ message: 'Lỗi gửi mail', error: err.message });
+        } else {
+            console.log('Message sent:', info.response);
+            return res.status(200).json({ message: 'Email đã được gửi thành công', info: info.response });
+        }
+    });
+});
 
 module.exports = router;

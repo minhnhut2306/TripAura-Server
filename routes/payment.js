@@ -54,26 +54,25 @@ router.post('/create-payment-link', async (req, res) => {
 });
 
 router.get('/success', async (req, res) => {
-    console.log('Received a request for /success');
+
     const { orderId } = req.query;
 
     if (!orderId) {
-        console.error('No orderId provided');
+  
         return res.status(400).send("orderId is required.");
     }
 
     try {
-        console.log('Checking for payment with orderId:', orderId);
         const payment = await PayOsModel.findOne({ orderId: orderId });
 
         if (payment) {
-            console.log('Payment found:', payment);
+ 
             payment.status = 0;
             await payment.save();
-            console.log('Payment updated:', payment);
+
             res.status(200).send(`Thanh toán thành công với số tiền: ${payment.amount} VNĐ.`);
         } else {
-            console.error('Payment not found for orderId:', orderId);
+
             res.status(404).send("Không tìm thấy đơn hàng.");
         }
     } catch (error) {
@@ -86,25 +85,25 @@ router.get('/cancel', async (req, res) => {
     console.log('Received cancel request:', req.query); 
     const { orderId } = req.query;
     if (!orderId) {
-        console.error('No orderId provided');
+ 
         return res.status(400).send("orderId is required.");
     }
 
     try {
         const payment = await PayOsModel.findOne({ orderId: orderId });
-        console.log('Payment found:', payment);
+
 
         if (payment) {
             payment.status = 2;
             await payment.save();
-            console.log('Payment status updated to canceled:', payment);
+       
             res.status(200).send("Thanh toán đã bị hủy.");
         } else {
-            console.error('Payment not found for orderId:', orderId);
+    
             res.status(404).send("Không tìm thấy đơn hàng.");
         }
     } catch (error) {
-        console.error('Error updating payment status:', error);
+      
         res.status(500).send("Có lỗi xảy ra khi cập nhật trạng thái thanh toán.");
     }
 });
