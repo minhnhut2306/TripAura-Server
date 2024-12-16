@@ -1,6 +1,25 @@
 const mongoose = require('mongoose');
 const DetailModule = require('../modules/DetailModule')
 const TourModule = require('../modules/TourModule')
+const BookingModule = require('../modules/BookingModule')
+
+
+const getDetailByBooking = async (detailId) => {
+    try {
+        const booking = await BookingModule.find({ detailId: detailId })
+        if (booking) {
+            console.log("==========", booking);
+            return booking
+        } else {
+            return false
+        }
+    } catch (error) {
+        return false
+    }
+}
+
+// getDetailByBooking("675fd371131222483b1fb7")
+
 
 const insert = async (startDay, endDay, maxTicket, minTicket, priceAdult, priceChildren, PromotionalPrice, tourId) => {
     try {
@@ -379,4 +398,15 @@ const getByDetailId = async (detailId) => {
 
 // getByDetailId("6735acef6d63ba4cbaa52b5f")
 
-module.exports = { insert, getByTourId, update, remove, stopSale, updateMaxTicket, getAll, getByDetailId, getByTourIdWeb }
+module.exports = {
+    insert,
+    getByTourId,
+    update,
+    remove,
+    stopSale,
+    updateMaxTicket,
+    getAll,
+    getByDetailId,
+    getByTourIdWeb,
+    getDetailByBooking
+}
