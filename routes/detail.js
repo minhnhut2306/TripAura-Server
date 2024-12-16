@@ -322,7 +322,7 @@ router.get('/api/getDetailByBooking', async (req, res) => {
     try {
         const { detailId } = req.query
         const detail = await detailController.getDetailByBooking(detailId)
-        if (detail) {
+        if (detail != []) {
             return res.json(createResponse(200, "get thành công", "success", detail));
         } else {
             return res.json(createResponse(400, "get Thất bại", "failed"));

@@ -398,15 +398,15 @@ const getByDetailId = async (detailId) => {
 
 // getByDetailId("6735acef6d63ba4cbaa52b5f")
 
-module.exports = {
-    insert,
-    getByTourId,
-    update,
-    remove,
-    stopSale,
-    updateMaxTicket,
-    getAll,
-    getByDetailId,
-    getByTourIdWeb,
-    getDetailByBooking
+module.exports = { 
+    insert, 
+    getByTourId, 
+    update, 
+    remove, 
+    stopSale, 
+    updateMaxTicket, 
+    getAll, 
+    getByDetailId, 
+    getByTourIdWeb, 
+    getDetailByBooking 
 }
