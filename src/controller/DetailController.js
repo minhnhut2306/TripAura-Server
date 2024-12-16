@@ -7,9 +7,13 @@ const BookingModule = require('../modules/BookingModule')
 const getDetailByBooking = async (detailId) => {
     try {
         const booking = await BookingModule.find({ detailId: detailId })
-        if (booking) {
-            console.log("==========", booking);
-            return booking
+        const detail = await DetailModule.findOne({ _id: detailId })
+        if (detail) {
+            if (booking) {
+                return detail
+            } else {
+                return false
+            }
         } else {
             return false
         }
@@ -398,15 +402,15 @@ const getByDetailId = async (detailId) => {
 
 // getByDetailId("6735acef6d63ba4cbaa52b5f")
 
-module.exports = { 
-    insert, 
-    getByTourId, 
-    update, 
-    remove, 
-    stopSale, 
-    updateMaxTicket, 
-    getAll, 
-    getByDetailId, 
-    getByTourIdWeb, 
-    getDetailByBooking 
+module.exports = {
+    insert,
+    getByTourId,
+    update,
+    remove,
+    stopSale,
+    updateMaxTicket,
+    getAll,
+    getByDetailId,
+    getByTourIdWeb,
+    getDetailByBooking
 }
