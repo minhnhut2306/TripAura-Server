@@ -199,6 +199,7 @@ router.delete('/api/delete/:id', async function (req, res) {
 })
 
 router.post('/api/uploadImageCloudinary', async (req, res) => {
+    
     try {
         const { image } = req.body
         const loadImage = await imageController.uploadFile(image)
