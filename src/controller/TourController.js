@@ -5,7 +5,8 @@ const mongoose = require("mongoose");
 
 const TourModule = require("../modules/TourModule");
 const ImageModule = require("../modules/ImageModle");
-const BookingModule = require("../modules/BookingModule")
+const BookingModule = require("../modules/BookingModule");
+const LocationModule = require('../modules/LocationModule')
 
 const filter = async (tourName, destination, minPrice, maxPrice, startDate) => {
   console.log(destination, minPrice, maxPrice, startDate);
@@ -568,9 +569,12 @@ const deleteTour = async (tourId) => {
 };
 
 // deleteTour('675cfc25247496ef8ee15c5f')
-const update = async (tourId, description, status) => {
+const update = async (tourId, description, name, departure, destination, province) => {
   try {
     const tour = await TourModule.findOne({ _id: tourId });
+    const location = await LocationModule.findOne({ tourId: tourId });
+    console.log("===== locations", location);
+
     if (!tour) {
       console.log("Không tìm thấy tour");
       return false;
@@ -581,24 +585,26 @@ const update = async (tourId, description, status) => {
     // console.log("Giá trị description mới:", sanitizedDescription);
 
     // Kiểm tra nếu giá trị thực sự thay đổi
-    if (tour.description === sanitizedDescription) {
-      console.log("Giá trị description không thay đổi");
-      return false; // Không cần cập nhật nếu không có sự thay đổi
-    }
+    // if (tour.description === sanitizedDescription) {
+    //   console.log("Giá trị description không thay đổi");
+    //   return false; // Không cần cập nhật nếu không có sự thay đổi
+    // }
 
-    if (tour.status === "1") {
-      console.log("Tour đang bán, không thể cập nhật");
-      return false;
-    }
-
-    const result = await tour.updateOne(
-      { $set: { description: sanitizedDescription, status: status } }
+    const resultTour = await tour.updateOne(
+      { $set: { description: description, tourName: name } }
+    );
+    const resultLocation = await location.updateOne(
+      { $set: { departure: departure, destination: destination, province: province } }
     );
 
-    console.log("Matched Count:", result.matchedCount);
-    console.log("Modified Count:", result.modifiedCount);
 
-    if (result.modifiedCount > 0) {
+
+    console.log("Matched CountTTT:", resultTour.matchedCount);
+    console.log("Modified CountTTT:", resultTour.modifiedCount);
+    console.log("Matched CountLLLL:", resultLocation.matchedCount);
+    console.log("Modified CountLLLL:", resultLocation.modifiedCount);
+
+    if (resultTour.matchedCount > 0 || resultLocation.matchedCount > 0) {
       console.log("Cập nhật thành công");
       const updatedTour = await TourModule.findOne({ _id: tourId });
       console.log("Giá trị description mới:", updatedTour.description);
@@ -613,21 +619,34 @@ const update = async (tourId, description, status) => {
   }
 };
 
-// update('675cfd24247496ef8ee15c61', 'a b b d');
+// update('676114fcbcc6a84a8bbe8471',);
 
 const getByTourId = async (tourId) => {
   try {
-    const tour = await TourModule.findOne({ _id: tourId })
-    if (tour) {
-      return tour
-    } else {
-      return false
+    // Tìm Tour và populate location
+    const tour = await TourModule.findOne({ _id: tourId }).lean();
+
+    if (!tour) {
+      console.log("Tour không tồn tại");
+      return null;
     }
+
+    // Tìm Location dựa trên tourId
+    const location = await LocationModule.findOne({ tourId: tourId }).lean();
+
+    // Kết hợp dữ liệu Tour và Location
+    const result = {
+      ...tour,
+      location: location || null,
+    };
+
+    return result;
   } catch (error) {
-    console.log(error);
-    return false
+    console.error('Error fetching tour with location:', error);
+    return null;
   }
-}
+};
+
 
 const findBookingsByTourId = async (tourId) => {
   try {
@@ -671,6 +690,8 @@ const findBookingsByTourId = async (tourId) => {
   }
 };
 // findBookingsByTourId("6760f91d46e4546e9af3dcb3")
+
+
 
 module.exports = {
   update,
