@@ -326,16 +326,9 @@ const update = async (detalId, startDay, endDay, maxTicket, minTicket, priceAdul
 }
 const remove = async (detalId) => {
     try {
-        const detail = await DetailModule.find({ _id: detalId })
-        console.log("======== detail", detail);
-        if (detail.length > 0) {
-            return { status: 0 }
-        } else {
-            const deletedetails = await DetailModule.findByIdAndDelete(detalId);
-            console.log("========== detail đã xóa ==========", deletedetails);
-            return { status: 1, data: deletedetails };
-        }
-
+        const deletedetails = await DetailModule.findByIdAndDelete(detalId);
+        console.log("========== detail đã xóa ==========", deletedetails);
+        return deletedetails;
     } catch (error) {
         console.log("========== Lỗi xóa detail ==========", error);
         return { status: -1 }
