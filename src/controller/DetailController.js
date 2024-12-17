@@ -9,9 +9,15 @@ const getDetailByBooking = async (detailId) => {
         const booking = await BookingModule.find({ detailId: detailId })
         const detail = await DetailModule.findOne({ _id: detailId })
         if (detail) {
-            if (booking) {
+            console.log("===== bk", booking);
+            console.log("====detail", detail);
+            if (booking.length > 0) {
+                console.log("cos");
+
                 return detail
             } else {
+                console.log("k cos");
+
                 return false
             }
         } else {
@@ -22,7 +28,7 @@ const getDetailByBooking = async (detailId) => {
     }
 }
 
-// getDetailByBooking("675fd371131222483b1fb7")
+// getDetailByBooking("675fde83180b628b67fc26aa")
 
 
 const insert = async (startDay, endDay, maxTicket, minTicket, priceAdult, priceChildren, PromotionalPrice, tourId) => {
