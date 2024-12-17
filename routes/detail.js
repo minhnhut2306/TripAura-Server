@@ -331,5 +331,23 @@ router.get('/api/getDetailByBooking', async (req, res) => {
         return res.json(createResponse(500, "Lỗi thất bại", "error"));
     }
 })
+router.get('/ticket/:detailId', async (req, res) => {
+    const { detailId } = req.params
+    console.log('get detail', detailId);
+    
+    try {
+        const check = await detailController.getTotalTickets(detailId);
+        console.log('get total tickets', check);
+        
+        if (check) {
+            return res.json(createResponse(200, "Lấy dữ liệu thành công", "success", check));
+        } else {
+            return res.json(createResponse(400, "Không tìm thấy dữ liệu", "failed"));
+        }
+    } catch (error) {
+        console.log(error);
+        return res.json(createResponse(500, "Lỗi máy chủ", "error"));
 
+    }
+})
 module.exports = router;
