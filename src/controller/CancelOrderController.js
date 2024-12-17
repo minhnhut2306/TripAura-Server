@@ -1,4 +1,4 @@
-const cancelOrder = require('./../modules/cancelOrder')
+const cancelOrder = require('./../modules/cancelOrder');
 
 const addCancelOrder = async (name, bankname, accountnumber, bookingId, cancellationreason, email, phone) => {
     try {
@@ -7,8 +7,6 @@ const addCancelOrder = async (name, bankname, accountnumber, bookingId, cancella
         }
         const createAt = new Date();
         console.log("====== day", createAt);
-
-      
         const newCancelOrder = new cancelOrder({
             name,
             bankname,
@@ -17,40 +15,35 @@ const addCancelOrder = async (name, bankname, accountnumber, bookingId, cancella
             cancellationreason,
             email,
             phone,
-            createAt
+            createAt,
         });
-
 
         await newCancelOrder.save();
 
         return newCancelOrder;
     } catch (error) {
-        
         console.error('Error saving cancel order:', error.message);
         throw new Error('Failed to save cancel order');
     }
 };
 
-
-
 const getAll = async () => {
     try {
-        const data = await cancelOrder.find()
-        console.log("===== data", data);
+        const data = await cancelOrder.find().sort({ createAt: -1 }); 
 
         if (data.length > 0) {
-            return data
-
+            console.log("===== All cancel orders:", data); 
+            return data; 
         } else {
-            return false
+            console.log("===== No cancel orders found");
+            return null; 
         }
-
     } catch (error) {
-        console.log(error);
-        return false
+        console.error("Error fetching cancel orders:", error.message);
+        return null; 
     }
-}
+};
 
-// getAll()     
 
-module.exports = { addCancelOrder };
+
+module.exports = { addCancelOrder, getAll };

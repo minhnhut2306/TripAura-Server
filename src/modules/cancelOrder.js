@@ -9,8 +9,8 @@ const cancelOrder = new Schema({
     accountnumber: { type: String, required: true },
     cancellationreason: { type: String, required: true },
     createAt: { type: Date, required: true },
-    bookingId: { type: mongoose.Schema.Types.ObjectId, ref: 'Booking' }
+    bookingId: { type: mongoose.Schema.Types.ObjectId, ref: 'Booking' },
+    status: { type: Number, default: 1 } 
 });
-
 
 module.exports = mongoose.model('CancelOrder', cancelOrder);
