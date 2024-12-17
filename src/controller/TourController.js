@@ -5,6 +5,7 @@ const mongoose = require("mongoose");
 
 const TourModule = require("../modules/TourModule");
 const ImageModule = require("../modules/ImageModle");
+const BookingModule = require("../modules/BookingModule")
 
 const filter = async (tourName, destination, minPrice, maxPrice, startDate) => {
   console.log(destination, minPrice, maxPrice, startDate);
@@ -542,23 +543,19 @@ const deleteTour = async (tourId) => {
       return false;
     }
     // Kiểm tra trạng thái của tour
-    if (tour.status === "1") {
-      console.log("Tour đang hoạt động, không thể xóa");
-      return false;
 
+    const result = await tour.deleteOne();
+
+    if (result.deletedCount > 0) {
+      // Nếu xóa thành công, trả về true
+      console.log("Xóa tour thành công");
+      return true;
     } else {
-      const result = await tour.deleteOne();
-
-      if (result.deletedCount > 0) {
-        // Nếu xóa thành công, trả về true
-        console.log("Xóa tour thành công");
-        return true;
-      } else {
-        // Nếu không xóa được, trả về false
-        console.log("Không thể xóa tour");
-        return false;
-      }
+      // Nếu không xóa được, trả về false
+      console.log("Không thể xóa tour");
+      return false;
     }
+
 
     // Thực hiện xóa tour
 
@@ -632,6 +629,48 @@ const getByTourId = async (tourId) => {
   }
 }
 
+const findBookingsByTourId = async (tourId) => {
+  try {
+    const bookings = await BookingModule.aggregate([
+      // Join với Detail
+      {
+        $lookup: {
+          from: 'details',
+          localField: 'detailId',
+          foreignField: '_id',
+          as: 'detailInfo'
+        }
+      },
+      { $unwind: '$detailInfo' }, // Làm phẳng mảng detailInfo
+
+      // Lọc theo tourId trong Detail
+      {
+        $match: {
+          'detailInfo.tourId': new mongoose.Types.ObjectId(tourId)
+        }
+      },
+
+      // Join với Tour nếu cần lấy thêm thông tin
+      {
+        $lookup: {
+          from: 'tours',
+          localField: 'detailInfo.tourId',
+          foreignField: '_id',
+          as: 'tourInfo'
+        }
+      },
+      { $unwind: '$tourInfo' } // Làm phẳng tourInfo
+
+    ]);
+
+    console.log('Bookings with Tour ID:', tourId, bookings);
+    return bookings;
+  } catch (error) {
+    console.error('Error finding bookings by tourId:', error);
+    throw error;
+  }
+};
+// findBookingsByTourId("6760f91d46e4546e9af3dcb3")
 
 module.exports = {
   update,
@@ -643,5 +682,6 @@ module.exports = {
   findByName,
   deleteTour,
   getToursAllAdmin,
-  getByTourId
+  getByTourId,
+  findBookingsByTourId
 };
