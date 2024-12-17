@@ -345,4 +345,18 @@ router.get('/api/getTourById', async (req, res) => {
     }
 })
 
+router.get('/api/findTourByBooking', async (req, res) => {
+    try {
+        const { tourId } = req.query
+        const tour = await tourController.findBookingsByTourId(tourId)
+        if (tour.length > 0) {
+            return res.json(createResponse(200, "Tour đang bán", "success", tour));
+        } else {
+            return res.json(createResponse(400, "Tour k bán", "failed"));
+        }
+    } catch (error) {
+        console.log(error);
+        return res.json(createResponse(500, "Lỗi máy chủ.", "error"));
+    }
+})
 module.exports = router;
