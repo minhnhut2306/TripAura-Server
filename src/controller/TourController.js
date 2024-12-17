@@ -543,23 +543,19 @@ const deleteTour = async (tourId) => {
       return false;
     }
     // Kiểm tra trạng thái của tour
-    if (tour.status === "1") {
-      console.log("Tour đang hoạt động, không thể xóa");
-      return false;
 
+    const result = await tour.deleteOne();
+
+    if (result.deletedCount > 0) {
+      // Nếu xóa thành công, trả về true
+      console.log("Xóa tour thành công");
+      return true;
     } else {
-      const result = await tour.deleteOne();
-
-      if (result.deletedCount > 0) {
-        // Nếu xóa thành công, trả về true
-        console.log("Xóa tour thành công");
-        return true;
-      } else {
-        // Nếu không xóa được, trả về false
-        console.log("Không thể xóa tour");
-        return false;
-      }
+      // Nếu không xóa được, trả về false
+      console.log("Không thể xóa tour");
+      return false;
     }
+
 
     // Thực hiện xóa tour
 
