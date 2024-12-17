@@ -161,12 +161,10 @@ router.get('/api/allBookings', async (req, res) => {
         res.status(500).json({ message: "Error retrieving bookings" });
     }
 });
-
 router.put('/api/update/:id', async (req, res) => {
     try {
         const { id } = req.params;
         let { status } = req.body;
-
         if (status === "success") {
             status = 0;
             const transporter = nodemailer.createTransport({
@@ -188,11 +186,8 @@ router.put('/api/update/:id', async (req, res) => {
             }
             const { totalPrice, numAdult, numChildren, priceAdult, priceChildren } = booking;
             console.log('booking', booking);
-            
             const { userId } = await BookingModule.findOne({ _id: id });
             const { email } = await UserModle.findOne({ _id: userId });
-
-
             const content = `
              <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; background-color: #f9f9f9; border: 1px solid #ddd; border-radius: 8px;">
                 <div style="background-color: #003375; padding: 20px; text-align: center; border-radius: 8px 8px 0 0;">
@@ -244,8 +239,7 @@ router.put('/api/update/:id', async (req, res) => {
                     </p>
                 </div>
             </div>
-            `;
-
+            `;  
             const mainOptions = {
                 from: 'TripAura',
                 to: email,

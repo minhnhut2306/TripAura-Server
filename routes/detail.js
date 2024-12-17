@@ -4,7 +4,6 @@ var router = express.Router();
 var detailController = require('../src/controller/DetailController');
 const { createResponse } = require('../src/helper/createResponse.helper');
 
-
 /**
  * @swagger
  * /detail/api/add:
