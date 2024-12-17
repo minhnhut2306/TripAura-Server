@@ -326,7 +326,7 @@ const update = async (detalId, startDay, endDay, maxTicket, minTicket, priceAdul
 }
 const remove = async (detalId) => {
     try {
-        const detail = await DetailModule.find({ _id: detalId, status: 1 })
+        const detail = await DetailModule.find({ _id: detalId })
         console.log("======== detail", detail);
         if (detail.length > 0) {
             return { status: 0 }
