@@ -29,18 +29,18 @@ const addCancelOrder = async (name, bankname, accountnumber, bookingId, cancella
 
 const getAll = async () => {
     try {
-        const data = await cancelOrder.find().sort({ createAt: -1 }); 
+        const data = await cancelOrder.find().sort({ createAt: -1 });
 
         if (data.length > 0) {
-            console.log("===== All cancel orders:", data); 
-            return data; 
+            console.log("===== All cancel orders:", data);
+            return data;
         } else {
             console.log("===== No cancel orders found");
-            return null; 
+            return null;
         }
     } catch (error) {
         console.error("Error fetching cancel orders:", error.message);
-        return null; 
+        return null;
     }
 };
 
@@ -49,7 +49,7 @@ const updateStatus = async (CancelId, status) => {
         if (!CancelId || !status) {
             throw new Error('Booking ID và status không hợp lệ');
         }
-        const cancelOrderToUpdate = await cancelOrder.findOne({ CancelId });
+        const cancelOrderToUpdate = await cancelOrder.findOne({ _id: CancelId });
 
         if (!cancelOrderToUpdate) {
             throw new Error('Không tìm thấy đơn hàng với Booking ID này');
@@ -67,4 +67,4 @@ const updateStatus = async (CancelId, status) => {
 };
 
 
-module.exports = { addCancelOrder, getAll,updateStatus};
+module.exports = { addCancelOrder, getAll, updateStatus };

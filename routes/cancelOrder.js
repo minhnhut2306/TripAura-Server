@@ -1,15 +1,15 @@
 const express = require('express');
 const router = express.Router();
-const { addCancelOrder,getAll, updateStatus } = require('./../src/controller/CancelOrderController');
+const { addCancelOrder, getAll, updateStatus } = require('./../src/controller/CancelOrderController');
 
 router.post('/add-cancel-order', async (req, res) => {
-    const { name, bankname, accountnumber, bookingId ,cancellationreason,email,phone} = req.body;
+    const { name, bankname, accountnumber, bookingId, cancellationreason, email, phone } = req.body;
     console.log('adding cancel order', name, bankname, accountnumber, bookingId, cancellationreason, email, phone);
-    
+
     try {
-        const newCancelOrder = await addCancelOrder(name, bankname, accountnumber, bookingId,cancellationreason,email,phone);
+        const newCancelOrder = await addCancelOrder(name, bankname, accountnumber, bookingId, cancellationreason, email, phone);
         console.log('Added canceled order', newCancelOrder);
-        
+
         return res.status(201).json({
             message: 'Cancel order added successfully',
             cancelOrder: newCancelOrder
@@ -24,7 +24,7 @@ router.post('/add-cancel-order', async (req, res) => {
 router.get('/cancelOrder/getAll', async (req, res) => {
     try {
         const cancelOrderData = await getAll();
-        
+
         if (cancelOrderData) {
             return res.status(200).json({
                 success: true,
@@ -46,19 +46,29 @@ router.get('/cancelOrder/getAll', async (req, res) => {
 });
 
 router.put('/cancelOrder/update/:CancelId', async (req, res) => {
-    const { CancelId } = req.params; 
-    const { status } = req.body;
 
     try {
+        const { CancelId } = req.params;
+        const { status } = req.body;
         if (!status) {
             return res.status(400).json({ message: 'Trạng thái không được để trống' });
         }
 
         const updatedOrder = await updateStatus(CancelId, status);
-        res.status(200).json({
-            message: 'Cập nhật trạng thái thành công',
-            data: updatedOrder
-        });
+        console.log("===== update", updatedOrder);
+
+        if (updatedOrder) {
+            res.status(200).json({
+                message: 'Cập nhật trạng thái thành công',
+                data: updatedOrder
+            });
+        } else {
+            res.status(400).json({
+                message: 'Cập nhật trạng thái thất bại',
+                data: updatedOrder
+            })
+        }
+
     } catch (error) {
         console.error('Lỗi khi cập nhật trạng thái đơn hàng:', error.message);
         res.status(500).json({ message: 'Không thể cập nhật trạng thái đơn hàng', error: error.message });
