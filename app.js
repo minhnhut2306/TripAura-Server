@@ -19,7 +19,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
-app.use(cors()); 
+app.use(cors());  // Cho phép tất cả các origin
+app.use(express.json());
 app.use("/", router);
 
 // app.get('/success', (req, res) => {

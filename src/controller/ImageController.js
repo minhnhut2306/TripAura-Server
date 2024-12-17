@@ -1,6 +1,8 @@
 const imageModule = require('../modules/ImageModle')
 const cloudinary = require('cloudinary').v2;
 
+
+
 cloudinary.config({
   cloud_name: 'dtoazwcfd',
   api_key: '976765598717887',
@@ -9,7 +11,6 @@ cloudinary.config({
 
 const uploadFile = async (filePath) => {
   console.log(filePath);
-
   try {
     const result = await cloudinary.uploader.upload(filePath);
     console.log(result);
