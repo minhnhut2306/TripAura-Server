@@ -198,7 +198,25 @@ router.post('/api/getByTourId', async function (req, res) {
 
     } catch (error) {
         console.log(error);
+        return res.json(createResponse(500, "Lỗi server", "error"));
     }
+})
+
+router.get('/api/admin/getBytouId', async (req, res) => {
+    try {
+        const { tourId } = req.query
+        const details = await detailController.getByTourIdWeb(tourId)
+        if (details) {
+            return res.json(createResponse(200, "Lấy dữ liệu thành công", "success", details))
+        } else {
+            return res.json(createResponse(400, "Không có dữ liệu", "failed"));
+        }
+
+    } catch (error) {
+        console.log(error);
+        return res.json(createResponse(500, "Lỗi server", "error"));
+    }
+
 })
 
 router.put('/api/update/:id', async function (req, res) {
@@ -299,5 +317,19 @@ router.get('/api/getDetail', async (req, res) => {
     }
 })
 
+router.get('/api/getDetailByBooking', async (req, res) => {
+    try {
+        const { detailId } = req.query
+        const detail = await detailController.getDetailByBooking(detailId)
+        if (detail != []) {
+            return res.json(createResponse(200, "get thành công", "success", detail));
+        } else {
+            return res.json(createResponse(400, "get Thất bại", "failed"));
+        }
+    } catch (error) {
+        console.log(error);
+        return res.json(createResponse(500, "Lỗi thất bại", "error"));
+    }
+})
 
 module.exports = router;

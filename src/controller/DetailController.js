@@ -1,6 +1,33 @@
 const mongoose = require('mongoose');
 const DetailModule = require('../modules/DetailModule')
 const TourModule = require('../modules/TourModule')
+const BookingModule = require('../modules/BookingModule')
+
+
+const getDetailByBooking = async (detailId) => {
+    try {
+        const booking = await BookingModule.find({ detailId: detailId })
+        const detail = await DetailModule.findOne({ _id: detailId })
+        if (detail) {
+            console.log("===== bk", booking);
+            console.log("====detail", detail);
+            if (booking.length > 0) {
+                console.log("cos");
+                return false
+            } else {
+                console.log("k cos");
+                return detail
+            }
+        } else {
+            return false
+        }
+    } catch (error) {
+        return false
+    }
+}
+
+// getDetailByBooking("675fde83180b628b67fc26aa")
+
 
 const insert = async (startDay, endDay, maxTicket, minTicket, priceAdult, priceChildren, PromotionalPrice, tourId) => {
     try {
@@ -19,9 +46,9 @@ const insert = async (startDay, endDay, maxTicket, minTicket, priceAdult, priceC
         }
         const detail = await DetailModule.find({ tourId: tourId, startDay: { $gte: startOfDay, $lt: endOfDay } })
         console.log("=========== detail", detail);
-        if (detail.length >0) {
+        if (detail.length > 0) {
             console.log(detail);
-            
+
             return false
         }
         const detailTour = new DetailModule({
@@ -143,6 +170,115 @@ const getByTourId = async (tourId) => {
     }
 }
 
+const getByTourIdWeb = async (tourId) => {
+    try {
+        // await updateDetailByDay()
+        // const sevenDaysAgo = new Date();
+        // sevenDaysAgo.setDate(sevenDaysAgo.getDate() + 7); // Tính ngày trước 7 ngày
+        // console.log(sevenDaysAgo);
+
+        const tour = await TourModule.aggregate([
+            {
+                $match: {
+                    _id: new mongoose.Types.ObjectId(tourId),
+                }
+            },
+            {
+                $lookup: {
+                    from: 'images',
+                    localField: '_id',
+                    foreignField: 'tourId',
+                    as: 'images'
+                }
+            },
+            {
+                $lookup: {
+                    from: 'locations',
+                    localField: '_id',
+                    foreignField: 'tourId',
+                    as: 'locations'
+                }
+            },
+            {
+                $lookup: {
+                    from: 'details', // Collection Image
+                    localField: '_id',
+                    foreignField: 'tourId',
+                    as: 'details'
+                }
+            },
+            // {
+            //     // Lọc các detail có status là 1
+            //     $addFields: {
+            //         details: {
+            //             $filter: {
+            //                 input: "$details",
+            //                 as: "detail",
+            //                 // cond: {
+            //                 //     $and: [
+            //                 //         { $eq: ["$$detail.status", "1"] }, // Điều kiện status = "1"
+            //                 //         { $gte: ["$$detail.startDay", sevenDaysAgo] } // Điều kiện startDay < 7 ngày trước
+            //                 //     ]
+            //                 // }
+            //             }
+            //         }
+            //     }
+            // },
+            {
+                $addFields: {
+                    details: {
+                        $sortArray: {
+                            input: "$details",
+                            sortBy: { startDay: 1 }, // Sắp xếp theo ngày tăng dần (gần nhất)
+                        }
+                    }
+                }
+            },
+            {
+                $unwind: { path: "$images", preserveNullAndEmptyArrays: true }, // Mở gói imageInfo, nếu không có vẫn trả về null
+            },
+            {
+                $unwind: { path: "$locations", preserveNullAndEmptyArrays: true }, // Mở gói detailInfo, nếu không có vẫn trả về null
+            },
+            {
+                $project: {
+                    _id: 1,
+                    tourName: 1,
+                    description: 1,
+                    status: 1,
+                    createAt: 1,
+                    locations: {
+                        departure: 1,
+                        destination: 1
+                    },
+                    details: {
+                        _id: 1,
+                        priceAdult: 1,
+                        startDay: 1,
+                        endDay: 1,
+                        maxTicket: 1,
+                        minTicket: 1,
+                        priceAdult: 1,
+                        priceChildren: 1,
+                        PromotionalPrice: 1,
+                        status: 1,
+                    },
+                    images: { linkImage: 1 }
+                }
+            }
+        ]);
+
+        if (!tour.length) {
+            return false;
+        }
+        return tour; // Trả về tour đầu tiên
+    } catch (error) {
+        console.error(error);
+        return false;
+    }
+}
+// getByTourIdWeb("675d2ff6db66f05fbfb02bbd")
+
 const updateDetailByDay = async () => {
     try {
 
@@ -190,16 +326,9 @@ const update = async (detalId, startDay, endDay, maxTicket, minTicket, priceAdul
 }
 const remove = async (detalId) => {
     try {
-        const detail = await DetailModule.find({ _id: detalId, status: 1 })
-        console.log("======== detail", detail);
-        if (detail.length > 0) {
-            return { status: 0 }
-        } else {
-            const deletedetails = await DetailModule.findByIdAndDelete(detalId);
-            console.log("========== detail đã xóa ==========", deletedetails);
-            return { status: 1, data: deletedetails };
-        }
-
+        const deletedetails = await DetailModule.findByIdAndDelete(detalId);
+        console.log("========== detail đã xóa ==========", deletedetails);
+        return deletedetails;
     } catch (error) {
         console.log("========== Lỗi xóa detail ==========", error);
         return { status: -1 }
@@ -270,6 +399,16 @@ const getByDetailId = async (detailId) => {
 
 // getByDetailId("6735acef6d63ba4cbaa52b5f")
 
-const check
 
-module.exports = { insert, getByTourId, update, remove, stopSale, updateMaxTicket, getAll, getByDetailId }
+module.exports = {
+    insert,
+    getByTourId,
+    update,
+    remove,
+    stopSale,
+    updateMaxTicket,
+    getAll,
+    getByDetailId,
+    getByTourIdWeb,
+    getDetailByBooking
+}
