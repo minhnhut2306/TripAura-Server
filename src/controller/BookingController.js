@@ -30,20 +30,20 @@ const insert = async (detailId, userId, voucherId, numAdult, numChildren, priceA
     }
 };
 
-cron.schedule('* * * * *', async () => {
-    const now = moment().toDate();
+    cron.schedule('* * * * *', async () => {
+        const now = moment().toDate();
 
-    const bookingsToCancel = await _Booking.find({
-        status: 1,
-        expireAt: { $lte: now },
-    });
+        const bookingsToCancel = await _Booking.find({
+            status: 1,
+            expireAt: { $lte: now },
+        });
 
-    bookingsToCancel.forEach(async (booking) => {
-        booking.status = 2;
-        await booking.save();
-        console.log(`Booking ${booking._id} đã bị hủy vì quá thời gian thanh toán.`);
+        bookingsToCancel.forEach(async (booking) => {
+            booking.status = 2;
+            await booking.save();
+            console.log(`Booking ${booking._id} đã bị hủy vì quá thời gian thanh toán.`);
+        });
     });
-});
 
 
 const bookingId = async (bookingId) => {
