@@ -1,7 +1,9 @@
 const cancelOrder = require('./../modules/cancelOrder')
 
-const addCancelOrder = async (name, bankname, accountnumber,bookingId,cancellationreason,email,phone) => {
+const addCancelOrder = async (name, bankname, accountnumber, bookingId, cancellationreason, email, phone) => {
     try {
+        const createAt = new Date();
+        console.log("====== day", createAt);
 
         if (!name || !bankname || !accountnumber || !bookingId, !cancellationreason || !email || !phone) {
             throw new Error('Missing required fields');
@@ -14,7 +16,8 @@ const addCancelOrder = async (name, bankname, accountnumber,bookingId,cancellati
             bookingId,
             cancellationreason,
             email,
-            phone
+            phone,
+            createAt
         });
 
         await newCancelOrder.save();
@@ -24,5 +27,26 @@ const addCancelOrder = async (name, bankname, accountnumber,bookingId,cancellati
         throw new Error('Failed to save cancel order');
     }
 };
+
+
+const getAll = async () => {
+    try {
+        const data = await cancelOrder.find()
+        console.log("===== data", data);
+
+        if (data.length > 0) {
+            return data
+
+        } else {
+            return false
+        }
+
+    } catch (error) {
+        console.log(error);
+        return false
+    }
+}
+
+// getAll()     
 
 module.exports = { addCancelOrder };
