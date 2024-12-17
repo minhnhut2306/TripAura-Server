@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { addCancelOrder,getAll } = require('./../src/controller/CancelOrderController');
+const { addCancelOrder,getAll, updateStatus } = require('./../src/controller/CancelOrderController');
 
 router.post('/add-cancel-order', async (req, res) => {
     const { name, bankname, accountnumber, bookingId ,cancellationreason,email,phone} = req.body;
