@@ -26,9 +26,6 @@ const insert = async (departure, destination, endDay, name, person, startDay, us
         let diaDiemId = [];
 
         for (let i = 0; i <= soNgayDi; i++) {
-            // Lấy số lượng địa điểm cho mỗi ngày (1 đến tối đa số địa điểm còn lại)
-            const soDiemDen = Math.max(1, Math.floor(Math.random() * locations.length) + 1);
-
             // Lọc những địa điểm chưa được chọn
             const availableLocations = locations.filter(item => !usedDiaDiemIds.has(item._id.toString()));
 
@@ -36,6 +33,9 @@ const insert = async (departure, destination, endDay, name, person, startDay, us
             if (availableLocations.length === 0) {
                 break;
             }
+
+            // Số lượng địa điểm mỗi ngày không vượt quá 10
+            const soDiemDen = Math.min(10, availableLocations.length);
 
             // Sắp xếp ngẫu nhiên và chọn số lượng địa điểm
             const shuffled = availableLocations.sort(() => Math.random() - 0.5);
@@ -76,6 +76,7 @@ const insert = async (departure, destination, endDay, name, person, startDay, us
         return false;
     }
 };
+
 
 
 
