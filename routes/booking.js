@@ -161,69 +161,92 @@ router.get('/api/allBookings', async (req, res) => {
         res.status(500).json({ message: "Error retrieving bookings" });
     }
 });
+
+const sendEmail = async (status, booking, email) => {
+    const { totalPrice, numAdult, numChildren, priceAdult, priceChildren } = booking;
+    const subject = status === 'success' ? 'Thanh toán thành công đơn hàng' : 'Hủy đơn hàng thành công';
+    const heading = status === 'success' ? 'Thanh toán thành công' : 'Hủy đơn hàng thành công';
+    const content = `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; background-color: #f9f9f9; border: 1px solid #ddd; border-radius: 8px;">
+            <div style="background-color: #003375; padding: 20px; text-align: center; border-radius: 8px 8px 0 0;">
+                <h2 style="color: #fff; margin: 0;">${heading}</h2>
+            </div>
+            <div style="padding: 20px; background-color: #ffffff;">
+                <p style="font-size: 16px; color: #333; line-height: 1.5;">Chào bạn,</p>
+                <p style="font-size: 16px; color: #333; line-height: 1.5;">Đơn hàng của bạn đã được ${heading.toLowerCase()}. Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi!</p>
+                <div style="background-color: #f1f1f1; padding: 15px; margin-top: 20px; border-radius: 8px;">
+                    <h3 style="color: #003375; font-size: 18px;">Thông tin đơn hàng</h3>
+                    <table style="width: 100%; margin-top: 10px;">
+                        <tr><td style="padding: 8px; font-size: 14px; color: #333;">Số lượng người lớn:</td><td style="padding: 8px; font-size: 14px; color: #333;">${numAdult}</td></tr>
+                        <tr><td style="padding: 8px; font-size: 14px; color: #333;">Số lượng trẻ em:</td><td style="padding: 8px; font-size: 14px; color: #333;">${numChildren}</td></tr>
+                        <tr><td style="padding: 8px; font-size: 14px; color: #333;">Giá người lớn:</td><td style="padding: 8px; font-size: 14px; color: #333;">${priceAdult}</td></tr>
+                        <tr><td style="padding: 8px; font-size: 14px; color: #333;">Giá trẻ em:</td><td style="padding: 8px; font-size: 14px; color: #333;">${priceChildren}</td></tr>
+                        <tr><td style="padding: 8px; font-size: 14px; color: #333; font-weight: bold;">Tổng giá trị:</td><td style="padding: 8px; font-size: 14px; color: #333; font-weight: bold;">${totalPrice}</td></tr>
+                    </table>
+                </div>
+                <p style="font-size: 16px; color: #333; line-height: 1.5; margin-top: 20px;">Nếu bạn có bất kỳ câu hỏi nào, vui lòng liên hệ với chúng tôi qua email <a href="mailto:tripaura@gmail.com" style="color: #003375;">tripaura@gmail.com</a> hoặc hotline <strong>0999998888</strong>.</p>
+                <hr style="border: none; border-top: 1px solid #ddd; margin: 20px 0;">
+                <p style="font-size: 14px; color: #999; text-align: center;">Đây là email tự động, vui lòng không trả lời email này.</p>
+            </div>
+            <div style="background-color: #003375; padding: 10px; text-align: center; border-radius: 0 0 8px 8px;">
+                <p style="color: #fff; font-size: 14px; margin: 0;">© 2024 TripAura. All rights reserved.</p>
+            </div>
+        </div>
+    `;
+
+    const transporter = nodemailer.createTransport({
+        host: 'smtp.gmail.com',
+        port: 465,
+        secure: true,
+        auth: {
+            user: config.email_user,
+            pass: config.email_pass,
+        },
+        tls: {
+            rejectUnauthorized: false,
+        },
+    });
+
+    const mainOptions = {
+        from: 'TripAura',
+        to: email,
+        subject,
+        html: content,
+    };
+
+    return new Promise((resolve, reject) => {
+        transporter.sendMail(mainOptions, (err, info) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(info);
+            }
+        });
+    });
+};
+
 router.put('/api/update/:id', async (req, res) => {
     try {
         const { id } = req.params;
-        console.log('id: ', id);
-        
         let { status } = req.body;
-        let emailSubject, emailContent;
-        
-        if (status === "success") {
-            status = 0;
-            emailSubject = 'Thanh toán thành công đơn hàng';
-            emailContent = generateEmailContent('Thanh toán thành công', 'Đơn hàng của bạn đã được thanh toán thành công', id);
-        } else if (status === "cancel") {
-            status = 2;
-            emailSubject = 'Hủy đơn hàng thành công';
-            console.log('hủy đơn hàng thành công');
-            
-            emailContent = generateEmailContent('Hủy đơn hàng thành công', 'Đơn hàng của bạn đã được hủy thành công', id);
-        } else {
-            return res.status(400).json({ message: 'Trạng thái không hợp lệ' });
-        }
-
-        const transporter = nodemailer.createTransport({
-            host: 'smtp.gmail.com',
-            port: 465,
-            secure: true,
-            auth: {
-                user: config.email_user,
-                pass: config.email_pass,
-            },
-            tls: {
-                rejectUnauthorized: false,
-            },
-        });
-
         const booking = await BookingModule.findOne({ _id: id });
         if (!booking) {
             return res.status(404).json({ message: 'Không tìm thấy booking' });
         }
 
-        const { userId } = booking;
-        const user = await UserModle.findOne({ _id: userId });
-        if (!user) {
-            return res.status(404).json({ message: 'Không tìm thấy người dùng' });
-        }
+        if (status === "success" || status === "cancel") {
+            status = status === "success" ? 0 : 2;
+            const { userId } = booking;
+            const { email } = await UserModle.findOne({ _id: userId });
 
-        const { email } = user;
-        const mainOptions = {
-            from: 'TripAura',
-            to: email,
-            subject: emailSubject,
-            html: emailContent,
-        };
-
-        transporter.sendMail(mainOptions, function (err, info) {
-            if (err) {
+            try {
+                const info = await sendEmail(status, booking, email);
+                console.log('Message sent:', info.response);
+            } catch (err) {
                 console.error('Lỗi gửi mail:', err);
                 return res.status(500).json({ message: 'Lỗi gửi mail', error: err.message });
-            } else {
-                console.log('Message sent:', info.response);
-                return res.status(200).json({ message: 'Email đã được gửi thành công', info: info.response });
             }
-        });
+        }
 
         const data = await bookingController.update(id, status);
         if (data) {
@@ -237,41 +260,7 @@ router.put('/api/update/:id', async (req, res) => {
     }
 });
 
-function generateEmailContent(title, message, id) {
-    return `
-        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; background-color: #f9f9f9; border: 1px solid #ddd; border-radius: 8px;">
-            <div style="background-color: #003375; padding: 20px; text-align: center; border-radius: 8px 8px 0 0;">
-                <h2 style="color: #fff; margin: 0;">${title}</h2>
-            </div>
-            <div style="padding: 20px; background-color: #ffffff;">
-                <p style="font-size: 16px; color: #333; line-height: 1.5;">
-                    Chào bạn,
-                </p>
-                <p style="font-size: 16px; color: #333; line-height: 1.5;">
-                    ${message}
-                </p>
-                <div style="background-color: #f1f1f1; padding: 15px; margin-top: 20px; border-radius: 8px;">
-                    <h3 style="color: #003375; font-size: 18px;">Thông tin đơn hàng</h3>
-                    <table style="width: 100%; margin-top: 10px;">
-                        <!-- Add your table rows here -->
-                    </table>
-                </div>
-                <p style="font-size: 16px; color: #333; line-height: 1.5; margin-top: 20px;">
-                    Nếu bạn có bất kỳ câu hỏi nào, vui lòng liên hệ với chúng tôi qua email <a href="mailto:tripaura@gmail.com" style="color: #003375;">tripaura@gmail.com</a> hoặc hotline <strong>0999998888</strong>.
-                </p>
-                <hr style="border: none; border-top: 1px solid #ddd; margin: 20px 0;">
-                <p style="font-size: 14px; color: #999; text-align: center;">
-                    Đây là email tự động, vui lòng không trả lời email này.
-                </p>
-            </div>
-            <div style="background-color: #003375; padding: 10px; text-align: center; border-radius: 0 0 8px 8px;">
-                <p style="color: #fff; font-size: 14px; margin: 0;">
-                    © 2024 TripAura. All rights reserved.
-                </p>
-            </div>
-        </div>
-    `;
-}
+
 
 
 router.delete('/api/delete/:id', async (req, res) => {
