@@ -45,5 +45,25 @@ router.get('/cancelOrder/getAll', async (req, res) => {
     }
 });
 
+router.put('/cancelOrder/update/:CancelId', async (req, res) => {
+    const { CancelId } = req.params; 
+    const { status } = req.body;
+
+    try {
+        if (!status) {
+            return res.status(400).json({ message: 'Trạng thái không được để trống' });
+        }
+
+        const updatedOrder = await updateStatus(CancelId, status);
+        res.status(200).json({
+            message: 'Cập nhật trạng thái thành công',
+            data: updatedOrder
+        });
+    } catch (error) {
+        console.error('Lỗi khi cập nhật trạng thái đơn hàng:', error.message);
+        res.status(500).json({ message: 'Không thể cập nhật trạng thái đơn hàng', error: error.message });
+    }
+});
+
 
 module.exports = router;
