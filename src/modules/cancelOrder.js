@@ -8,7 +8,8 @@ const cancelOrder = new Schema({
     phone: { type: String, required: true },
     accountnumber: { type: String, required: true },
     cancellationreason: { type: String, required: true },
-    bookingId: { type: mongoose.Schema.Types.ObjectId, ref: 'Booking' }
+    bookingId: { type: mongoose.Schema.Types.ObjectId, ref: 'Booking', required: true }
 });
 
-module.exports = mongoose.model('cancelOrder', cancelOrder);
+
+module.exports = mongoose.model('CancelOrder', cancelOrder);
