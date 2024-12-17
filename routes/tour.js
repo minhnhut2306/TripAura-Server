@@ -335,9 +335,9 @@ router.get('/api/getTourById', async (req, res) => {
         const { tourId } = req.query
         const tour = await tourController.getByTourId(tourId)
         if (tour) {
-            return res.json(createResponse(200, "Update tour thành công", "success", tour));
+            return res.json(createResponse(200, "get tour thành công", "success", tour));
         } else {
-            return res.json(createResponse(400, "Update tour thất bại", "failed"));
+            return res.json(createResponse(400, "get tour thất bại", "failed"));
         }
     } catch (error) {
         console.log(error);

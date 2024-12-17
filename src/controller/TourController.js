@@ -623,17 +623,30 @@ const update = async (tourId, description, name, departure, destination, provinc
 
 const getByTourId = async (tourId) => {
   try {
-    const tour = await TourModule.findOne({ _id: tourId })
-    if (tour) {
-      return tour
-    } else {
-      return false
+    // Tìm Tour và populate location
+    const tour = await TourModule.findOne({ _id: tourId }).lean();
+
+    if (!tour) {
+      console.log("Tour không tồn tại");
+      return null;
     }
+
+    // Tìm Location dựa trên tourId
+    const location = await LocationModule.findOne({ tourId: tourId }).lean();
+
+    // Kết hợp dữ liệu Tour và Location
+    const result = {
+      ...tour,
+      location: location || null,
+    };
+
+    return result;
   } catch (error) {
-    console.log(error);
-    return false
+    console.error('Error fetching tour with location:', error);
+    return null;
   }
-}
+};
+
 
 const findBookingsByTourId = async (tourId) => {
   try {
@@ -677,6 +690,8 @@ const findBookingsByTourId = async (tourId) => {
   }
 };
 // findBookingsByTourId("6760f91d46e4546e9af3dcb3")
+
+
 
 module.exports = {
   update,
