@@ -161,6 +161,7 @@ router.get('/api/allBookings', async (req, res) => {
         res.status(500).json({ message: "Error retrieving bookings" });
     }
 });
+
 router.put('/api/update/:id', async (req, res) => {
     try {
         const { id } = req.params;
@@ -239,7 +240,7 @@ router.put('/api/update/:id', async (req, res) => {
                     </p>
                 </div>
             </div>
-            `;  
+            `;
             const mainOptions = {
                 from: 'TripAura',
                 to: email,

@@ -14,7 +14,6 @@ const UserModle = require("../modules/UserModle");
 
 const saltRounds = 10;
 
-// Controller đăng ký
 exports.registerController = async (email, phone, password) => {
   try {
     const response = await register(email, phone, password);

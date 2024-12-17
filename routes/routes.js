@@ -19,7 +19,7 @@ const payment = require('./payment');
 const tinhRouter = require('./lichtrinh/tinh')
 const diaDiemRouter = require('./lichtrinh/diaDiem')
 const lichTrinhRouter = require('./lichtrinh/lichTrinh')
-
+const cancelorder = require('./cancelOrder')
 // Định tuyến tất cả các router
 router.get('/', index);
 router.use('/category', categoryRouter);
@@ -39,5 +39,7 @@ router.use('/payment', payment);
 router.use('/tinh', tinhRouter);
 router.use('/diaDiem', diaDiemRouter);
 router.use('/lichTrinh', lichTrinhRouter);
+router.use('/cancelorder', cancelorder);
+
 
 module.exports = router;

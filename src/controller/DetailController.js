@@ -397,7 +397,6 @@ const getByDetailId = async (detailId) => {
     }
 }
 
-
 const getTotalTickets = async (detailId) => {
     try {
         const result = await BookingModule.aggregate([
