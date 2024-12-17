@@ -397,7 +397,39 @@ const getByDetailId = async (detailId) => {
     }
 }
 
-// getByDetailId("6735acef6d63ba4cbaa52b5f")
+
+const getTotalTickets = async (detailId) => {
+    try {
+        const result = await BookingModule.aggregate([
+            {
+                $match: { 
+                    detailId: new mongoose.Types.ObjectId(detailId), 
+                    status: 0 
+                }
+            },
+            {
+                $group: {
+                    _id: null,
+                    totalAdults: { $sum: '$numAdult' },
+                    totalChildren: { $sum: '$numChildren' }
+                }
+            }
+        ]);
+        console.log('result', result);
+    
+        let totalTickets = 0;
+
+        if (result.length > 0) {
+            const { totalAdults, totalChildren } = result[0];
+            totalTickets = totalAdults + totalChildren; 
+        }
+
+        return { totalTickets };
+    } catch (error) {
+        console.error('Lỗi khi tính tổng số vé:', error);
+        throw new Error('Đã xảy ra lỗi khi tính tổng số vé.');
+    }
+};
 
 
 module.exports = {
@@ -410,5 +442,6 @@ module.exports = {
     getAll,
     getByDetailId,
     getByTourIdWeb,
-    getDetailByBooking
+    getDetailByBooking,
+    getTotalTickets,
 }
