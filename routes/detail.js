@@ -4,7 +4,6 @@ var router = express.Router();
 var detailController = require('../src/controller/DetailController');
 const { createResponse } = require('../src/helper/createResponse.helper');
 
-
 /**
  * @swagger
  * /detail/api/add:
@@ -299,5 +298,6 @@ router.get('/api/getDetail', async (req, res) => {
         return res.json(createResponse(500, "Lỗi thất bại", "error"));
     }
 })
+
 
 module.exports = router;

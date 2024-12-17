@@ -270,4 +270,6 @@ const getByDetailId = async (detailId) => {
 
 // getByDetailId("6735acef6d63ba4cbaa52b5f")
 
+const check
+
 module.exports = { insert, getByTourId, update, remove, stopSale, updateMaxTicket, getAll, getByDetailId }
