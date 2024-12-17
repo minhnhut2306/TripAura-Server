@@ -303,8 +303,8 @@ router.delete('/api/deleteTour/:tourId', async (req, res) => {
 
 router.put('/api/update', async (req, res) => {
     try {
-        const { tourId, description, status } = req.body
-        const tour = await tourController.update(tourId, description, status)
+        const { tourId, description, name, departure, destination, province } = req.body
+        const tour = await tourController.update(tourId, description, name, departure, destination, province)
         if (tour) {
             return res.json(createResponse(200, "Update tour thành công", "success", tour));
         } else {

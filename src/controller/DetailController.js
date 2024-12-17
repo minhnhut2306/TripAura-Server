@@ -249,7 +249,8 @@ const getByTourIdWeb = async (tourId) => {
                     createAt: 1,
                     locations: {
                         departure: 1,
-                        destination: 1
+                        destination: 1,
+                        province: 1
                     },
                     details: {
                         _id: 1,
