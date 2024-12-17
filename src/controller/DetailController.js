@@ -13,12 +13,10 @@ const getDetailByBooking = async (detailId) => {
             console.log("====detail", detail);
             if (booking.length > 0) {
                 console.log("cos");
-
-                return detail
+                return false
             } else {
                 console.log("k cos");
-
-                return false
+                return detail
             }
         } else {
             return false
